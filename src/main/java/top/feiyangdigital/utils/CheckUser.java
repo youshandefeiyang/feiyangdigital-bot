@@ -36,7 +36,7 @@ public class CheckUser {
     }
 
     public boolean isChatOwner(AbsSender sender, Update update) {
-        String chatId = null;
+        String chatId = "";
         long uid = 0;
         if (update.getMessage() == null) {
             chatId = update.getCallbackQuery().getMessage().getChatId().toString();

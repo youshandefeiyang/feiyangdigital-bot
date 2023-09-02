@@ -15,7 +15,7 @@ import java.util.List;
 @Component
 public class SendContent {
     public SendMessage messageText(Update update,String text){
-        String chatId = null;
+        String chatId = "";
         if (update.getMessage() == null) {
             chatId = update.getCallbackQuery().getMessage().getChatId().toString();
         } else {
@@ -28,8 +28,8 @@ public class SendContent {
     }
 
     public EditMessageText editMessageText(Update update, String text){
-        String chatId = null;
-        Integer messageId = null;
+        String chatId = "";
+        Integer messageId = 0;
 
         if (update.getCallbackQuery() != null) {
             chatId = update.getCallbackQuery().getMessage().getChatId().toString();
@@ -46,7 +46,7 @@ public class SendContent {
     }
 
     public SendMessage createResponseMessage(Update update, KeywordsFormat keyword,String textFormat) {
-        String chatId = null;
+        String chatId = "";
         if (update.getMessage() == null) {
             chatId = update.getCallbackQuery().getMessage().getChatId().toString();
         } else {
@@ -112,8 +112,8 @@ public class SendContent {
     }
 
     public EditMessageText editResponseMessage(Update update, KeywordsFormat keyword, String textFormat) {
-        String chatId = null;
-        Integer messageId = null;
+        String chatId = "";
+        Integer messageId = 0;
 
         if (update.getCallbackQuery() != null) {
             chatId = update.getCallbackQuery().getMessage().getChatId().toString();

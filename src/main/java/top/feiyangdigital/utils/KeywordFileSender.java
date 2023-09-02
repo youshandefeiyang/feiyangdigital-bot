@@ -32,8 +32,8 @@ public class KeywordFileSender {
     private SendContent sendContent;
 
     public void sendKeywordsFile(AbsSender sender, Update update) {
-        String userId = null;
-        String chatId = null; //这个chatId是私人会话的，下面查数据库的是群组的chatId
+        String userId = "";
+        String chatId = ""; //这个chatId是私人会话的，下面查数据库的是群组的chatId
         if (update.getMessage() == null) {
             userId = update.getCallbackQuery().getFrom().getId().toString();
             chatId = update.getCallbackQuery().getMessage().getChatId().toString();
