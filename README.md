@@ -33,8 +33,17 @@ curl -o start.sh https://ghproxy.com/https://raw.githubusercontent.com/youshande
 ----------------
 
 - 确保你的网络可以连接到 Telegram 服务器。如果使用软路由，请使用增强代理。
+- 在 `/home/feiyangdigitalbotconf/` 目录下执行：
 ```bash
 docker-compose up -d
+```
+
+5️⃣ 暂停容器
+------------
+
+- 在 `/home/feiyangdigitalbotconf/` 目录下执行：
+```bash
+docker-compose stop
 ```
 
 🔍 查看日志
