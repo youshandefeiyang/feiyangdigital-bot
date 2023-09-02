@@ -29,7 +29,7 @@ curl -o start.sh https://ghproxy.com/https://raw.githubusercontent.com/youshande
   1. 填入你的 `username` 和 `token` 到 `botConfig` 的 `name` 和 `token` 字段。
   2. 保存更改。
 
-4️⃣ 运行机器人
+▶️ 运行机器人
 ----------------
 
 - 确保你的网络可以连接到 Telegram 服务器。如果使用软路由，请使用增强代理。
@@ -38,7 +38,7 @@ curl -o start.sh https://ghproxy.com/https://raw.githubusercontent.com/youshande
 docker-compose up -d
 ```
 
-5️⃣ 暂停容器
+⏸️ 暂停容器
 ------------
 
 - 在 `/home/feiyangdigitalbotconf/` 目录下执行：
