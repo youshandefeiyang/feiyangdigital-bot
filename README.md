@@ -15,7 +15,7 @@
 - **准备环境:**
   - [安装 Docker 和 Docker-Compose](https://www.wxy97.com/archives/77)。
 
-2️⃣ 一键部署
+2️⃣ 终端运行
 --------------
 
 ```bash
