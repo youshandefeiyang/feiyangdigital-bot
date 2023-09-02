@@ -1,25 +1,59 @@
-# 使用说明：
-## 这是一个基于SpringBoot和Telegrambot-Api的多功能Telegram群管机器人
-## 首先你需要在[@BotFather](https://t.me/botfather)创建一个自己的机器人，并记录token和机器人的用户名，具体步骤：[点击查看](https://blog.csdn.net/whatday/article/details/113747294)
-## 然后需要[安装Docker和Docker-Compose](https://www.wxy97.com/archives/77)
-## 然后你需要一键执行
-```
+
+🤖 Feiyang Digital Telegram 群管机器人
+===========================================
+
+基于 **SpringBoot** 和 **Telegrambot-Api** 打造的多功能 Telegram 群管理机器人。
+
+1️⃣ 开始之前
+----------------
+
+- **创建你的 Telegram 机器人:**
+  1. 前往 [@BotFather](https://t.me/botfather) 以创建机器人。
+  2. 记录下机器人的 `token` 和用户名。
+  3. 不熟悉的话，可以[查阅此具体步骤](https://blog.csdn.net/whatday/article/details/113747294)。
+
+- **准备环境:**
+  - [安装 Docker 和 Docker-Compose](https://www.wxy97.com/archives/77)。
+
+2️⃣ 一键部署
+--------------
+
+```bash
 curl -o start.sh https://ghproxy.com/https://raw.githubusercontent.com/youshandefeiyang/feiyangdigital-bot/main/start.sh && chmod +x start.sh && ./start.sh
 ```
-## 然后你需要在/home/feiyangdigitalbotconf/目录下编辑该conf.json，将刚才申请的username和token填入botConfig下的name和token并保存
-## 最后你可以执行Docker一键运行该bot，确保你的网络能连接到telegram服务器，软路由请使用增强代理
-```
+
+3️⃣ 配置机器人
+----------------
+
+- 前往 `/home/feiyangdigitalbotconf/` 目录，编辑 `conf.json` 文件：
+  1. 填入你的 `username` 和 `token` 到 `botConfig` 的 `name` 和 `token` 字段。
+  2. 保存更改。
+
+4️⃣ 运行机器人
+----------------
+
+- 确保你的网络可以连接到 Telegram 服务器。如果使用软路由，请使用增强代理。
+```bash
 docker-compose up -d
 ```
-## 查看日志，在/home/feiyangdigitalbotconf/目录下执行：
-```
+
+🔍 查看日志
+------------
+
+在 `/home/feiyangdigitalbotconf/` 目录下执行：
+```bash
 docker-compose logs -f 
 ```
-## 更新Docker，在/home/feiyangdigitalbotconf/目录下执行：
-```
-拉取新镜像
-docker-compose pull  
 
-使用新镜像重新启动容器
+🔄 更新
+--------
+
+在 `/home/feiyangdigitalbotconf/` 目录下进行以下操作：
+- 拉取最新镜像：
+```bash
+docker-compose pull  
+```
+- 使用新镜像重新启动容器：
+```bash
 docker-compose up -d
 ```
