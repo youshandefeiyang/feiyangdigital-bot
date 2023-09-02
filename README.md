@@ -15,13 +15,10 @@ docker-compose up -d
 ```
 docker-compose logs -f 
 ```
-## 更新Docker镜像：
+## 更新Docker，在/home/feiyangdigitalbotconf/目录下执行：
 ```
 拉取新镜像
 docker-compose pull  
-
-删除数据库缓存
-docker volume rm feiyangdigital-bot_mysql-data 
 
 使用新镜像重新启动容器
 docker-compose up -d
