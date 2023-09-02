@@ -46,6 +46,14 @@ docker-compose up -d
 docker-compose stop
 ```
 
+🔥 重启容器
+------------
+
+- 在 `/home/feiyangdigitalbotconf/` 目录下执行：
+```bash
+docker-compose restart
+```
+
 🔍 查看日志
 ------------
 
