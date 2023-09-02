@@ -1,3 +1,4 @@
+## 修复bug中，请勿下载
 # 使用说明：
 ## 这是一个基于SpringBoot和Telegrambot-Api的多功能Telegram群管机器人
 ## 首先你需要在[@BotFather](https://t.me/botfather)创建一个自己的机器人，并记录token和机器人的用户名，具体步骤：[点击查看](https://blog.csdn.net/whatday/article/details/113747294)
