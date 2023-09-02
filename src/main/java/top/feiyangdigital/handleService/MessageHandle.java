@@ -23,13 +23,21 @@ public class MessageHandle {
     private SendContent sendContent;
 
     public void processUserMessage(AbsSender sender, Update update, List<KeywordsFormat> keywordsList) {
+        String messageText = update.getMessage().getText();
+
+        // 如果消息文本为null，直接返回，不做处理
+        if (messageText == null) {
+            return;
+        }
+
         for (KeywordsFormat keywordFormat : keywordsList) {
             Map<String, String> currentMap = keywordFormat.getDelMap();
-            //还可以添加其他map，比如禁言的map和封禁的map
+            // 还可以添加其他map，比如禁言的map和封禁的map
             String regex = keywordFormat.getRegex();
             Pattern pattern = Pattern.compile(regex);
+
             if (currentMap.containsKey("DeleteAfterXSeconds")) {
-                if (pattern.matcher(update.getMessage().getText()).find()) {
+                if (pattern.matcher(messageText).find()) {
                     // 用户违规了
                     int deleteAfterXSeconds = Integer.parseInt(currentMap.get("DeleteAfterXSeconds"));
 
@@ -53,9 +61,9 @@ public class MessageHandle {
                     }
                     break;
                 }
-            } //可以判断后续逻辑，比如是否ban或者禁言
+            } // 可以判断后续逻辑，比如是否ban或者禁言
             else {
-                if (pattern.matcher(update.getMessage().getText()).find()) {
+                if (pattern.matcher(messageText).find()) {
                     try {
                         sender.execute(sendContent.replyToUser(update, keywordFormat,"markdown"));
                     } catch (TelegramApiException e) {
