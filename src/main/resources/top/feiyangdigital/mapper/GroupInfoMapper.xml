@@ -1,0 +1,332 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="top.feiyangdigital.mapper.GroupInfoMapper">
+  <resultMap id="BaseResultMap" type="top.feiyangdigital.entity.GroupInfo">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="groupId" jdbcType="VARCHAR" property="groupid" />
+    <result column="ownerAndAnonymousAdmins" jdbcType="VARCHAR" property="ownerandanonymousadmins" />
+    <result column="groupName" jdbcType="VARCHAR" property="groupname" />
+    <result column="keyWordsflag" jdbcType="VARCHAR" property="keywordsflag" />
+    <result column="deleteKeywordFlag" jdbcType="VARCHAR" property="deletekeywordflag" />
+    <result column="settingTimeStamp" jdbcType="VARCHAR" property="settingtimestamp" />
+  </resultMap>
+  <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="top.feiyangdigital.entity.GroupInfoWithBLOBs">
+    <result column="keyWords" jdbcType="LONGVARCHAR" property="keywords" />
+    <result column="intoGroupWelcomeWords" jdbcType="LONGVARCHAR" property="intogroupwelcomewords" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    id, groupId, ownerAndAnonymousAdmins, groupName, keyWordsflag, deleteKeywordFlag, 
+    settingTimeStamp
+  </sql>
+  <sql id="Blob_Column_List">
+    keyWords, intoGroupWelcomeWords
+  </sql>
+  <select id="selectByExampleWithBLOBs" parameterType="top.feiyangdigital.entity.GroupInfoExample" resultMap="ResultMapWithBLOBs">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from groupinfo
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+    <if test="limit != null">
+      <if test="offset != null">
+        limit ${offset}, ${limit}
+      </if>
+      <if test="offset == null">
+        limit ${limit}
+      </if>
+    </if>
+  </select>
+  <select id="selectByExample" parameterType="top.feiyangdigital.entity.GroupInfoExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from groupinfo
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+    <if test="limit != null">
+      <if test="offset != null">
+        limit ${offset}, ${limit}
+      </if>
+      <if test="offset == null">
+        limit ${limit}
+      </if>
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="ResultMapWithBLOBs">
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from groupinfo
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from groupinfo
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="top.feiyangdigital.entity.GroupInfoExample">
+    delete from groupinfo
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" keyColumn="id" keyProperty="id" parameterType="top.feiyangdigital.entity.GroupInfoWithBLOBs" useGeneratedKeys="true">
+    insert into groupinfo (groupId, ownerAndAnonymousAdmins, 
+      groupName, keyWordsflag, deleteKeywordFlag, 
+      settingTimeStamp, keyWords, intoGroupWelcomeWords
+      )
+    values (#{groupid,jdbcType=VARCHAR}, #{ownerandanonymousadmins,jdbcType=VARCHAR}, 
+      #{groupname,jdbcType=VARCHAR}, #{keywordsflag,jdbcType=VARCHAR}, #{deletekeywordflag,jdbcType=VARCHAR}, 
+      #{settingtimestamp,jdbcType=VARCHAR}, #{keywords,jdbcType=LONGVARCHAR}, #{intogroupwelcomewords,jdbcType=LONGVARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" keyColumn="id" keyProperty="id" parameterType="top.feiyangdigital.entity.GroupInfoWithBLOBs" useGeneratedKeys="true">
+    insert into groupinfo
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="groupid != null">
+        groupId,
+      </if>
+      <if test="ownerandanonymousadmins != null">
+        ownerAndAnonymousAdmins,
+      </if>
+      <if test="groupname != null">
+        groupName,
+      </if>
+      <if test="keywordsflag != null">
+        keyWordsflag,
+      </if>
+      <if test="deletekeywordflag != null">
+        deleteKeywordFlag,
+      </if>
+      <if test="settingtimestamp != null">
+        settingTimeStamp,
+      </if>
+      <if test="keywords != null">
+        keyWords,
+      </if>
+      <if test="intogroupwelcomewords != null">
+        intoGroupWelcomeWords,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="groupid != null">
+        #{groupid,jdbcType=VARCHAR},
+      </if>
+      <if test="ownerandanonymousadmins != null">
+        #{ownerandanonymousadmins,jdbcType=VARCHAR},
+      </if>
+      <if test="groupname != null">
+        #{groupname,jdbcType=VARCHAR},
+      </if>
+      <if test="keywordsflag != null">
+        #{keywordsflag,jdbcType=VARCHAR},
+      </if>
+      <if test="deletekeywordflag != null">
+        #{deletekeywordflag,jdbcType=VARCHAR},
+      </if>
+      <if test="settingtimestamp != null">
+        #{settingtimestamp,jdbcType=VARCHAR},
+      </if>
+      <if test="keywords != null">
+        #{keywords,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="intogroupwelcomewords != null">
+        #{intogroupwelcomewords,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="top.feiyangdigital.entity.GroupInfoExample" resultType="java.lang.Long">
+    select count(*) from groupinfo
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update groupinfo
+    <set>
+      <if test="record.id != null">
+        id = #{record.id,jdbcType=INTEGER},
+      </if>
+      <if test="record.groupid != null">
+        groupId = #{record.groupid,jdbcType=VARCHAR},
+      </if>
+      <if test="record.ownerandanonymousadmins != null">
+        ownerAndAnonymousAdmins = #{record.ownerandanonymousadmins,jdbcType=VARCHAR},
+      </if>
+      <if test="record.groupname != null">
+        groupName = #{record.groupname,jdbcType=VARCHAR},
+      </if>
+      <if test="record.keywordsflag != null">
+        keyWordsflag = #{record.keywordsflag,jdbcType=VARCHAR},
+      </if>
+      <if test="record.deletekeywordflag != null">
+        deleteKeywordFlag = #{record.deletekeywordflag,jdbcType=VARCHAR},
+      </if>
+      <if test="record.settingtimestamp != null">
+        settingTimeStamp = #{record.settingtimestamp,jdbcType=VARCHAR},
+      </if>
+      <if test="record.keywords != null">
+        keyWords = #{record.keywords,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="record.intogroupwelcomewords != null">
+        intoGroupWelcomeWords = #{record.intogroupwelcomewords,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExampleWithBLOBs" parameterType="map">
+    update groupinfo
+    set id = #{record.id,jdbcType=INTEGER},
+      groupId = #{record.groupid,jdbcType=VARCHAR},
+      ownerAndAnonymousAdmins = #{record.ownerandanonymousadmins,jdbcType=VARCHAR},
+      groupName = #{record.groupname,jdbcType=VARCHAR},
+      keyWordsflag = #{record.keywordsflag,jdbcType=VARCHAR},
+      deleteKeywordFlag = #{record.deletekeywordflag,jdbcType=VARCHAR},
+      settingTimeStamp = #{record.settingtimestamp,jdbcType=VARCHAR},
+      keyWords = #{record.keywords,jdbcType=LONGVARCHAR},
+      intoGroupWelcomeWords = #{record.intogroupwelcomewords,jdbcType=LONGVARCHAR}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update groupinfo
+    set id = #{record.id,jdbcType=INTEGER},
+      groupId = #{record.groupid,jdbcType=VARCHAR},
+      ownerAndAnonymousAdmins = #{record.ownerandanonymousadmins,jdbcType=VARCHAR},
+      groupName = #{record.groupname,jdbcType=VARCHAR},
+      keyWordsflag = #{record.keywordsflag,jdbcType=VARCHAR},
+      deleteKeywordFlag = #{record.deletekeywordflag,jdbcType=VARCHAR},
+      settingTimeStamp = #{record.settingtimestamp,jdbcType=VARCHAR}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="top.feiyangdigital.entity.GroupInfoWithBLOBs">
+    update groupinfo
+    <set>
+      <if test="groupid != null">
+        groupId = #{groupid,jdbcType=VARCHAR},
+      </if>
+      <if test="ownerandanonymousadmins != null">
+        ownerAndAnonymousAdmins = #{ownerandanonymousadmins,jdbcType=VARCHAR},
+      </if>
+      <if test="groupname != null">
+        groupName = #{groupname,jdbcType=VARCHAR},
+      </if>
+      <if test="keywordsflag != null">
+        keyWordsflag = #{keywordsflag,jdbcType=VARCHAR},
+      </if>
+      <if test="deletekeywordflag != null">
+        deleteKeywordFlag = #{deletekeywordflag,jdbcType=VARCHAR},
+      </if>
+      <if test="settingtimestamp != null">
+        settingTimeStamp = #{settingtimestamp,jdbcType=VARCHAR},
+      </if>
+      <if test="keywords != null">
+        keyWords = #{keywords,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="intogroupwelcomewords != null">
+        intoGroupWelcomeWords = #{intogroupwelcomewords,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="top.feiyangdigital.entity.GroupInfoWithBLOBs">
+    update groupinfo
+    set groupId = #{groupid,jdbcType=VARCHAR},
+      ownerAndAnonymousAdmins = #{ownerandanonymousadmins,jdbcType=VARCHAR},
+      groupName = #{groupname,jdbcType=VARCHAR},
+      keyWordsflag = #{keywordsflag,jdbcType=VARCHAR},
+      deleteKeywordFlag = #{deletekeywordflag,jdbcType=VARCHAR},
+      settingTimeStamp = #{settingtimestamp,jdbcType=VARCHAR},
+      keyWords = #{keywords,jdbcType=LONGVARCHAR},
+      intoGroupWelcomeWords = #{intogroupwelcomewords,jdbcType=LONGVARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="top.feiyangdigital.entity.GroupInfo">
+    update groupinfo
+    set groupId = #{groupid,jdbcType=VARCHAR},
+      ownerAndAnonymousAdmins = #{ownerandanonymousadmins,jdbcType=VARCHAR},
+      groupName = #{groupname,jdbcType=VARCHAR},
+      keyWordsflag = #{keywordsflag,jdbcType=VARCHAR},
+      deleteKeywordFlag = #{deletekeywordflag,jdbcType=VARCHAR},
+      settingTimeStamp = #{settingtimestamp,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>
