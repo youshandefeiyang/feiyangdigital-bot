@@ -29,5 +29,4 @@ public class TgBotApplication implements CommandLineRunner {
         TelegramBotsApi botsApi = new TelegramBotsApi(DefaultBotSession.class);
         botsApi.registerBot(tgBot);
     }
-    
 }
