@@ -49,6 +49,10 @@ docker-compose logs -f
 --------
 
 在 `/home/feiyangdigitalbotconf/` 目录下进行以下操作：
+- 停止并移除卷：
+```bash
+docker-compose down
+```
 - 拉取最新镜像：
 ```bash
 docker-compose pull  
