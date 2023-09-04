@@ -9,47 +9,43 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Paths;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 public class BaseInfo {
-    private static final String configPath = String.valueOf(Paths.get("").toAbsolutePath().resolve("config.json"));
+    private static final String CONFIG_PATH = String.valueOf(Paths.get("").toAbsolutePath().resolve("config.json"));
+    private static final JSONObject CONFIG;
+
+    static {
+        try {
+            CONFIG = readJson(CONFIG_PATH);
+        } catch (IOException e) {
+            throw new RuntimeException("加载配置文件失败 " + CONFIG_PATH, e);
+        }
+    }
 
     public static JSONObject readJson(String filePath) throws IOException {
-        FileInputStream fileInputStream = new FileInputStream(filePath);
-        InputStreamReader inputStreamReader = new InputStreamReader(fileInputStream, StandardCharsets.UTF_8);
-        BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+        try (FileInputStream fileInputStream = new FileInputStream(filePath);
+             InputStreamReader inputStreamReader = new InputStreamReader(fileInputStream, StandardCharsets.UTF_8);
+             BufferedReader bufferedReader = new BufferedReader(inputStreamReader)) {
 
-        StringBuilder sb = new StringBuilder();
-        String line;
-        while ((line = bufferedReader.readLine()) != null) {
-            sb.append(line);
+            StringBuilder sb = new StringBuilder();
+            String line;
+            while ((line = bufferedReader.readLine()) != null) {
+                sb.append(line);
+            }
+            return JSON.parseObject(sb.toString());
         }
-
-        bufferedReader.close();
-        inputStreamReader.close();
-        fileInputStream.close();
-
-        return JSON.parseObject(sb.toString());
     }
-    public static Map<String,String> getConfig() {
-        Map<String,String> map = new ConcurrentHashMap<>();
-        try {
-            JSONObject config = readJson(configPath);
-            map.put("botName",String.valueOf(config.getJSONObject("botConfig").get("name")));
-            map.put("botToken",String.valueOf(config.getJSONObject("botConfig").get("token")));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return map;
+
+    public static String getConfigValue(String key, String subKey) {
+        JSONObject subConfig = CONFIG.getJSONObject(key);
+        return (subConfig != null) ? subConfig.getString(subKey) : null;
     }
 
     public static String getBotName() {
-        return getConfig().get("botName");
+        return getConfigValue("botConfig", "name");
     }
 
     public static String getBotToken() {
-        return getConfig().get("botToken");
+        return getConfigValue("botConfig", "token");
     }
 }
