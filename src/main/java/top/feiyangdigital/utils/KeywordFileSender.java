@@ -42,8 +42,7 @@ public class KeywordFileSender {
             chatId = update.getMessage().getChatId().toString();
         }
         if (cooldownMap.isCooldownElapsed(userId, addRuleCacheMap.getGroupIdForUser(userId), 10000)) {
-
-            String keywords = groupInfoService.fetchBanKeywordsDataByGroupId(addRuleCacheMap.getGroupIdForUser(userId));
+            String keywords = groupInfoService.selAllByGroupId(addRuleCacheMap.getGroupIdForUser(userId)).getKeywords();
             if (keywords != null && !keywords.isEmpty()) {
                 File keywordFile = convertStringToFile(keywords.trim());
                 InputStream thumbStream = getClass().getClassLoader().getResourceAsStream("callback.png");

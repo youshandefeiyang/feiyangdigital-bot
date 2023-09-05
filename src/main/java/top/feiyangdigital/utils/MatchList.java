@@ -17,7 +17,7 @@ public class MatchList {
     private GroupInfoService groupInfoService;
 
     public List<KeywordsFormat> createBanKeyDeleteOptionList(Update update) {
-        String content = groupInfoService.fetchBanKeywordsDataByGroupId(update.getMessage().getChatId().toString());
+        String content = groupInfoService.selAllByGroupId(update.getMessage().getChatId().toString()).getKeywords();
         if (content!=null && !content.isEmpty()){
             return Arrays.stream(content.split("\\n{2,}"))
                     .map(String::trim)
