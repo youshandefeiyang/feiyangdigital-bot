@@ -7,7 +7,7 @@ spring:
 
 logging:
   level:
-    root: WARN
+    root: error
 
 mybatis:
   type-aliases-package: top.feiyangdigital.entity
