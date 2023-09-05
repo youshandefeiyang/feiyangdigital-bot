@@ -23,7 +23,7 @@ import java.util.Date;
 import java.util.List;
 
 @Component
-public class TgBot extends TelegramLongPollingBot {
+public class TgLongPollingBot extends TelegramLongPollingBot {
 
     private String botName;
     private String botToken;

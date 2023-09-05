@@ -1,6 +1,8 @@
 {
   "botConfig": {
+    "mode": "longPolling",
     "name": "",
-    "token": ""
+    "token": "",
+    "path": ""
   }
 }

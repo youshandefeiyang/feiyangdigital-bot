@@ -41,11 +41,19 @@ public class BaseInfo {
         return (subConfig != null) ? subConfig.getString(subKey) : null;
     }
 
+    public static String getBotMode(){
+        return getConfigValue("botConfig", "mode");
+    }
+
     public static String getBotName() {
         return getConfigValue("botConfig", "name");
     }
 
     public static String getBotToken() {
         return getConfigValue("botConfig", "token");
+    }
+
+    public static String getBotPath() {
+        return getConfigValue("botConfig","path");
     }
 }
