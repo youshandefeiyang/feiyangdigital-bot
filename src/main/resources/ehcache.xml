@@ -1,0 +1,10 @@
+<ehcache>
+    <!-- 针对groupinfo表的缓存 -->
+    <cache
+            name="groupinfo"
+            maxElementsInMemory="10000"
+            eternal="true"
+            overflowToDisk="false"
+            memoryStoreEvictionPolicy="LRU"
+    />
+</ehcache>

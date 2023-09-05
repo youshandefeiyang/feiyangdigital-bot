@@ -1,6 +1,8 @@
 package top.feiyangdigital.sqlService;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,6 +19,7 @@ public class GroupInfoService {
     @Autowired
     private GroupInfoMapper groupInfoMapper;
 
+    @CacheEvict(value = "groupinfo", key = "#record.groupid")
     public boolean addGroup(GroupInfoWithBLOBs record) {
         return groupInfoMapper.insertSelective(record) > 0;
     }
@@ -32,6 +35,7 @@ public class GroupInfoService {
         return true;
     }
 
+    @CacheEvict(value = "groupinfo", key = "#chatId")
     public boolean updateAdminListByGroupId(GroupInfoWithBLOBs groupInfoWithBLOBs, String chatId) {
         GroupInfoExample example = new GroupInfoExample();
         GroupInfoExample.Criteria criteria = example.createCriteria();
@@ -39,6 +43,7 @@ public class GroupInfoService {
         return groupInfoMapper.updateByExampleSelective(groupInfoWithBLOBs, example) > 0;
     }
 
+    @Cacheable(value = "groupinfo", key = "#groupId")
     @Transactional(propagation = Propagation.NEVER)
     public GroupInfoWithBLOBs selAllByGroupId(String groupId){
         GroupInfoExample example = new GroupInfoExample();
@@ -51,6 +56,7 @@ public class GroupInfoService {
         return null;
     }
 
+    @Cacheable(value = "groupinfo", key = "#groupId")
     @Transactional(propagation = Propagation.NEVER)
     public String fetchBanKeywordsDataByGroupId(String groupId){
         GroupInfoExample example = new GroupInfoExample();
