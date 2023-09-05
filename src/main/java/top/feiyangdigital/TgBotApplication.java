@@ -23,6 +23,7 @@ public class TgBotApplication implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
+        System.out.println("TgBotApplication.run");
         tgBot.setBotName(BaseInfo.getBotName());
         tgBot.setBotToken(BaseInfo.getBotToken());
         tgBot.setGroupCommands();
