@@ -23,7 +23,6 @@ public class CommonCallBack {
 
     public void backMainMenu(AbsSender sender, Update update) {
         String userId = update.getCallbackQuery().getFrom().getId().toString();
-        
         List<String> keywordsButtons = new ArrayList<>();
         KeywordsFormat keywordsFormat = new KeywordsFormat();
         keywordsButtons.add("📝自动回复##autoReply%%⚪️功能占位##zhanwei");
