@@ -17,14 +17,14 @@ public class TgWebhookBot extends TelegramWebhookBot {
     private String botPath;
 
     @Autowired
-    private TgLongPollingBot tgLongPollingBot;
+    private CommonFunction commonFunction;
 
     @Autowired
     private GroupCommands groupCommands;
 
     @Override
     public BotApiMethod<?> onWebhookUpdateReceived(Update update) {
-        tgLongPollingBot.onUpdateReceived(update);
+        commonFunction.mainFunc(this,update);
         return null;
     }
 

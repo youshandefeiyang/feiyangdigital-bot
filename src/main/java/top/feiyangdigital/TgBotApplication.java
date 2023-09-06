@@ -43,8 +43,6 @@ public class TgBotApplication implements CommandLineRunner {
             botsApi.registerBot(tgLongPollingBot);
         } else if ("webhook".equals(BaseInfo.getBotMode())) {
             log.info("webhook模式已启动");
-            tgLongPollingBot.setBotName(BaseInfo.getBotName());
-            tgLongPollingBot.setBotToken(BaseInfo.getBotToken());
             tgWebhookBot.setBotToken(BaseInfo.getBotToken());
             tgWebhookBot.setGroupCommands();
             SetWebhook setWebhook = SetWebhook.builder().url(BaseInfo.getBotPath()).build();
