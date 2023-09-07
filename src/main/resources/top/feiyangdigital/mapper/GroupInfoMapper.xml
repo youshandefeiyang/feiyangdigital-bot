@@ -13,6 +13,7 @@
   <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="top.feiyangdigital.entity.GroupInfoWithBLOBs">
     <result column="keyWords" jdbcType="LONGVARCHAR" property="keywords" />
     <result column="intoGroupWelcomeWords" jdbcType="LONGVARCHAR" property="intogroupwelcomewords" />
+    <result column="ChannelSpammersWhiteList" jdbcType="LONGVARCHAR" property="channelspammerswhitelist" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <where>
@@ -77,7 +78,7 @@
     settingTimeStamp
   </sql>
   <sql id="Blob_Column_List">
-    keyWords, intoGroupWelcomeWords
+    keyWords, intoGroupWelcomeWords, ChannelSpammersWhiteList
   </sql>
   <select id="selectByExampleWithBLOBs" parameterType="top.feiyangdigital.entity.GroupInfoExample" resultMap="ResultMapWithBLOBs">
     select
@@ -146,12 +147,12 @@
   <insert id="insert" keyColumn="id" keyProperty="id" parameterType="top.feiyangdigital.entity.GroupInfoWithBLOBs" useGeneratedKeys="true">
     insert into groupinfo (groupId, ownerAndAnonymousAdmins, 
       groupName, keyWordsflag, deleteKeywordFlag, 
-      settingTimeStamp, keyWords, intoGroupWelcomeWords
-      )
+      settingTimeStamp, keyWords, intoGroupWelcomeWords, 
+      ChannelSpammersWhiteList)
     values (#{groupid,jdbcType=VARCHAR}, #{ownerandanonymousadmins,jdbcType=VARCHAR}, 
       #{groupname,jdbcType=VARCHAR}, #{keywordsflag,jdbcType=VARCHAR}, #{deletekeywordflag,jdbcType=VARCHAR}, 
-      #{settingtimestamp,jdbcType=VARCHAR}, #{keywords,jdbcType=LONGVARCHAR}, #{intogroupwelcomewords,jdbcType=LONGVARCHAR}
-      )
+      #{settingtimestamp,jdbcType=VARCHAR}, #{keywords,jdbcType=LONGVARCHAR}, #{intogroupwelcomewords,jdbcType=LONGVARCHAR}, 
+      #{channelspammerswhitelist,jdbcType=LONGVARCHAR})
   </insert>
   <insert id="insertSelective" keyColumn="id" keyProperty="id" parameterType="top.feiyangdigital.entity.GroupInfoWithBLOBs" useGeneratedKeys="true">
     insert into groupinfo
@@ -180,6 +181,9 @@
       <if test="intogroupwelcomewords != null">
         intoGroupWelcomeWords,
       </if>
+      <if test="channelspammerswhitelist != null">
+        ChannelSpammersWhiteList,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="groupid != null">
@@ -205,6 +209,9 @@
       </if>
       <if test="intogroupwelcomewords != null">
         #{intogroupwelcomewords,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="channelspammerswhitelist != null">
+        #{channelspammerswhitelist,jdbcType=LONGVARCHAR},
       </if>
     </trim>
   </insert>
@@ -244,6 +251,9 @@
       <if test="record.intogroupwelcomewords != null">
         intoGroupWelcomeWords = #{record.intogroupwelcomewords,jdbcType=LONGVARCHAR},
       </if>
+      <if test="record.channelspammerswhitelist != null">
+        ChannelSpammersWhiteList = #{record.channelspammerswhitelist,jdbcType=LONGVARCHAR},
+      </if>
     </set>
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
@@ -259,7 +269,8 @@
       deleteKeywordFlag = #{record.deletekeywordflag,jdbcType=VARCHAR},
       settingTimeStamp = #{record.settingtimestamp,jdbcType=VARCHAR},
       keyWords = #{record.keywords,jdbcType=LONGVARCHAR},
-      intoGroupWelcomeWords = #{record.intogroupwelcomewords,jdbcType=LONGVARCHAR}
+      intoGroupWelcomeWords = #{record.intogroupwelcomewords,jdbcType=LONGVARCHAR},
+      ChannelSpammersWhiteList = #{record.channelspammerswhitelist,jdbcType=LONGVARCHAR}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -304,6 +315,9 @@
       <if test="intogroupwelcomewords != null">
         intoGroupWelcomeWords = #{intogroupwelcomewords,jdbcType=LONGVARCHAR},
       </if>
+      <if test="channelspammerswhitelist != null">
+        ChannelSpammersWhiteList = #{channelspammerswhitelist,jdbcType=LONGVARCHAR},
+      </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
@@ -316,7 +330,8 @@
       deleteKeywordFlag = #{deletekeywordflag,jdbcType=VARCHAR},
       settingTimeStamp = #{settingtimestamp,jdbcType=VARCHAR},
       keyWords = #{keywords,jdbcType=LONGVARCHAR},
-      intoGroupWelcomeWords = #{intogroupwelcomewords,jdbcType=LONGVARCHAR}
+      intoGroupWelcomeWords = #{intogroupwelcomewords,jdbcType=LONGVARCHAR},
+      ChannelSpammersWhiteList = #{channelspammerswhitelist,jdbcType=LONGVARCHAR}
     where id = #{id,jdbcType=INTEGER}
   </update>
   <update id="updateByPrimaryKey" parameterType="top.feiyangdigital.entity.GroupInfo">

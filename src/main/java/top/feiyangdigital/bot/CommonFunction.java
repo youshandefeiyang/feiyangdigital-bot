@@ -65,7 +65,6 @@ public class CommonFunction {
     private DeleteSingleRuleByKeyWord deleteSingleRuleByKeyWord;
 
     public void mainFunc(AbsSender sender, Update update){
-
         if (update.hasMessage() && update.getMessage().getChat().isUserChat()) {
             if (update.getMessage().getText().contains("start _")) {
                 GroupInfoWithBLOBs groupInfoWithBLOBs = groupInfoService.selAllByGroupId(update.getMessage().getText().split("_")[1]);
