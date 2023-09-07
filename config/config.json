@@ -4,5 +4,9 @@
     "name": "",
     "token": "",
     "path": ""
+  },
+  "groupLimit": {
+    "status": "close",
+    "whiteList": ["",""]
   }
 }

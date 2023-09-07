@@ -115,7 +115,7 @@ public class CommonFunction {
         }
 
         if (update.hasMessage() && (update.getMessage().getNewChatMembers() != null && !update.getMessage().getNewChatMembers().isEmpty())) {
-            botFirstIntoGroup.handleMessage(update.getMessage());
+            botFirstIntoGroup.handleMessage(sender,update.getMessage());
         }
 
 
