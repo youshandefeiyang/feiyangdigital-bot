@@ -29,6 +29,10 @@ public class MessageHandle {
         if (messageText == null) {
             return;
         }
+        //这代表的是从群组绑定频道发过来的消息，直接返回，不做处理
+        if ("Telegram".equals(update.getMessage().getFrom().getFirstName()) && update.getMessage().getSenderChat().isChannelChat()) {
+            return;
+        }
 
         for (KeywordsFormat keywordFormat : keywordsList) {
             Map<String, String> currentMap = keywordFormat.getDelMap();
@@ -53,10 +57,10 @@ public class MessageHandle {
                         int deleteReplyAfterYSeconds = Integer.parseInt(currentMap.get("DeleteReplyAfterYSeconds"));
                         if (deleteReplyAfterYSeconds == 0) {
                             // 立即删除reply
-                            timerDelete.sendAndDeleteMessageImmediately(sender, sendContent.createResponseMessage(update, keywordFormat,"markdown"));
+                            timerDelete.sendAndDeleteMessageImmediately(sender, sendContent.createResponseMessage(update, keywordFormat, "markdown"));
                         } else {
                             // 使用timer删除reply
-                            timerDelete.sendTimedMessage(sender, sendContent.createResponseMessage(update, keywordFormat,"markdown"), deleteReplyAfterYSeconds);
+                            timerDelete.sendTimedMessage(sender, sendContent.createResponseMessage(update, keywordFormat, "markdown"), deleteReplyAfterYSeconds);
                         }
                     }
                     break;
@@ -65,7 +69,7 @@ public class MessageHandle {
             else {
                 if (pattern.matcher(messageText).find()) {
                     try {
-                        sender.execute(sendContent.replyToUser(update, keywordFormat,"markdown"));
+                        sender.execute(sendContent.replyToUser(update, keywordFormat, "markdown"));
                     } catch (TelegramApiException e) {
                         e.printStackTrace();
                     }
