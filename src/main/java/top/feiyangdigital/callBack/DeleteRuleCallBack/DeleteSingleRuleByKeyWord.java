@@ -40,10 +40,6 @@ public class DeleteSingleRuleByKeyWord {
                 String settingTimestamp = groupInfoWithBLOBs.getSettingtimestamp();
                 String content = groupInfoWithBLOBs.getKeywords();
                 if (settingTimestamp != null && !settingTimestamp.isEmpty()) {
-                    long date = new Date().getTime();
-                    
-                    
-                    
                     if (new Date().getTime() - Long.parseLong(settingTimestamp) > (15 * 60 * 1000)) {
                         try {
                             sender.execute(sendContent.messageText(update, "本次设置超时，请去群里重新发送/setbot"));

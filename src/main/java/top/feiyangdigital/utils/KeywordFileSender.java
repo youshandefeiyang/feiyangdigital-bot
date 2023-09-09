@@ -6,6 +6,8 @@ import org.telegram.telegrambots.meta.api.methods.send.SendDocument;
 import org.telegram.telegrambots.meta.api.objects.InputFile;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.bots.AbsSender;
+import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
+import top.feiyangdigital.entity.GroupInfoWithBLOBs;
 import top.feiyangdigital.sqlService.GroupInfoService;
 import top.feiyangdigital.utils.ruleCacheMap.AddRuleCacheMap;
 
@@ -15,6 +17,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Date;
 
 @Component
 public class KeywordFileSender {
@@ -41,30 +44,42 @@ public class KeywordFileSender {
             userId = update.getMessage().getFrom().getId().toString();
             chatId = update.getMessage().getChatId().toString();
         }
-        if (cooldownMap.isCooldownElapsed(userId, addRuleCacheMap.getGroupIdForUser(userId), 10000)) {
-            String keywords = groupInfoService.selAllByGroupId(addRuleCacheMap.getGroupIdForUser(userId)).getKeywords();
-            if (keywords != null && !keywords.isEmpty()) {
-                File keywordFile = convertStringToFile(keywords.trim());
-                InputStream thumbStream = getClass().getClassLoader().getResourceAsStream("callback.png");
-                InputFile thumb = new InputFile(thumbStream, "callback.png");
-                SendDocument sendDocument = new SendDocument();
-                sendDocument.setChatId(chatId);
-                sendDocument.setDocument(new InputFile(keywordFile, "所有规则.txt"));
-                sendDocument.setThumbnail(thumb);
-                sendDocument.setCaption("查询所有规则冷却时间为10秒，请勿频繁点击！");
-
+        GroupInfoWithBLOBs groupInfoWithBLOBs = groupInfoService.selAllByGroupId(addRuleCacheMap.getGroupIdForUser(userId));
+        String settingTimestamp = groupInfoWithBLOBs.getSettingtimestamp();
+        if (settingTimestamp != null && !settingTimestamp.isEmpty()) {
+            if (new Date().getTime() - Long.parseLong(settingTimestamp) > (15 * 60 * 1000)) {
                 try {
-                    sender.execute(sendDocument);
-                    cooldownMap.setCooldown(userId, addRuleCacheMap.getGroupIdForUser(userId));  // 设置冷却时间
-                } catch (Exception e) {
+                    sender.execute(sendContent.messageText(update, "本次设置超时，请去群里重新发送/setbot"));
+                } catch (TelegramApiException e) {
                     e.printStackTrace();
                 }
-            }
-        } else {
-            try {
-                sender.execute(sendContent.messageText(update, "查询所有规则冷却时间为10秒，请勿频繁点击！"));
-            } catch (Exception e) {
-                e.printStackTrace();
+            } else {
+                if (cooldownMap.isCooldownElapsed(userId, addRuleCacheMap.getGroupIdForUser(userId), 10000)) {
+                    String keywords = groupInfoWithBLOBs.getKeywords();
+                    if (keywords != null && !keywords.isEmpty()) {
+                        File keywordFile = convertStringToFile(keywords.trim());
+                        InputStream thumbStream = getClass().getClassLoader().getResourceAsStream("callback.png");
+                        InputFile thumb = new InputFile(thumbStream, "callback.png");
+                        SendDocument sendDocument = new SendDocument();
+                        sendDocument.setChatId(chatId);
+                        sendDocument.setDocument(new InputFile(keywordFile, "所有规则.txt"));
+                        sendDocument.setThumbnail(thumb);
+                        sendDocument.setCaption("查询所有规则冷却时间为10秒，请勿频繁点击！");
+
+                        try {
+                            sender.execute(sendDocument);
+                            cooldownMap.setCooldown(userId, addRuleCacheMap.getGroupIdForUser(userId));  // 设置冷却时间
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                } else {
+                    try {
+                        sender.execute(sendContent.messageText(update, "查询所有规则冷却时间为10秒，请勿频繁点击！"));
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
             }
         }
     }
