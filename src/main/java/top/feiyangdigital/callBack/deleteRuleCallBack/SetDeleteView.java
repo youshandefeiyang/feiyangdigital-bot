@@ -1,4 +1,4 @@
-package top.feiyangdigital.callBack.DeleteRuleCallBack;
+package top.feiyangdigital.callBack.deleteRuleCallBack;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

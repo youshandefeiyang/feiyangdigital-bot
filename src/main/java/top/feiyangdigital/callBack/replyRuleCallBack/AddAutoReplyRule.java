@@ -59,7 +59,7 @@ public class AddAutoReplyRule {
                             }
                             GroupInfoWithBLOBs groupInfoWithBLOBs1 = new GroupInfoWithBLOBs();
                             groupInfoWithBLOBs1.setKeywords(newContent);
-                            if (groupInfoService.updateAdminListByGroupId(groupInfoWithBLOBs1, addRuleCacheMap.getGroupIdForUser(userId))) {
+                            if (groupInfoService.updateSelectiveByChatId(groupInfoWithBLOBs1, addRuleCacheMap.getGroupIdForUser(userId))) {
                                 try {
                                     sender.execute(sendContent.createResponseMessage(update, new KeywordsFormat(waitRule), "html"));
                                 } catch (TelegramApiException e) {

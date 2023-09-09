@@ -2,19 +2,22 @@ package top.feiyangdigital.bot;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.bots.AbsSender;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
-import top.feiyangdigital.callBack.DeleteRuleCallBack.DeleteSingleRuleByKeyWord;
+import top.feiyangdigital.callBack.deleteRuleCallBack.DeleteSingleRuleByKeyWord;
 import top.feiyangdigital.callBack.replyRuleCallBack.AddAutoReplyRule;
 import top.feiyangdigital.entity.BaseInfo;
 import top.feiyangdigital.entity.GroupInfoWithBLOBs;
 import top.feiyangdigital.entity.KeywordsFormat;
-import top.feiyangdigital.handleService.BotFirstIntoGroup;
+import top.feiyangdigital.handleService.CaptchaGenerator;
+import top.feiyangdigital.handleService.NewMemberIntoGroup;
 import top.feiyangdigital.handleService.BotHelper;
 import top.feiyangdigital.handleService.MessageHandle;
 import top.feiyangdigital.sqlService.GroupInfoService;
 import top.feiyangdigital.utils.*;
+import top.feiyangdigital.utils.groupCaptch.CaptchaManager;
 import top.feiyangdigital.utils.ruleCacheMap.AddRuleCacheMap;
 import top.feiyangdigital.utils.ruleCacheMap.DeleteRuleCacheMap;
 
@@ -32,7 +35,7 @@ public class CommonFunction {
     private TimerDelete timerDelete;
 
     @Autowired
-    private BotFirstIntoGroup botFirstIntoGroup;
+    private NewMemberIntoGroup newMemberIntoGroup;
 
     @Autowired
     private BotHelper botHelper;
@@ -64,14 +67,38 @@ public class CommonFunction {
     @Autowired
     private DeleteSingleRuleByKeyWord deleteSingleRuleByKeyWord;
 
-    public void mainFunc(AbsSender sender, Update update){
+    @Autowired
+    private CaptchaGenerator captchaGenerator;
+
+    @Autowired
+    private CaptchaManager captchaManager;
+
+
+    public void mainFunc(AbsSender sender, Update update) {
         if (update.hasMessage() && update.getMessage().getChat().isUserChat()) {
-            if (update.getMessage().getText().contains("start _")) {
-                GroupInfoWithBLOBs groupInfoWithBLOBs = groupInfoService.selAllByGroupId(update.getMessage().getText().split("_")[1]);
+
+            if (update.getMessage().getText().contains("start _groupId")) {
+                GroupInfoWithBLOBs groupInfoWithBLOBs = groupInfoService.selAllByGroupId(update.getMessage().getText().split("_")[1].substring(7));
                 if (groupInfoWithBLOBs.getOwnerandanonymousadmins().contains(update.getMessage().getFrom().getId().toString())) {
                     addRuleCacheMap.updateUserMapping(update.getMessage().getFrom().getId().toString(), groupInfoWithBLOBs.getGroupid(), groupInfoWithBLOBs.getGroupname(), groupInfoWithBLOBs.getKeywordsflag());
                     deleteRuleCacheMap.updateUserMapping(update.getMessage().getFrom().getId().toString(), groupInfoWithBLOBs.getGroupid(), groupInfoWithBLOBs.getGroupname(), groupInfoWithBLOBs.getDeletekeywordflag());
                     botHelper.sendInlineKeyboard(sender, update);
+                }
+            } else if (update.getMessage().getText().contains("start _intoGroupInfo")) {
+                String[] idGroup = update.getMessage().getText().split("_")[1].substring(13).split("and");
+                String chatId = idGroup[0];
+                String userId = idGroup[1];
+                String currentChatId = update.getMessage().getChatId().toString();
+                String firstName = update.getMessage().getChat().getFirstName();
+                if (update.getMessage().getFrom().getId().toString().equals(userId) && "open".equals(groupInfoService.selAllByGroupId(chatId).getIntogroupcheckflag())) {
+
+                    captchaGenerator.sendCaptcha(sender, update.getMessage().getFrom().getId(), chatId, currentChatId, firstName);
+                } else {
+                    try {
+                        sender.execute(sendContent.messageText(update, "❌这不是你的验证"));
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
             } else if ("/start".equals(update.getMessage().getText())) {
                 String url = String.format("https://t.me/%s?startgroup=start", BaseInfo.getBotName());
@@ -92,12 +119,16 @@ public class CommonFunction {
                     addAutoReplyRule.addNewRule(sender, update);
                 } else if ("candelete".equals(deleteRuleCacheMap.getDeleteKeywordFlagMap(userId))) {
                     deleteSingleRuleByKeyWord.DeleteOption(sender, update);
+                } else if (StringUtils.hasText(captchaManager.getAnswerForUser(userId))) {
+                    captchaGenerator.answerReplyhandle(sender, update);
+
                 }
             }
 
         }
 
         if (update.hasMessage() && (update.getMessage().getChat().isGroupChat() || update.getMessage().getChat().isSuperGroupChat())) {
+
             List<KeywordsFormat> keywordsFormatList = matchList.createBanKeyDeleteOptionList(update);
             if (keywordsFormatList != null) {
                 messageHandle.processUserMessage(sender, update, keywordsFormatList);
@@ -107,7 +138,7 @@ public class CommonFunction {
                 groupInfo.setOwnerandanonymousadmins(adminList.fetchHighAdminList(sender, update));
                 groupInfo.setGroupname(update.getMessage().getChat().getTitle());
                 groupInfo.setSettingtimestamp(String.valueOf(new Date().getTime()));
-                groupInfoService.updateAdminListByGroupId(groupInfo, update.getMessage().getChatId().toString());
+                groupInfoService.updateSelectiveByChatId(groupInfo, update.getMessage().getChatId().toString());
                 botHelper.sendAdminButton(sender, update);
             } else if ("/setbot".equals(update.getMessage().getText()) || ("/setbot@" + BaseInfo.getBotName()).equals(update.getMessage().getText())) {
                 timerDelete.sendTimedMessage(sender, sendContent.messageText(update, "你没有权限执行此命令"), 10);
@@ -115,7 +146,7 @@ public class CommonFunction {
         }
 
         if (update.hasMessage() && (update.getMessage().getNewChatMembers() != null && !update.getMessage().getNewChatMembers().isEmpty())) {
-            botFirstIntoGroup.handleMessage(sender,update.getMessage());
+            newMemberIntoGroup.handleMessage(sender, update);
         }
 
 

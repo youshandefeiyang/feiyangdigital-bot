@@ -1,16 +1,14 @@
-package top.feiyangdigital.callBack.DeleteRuleCallBack;
+package top.feiyangdigital.callBack.deleteRuleCallBack;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.Update;
-import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 import org.telegram.telegrambots.meta.bots.AbsSender;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import top.feiyangdigital.entity.GroupInfoWithBLOBs;
 import top.feiyangdigital.entity.KeywordsFormat;
 import top.feiyangdigital.sqlService.GroupInfoService;
 import top.feiyangdigital.utils.DeleteGropuRuleMap;
-import top.feiyangdigital.utils.ruleCacheMap.AddRuleCacheMap;
 import top.feiyangdigital.utils.SendContent;
 import top.feiyangdigital.utils.ruleCacheMap.DeleteRuleCacheMap;
 

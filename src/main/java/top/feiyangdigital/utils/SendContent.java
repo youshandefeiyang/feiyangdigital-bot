@@ -15,7 +15,7 @@ import java.util.List;
 @Component
 public class SendContent {
     public SendMessage messageText(Update update,String text){
-        String chatId = "";
+        String chatId;
         if (update.getMessage() == null) {
             chatId = update.getCallbackQuery().getMessage().getChatId().toString();
         } else {

@@ -36,7 +36,7 @@ public class GroupInfoService {
     }
 
     @CacheEvict(value = "groupinfo", key = "#chatId")
-    public boolean updateAdminListByGroupId(GroupInfoWithBLOBs groupInfoWithBLOBs, String chatId) {
+    public boolean updateSelectiveByChatId(GroupInfoWithBLOBs groupInfoWithBLOBs, String chatId) {
         GroupInfoExample example = new GroupInfoExample();
         GroupInfoExample.Criteria criteria = example.createCriteria();
         criteria.andGroupidEqualTo(chatId);

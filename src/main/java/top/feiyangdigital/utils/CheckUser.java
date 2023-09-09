@@ -21,7 +21,7 @@ public class CheckUser {
     private AdminList adminList;
 
 
-    public boolean isUserAdmin(AbsSender sender, Update update) {
+    public boolean isGroupAdmin(AbsSender sender, Update update) {
         for (ChatMember admin : adminList.getAdmins(sender, update.getMessage().getChatId().toString())) {
             if ("GroupAnonymousBot".equals(update.getMessage().getFrom().getUserName()) || admin.getUser().getId().equals(update.getMessage().getFrom().getId())) {
                 return true;

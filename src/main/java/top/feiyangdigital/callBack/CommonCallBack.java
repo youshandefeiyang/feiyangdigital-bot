@@ -25,7 +25,7 @@ public class CommonCallBack {
         String userId = update.getCallbackQuery().getFrom().getId().toString();
         List<String> keywordsButtons = new ArrayList<>();
         KeywordsFormat keywordsFormat = new KeywordsFormat();
-        keywordsButtons.add("📝自动回复##autoReply%%⚪️功能占位##zhanwei");
+        keywordsButtons.add("📝自动回复##autoReply%%⚙️群组设置##groupSetting");
         keywordsButtons.add("👨🏻‍💻仓库地址$$https://github.com/youshandefeiyang/feiyangdigital-bot%%👥官方群组$$https://t.me/feiyangdigital");
         keywordsButtons.add("❌关闭菜单##closeMenu");
         keywordsFormat.setReplyText("当前群组：<b>"+ addRuleCacheMap.getGroupNameForUser(userId)+"</b>\n当前群组ID：<b>"+ addRuleCacheMap.getGroupIdForUser(userId)+"</b>\n当前可输入状态：<b>"+ addRuleCacheMap.getKeywordsFlagForUser(userId)+"</b>\n⚡️请选择一个操作!⚡️");
