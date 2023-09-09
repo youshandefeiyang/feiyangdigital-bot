@@ -6,9 +6,12 @@
     <result column="groupId" jdbcType="VARCHAR" property="groupid" />
     <result column="ownerAndAnonymousAdmins" jdbcType="VARCHAR" property="ownerandanonymousadmins" />
     <result column="groupName" jdbcType="VARCHAR" property="groupname" />
-    <result column="keyWordsflag" jdbcType="VARCHAR" property="keywordsflag" />
+    <result column="keyWordsFlag" jdbcType="VARCHAR" property="keywordsflag" />
     <result column="deleteKeywordFlag" jdbcType="VARCHAR" property="deletekeywordflag" />
     <result column="settingTimeStamp" jdbcType="VARCHAR" property="settingtimestamp" />
+    <result column="intoGroupCheckFlag" jdbcType="VARCHAR" property="intogroupcheckflag" />
+    <result column="intoGroupWelcomeFlag" jdbcType="VARCHAR" property="intogroupwelcomeflag" />
+    <result column="intoGroupUserNameCheckFlag" jdbcType="VARCHAR" property="intogroupusernamecheckflag" />
   </resultMap>
   <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="top.feiyangdigital.entity.GroupInfoWithBLOBs">
     <result column="keyWords" jdbcType="LONGVARCHAR" property="keywords" />
@@ -74,8 +77,8 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, groupId, ownerAndAnonymousAdmins, groupName, keyWordsflag, deleteKeywordFlag, 
-    settingTimeStamp
+    id, groupId, ownerAndAnonymousAdmins, groupName, keyWordsFlag, deleteKeywordFlag, 
+    settingTimeStamp, intoGroupCheckFlag, intoGroupWelcomeFlag, intoGroupUserNameCheckFlag
   </sql>
   <sql id="Blob_Column_List">
     keyWords, intoGroupRules, ChannelSpammersWhiteList
@@ -146,13 +149,17 @@
   </delete>
   <insert id="insert" keyColumn="id" keyProperty="id" parameterType="top.feiyangdigital.entity.GroupInfoWithBLOBs" useGeneratedKeys="true">
     insert into groupinfo (groupId, ownerAndAnonymousAdmins, 
-      groupName, keyWordsflag, deleteKeywordFlag, 
-      settingTimeStamp, keyWords, intoGroupRules, 
-      ChannelSpammersWhiteList)
+      groupName, keyWordsFlag, deleteKeywordFlag, 
+      settingTimeStamp, intoGroupCheckFlag, intoGroupWelcomeFlag, 
+      intoGroupUserNameCheckFlag, keyWords, 
+      intoGroupRules, ChannelSpammersWhiteList
+      )
     values (#{groupid,jdbcType=VARCHAR}, #{ownerandanonymousadmins,jdbcType=VARCHAR}, 
       #{groupname,jdbcType=VARCHAR}, #{keywordsflag,jdbcType=VARCHAR}, #{deletekeywordflag,jdbcType=VARCHAR}, 
-      #{settingtimestamp,jdbcType=VARCHAR}, #{keywords,jdbcType=LONGVARCHAR}, #{intogrouprules,jdbcType=LONGVARCHAR}, 
-      #{channelspammerswhitelist,jdbcType=LONGVARCHAR})
+      #{settingtimestamp,jdbcType=VARCHAR}, #{intogroupcheckflag,jdbcType=VARCHAR}, #{intogroupwelcomeflag,jdbcType=VARCHAR}, 
+      #{intogroupusernamecheckflag,jdbcType=VARCHAR}, #{keywords,jdbcType=LONGVARCHAR}, 
+      #{intogrouprules,jdbcType=LONGVARCHAR}, #{channelspammerswhitelist,jdbcType=LONGVARCHAR}
+      )
   </insert>
   <insert id="insertSelective" keyColumn="id" keyProperty="id" parameterType="top.feiyangdigital.entity.GroupInfoWithBLOBs" useGeneratedKeys="true">
     insert into groupinfo
@@ -167,13 +174,22 @@
         groupName,
       </if>
       <if test="keywordsflag != null">
-        keyWordsflag,
+        keyWordsFlag,
       </if>
       <if test="deletekeywordflag != null">
         deleteKeywordFlag,
       </if>
       <if test="settingtimestamp != null">
         settingTimeStamp,
+      </if>
+      <if test="intogroupcheckflag != null">
+        intoGroupCheckFlag,
+      </if>
+      <if test="intogroupwelcomeflag != null">
+        intoGroupWelcomeFlag,
+      </if>
+      <if test="intogroupusernamecheckflag != null">
+        intoGroupUserNameCheckFlag,
       </if>
       <if test="keywords != null">
         keyWords,
@@ -203,6 +219,15 @@
       </if>
       <if test="settingtimestamp != null">
         #{settingtimestamp,jdbcType=VARCHAR},
+      </if>
+      <if test="intogroupcheckflag != null">
+        #{intogroupcheckflag,jdbcType=VARCHAR},
+      </if>
+      <if test="intogroupwelcomeflag != null">
+        #{intogroupwelcomeflag,jdbcType=VARCHAR},
+      </if>
+      <if test="intogroupusernamecheckflag != null">
+        #{intogroupusernamecheckflag,jdbcType=VARCHAR},
       </if>
       <if test="keywords != null">
         #{keywords,jdbcType=LONGVARCHAR},
@@ -237,13 +262,22 @@
         groupName = #{record.groupname,jdbcType=VARCHAR},
       </if>
       <if test="record.keywordsflag != null">
-        keyWordsflag = #{record.keywordsflag,jdbcType=VARCHAR},
+        keyWordsFlag = #{record.keywordsflag,jdbcType=VARCHAR},
       </if>
       <if test="record.deletekeywordflag != null">
         deleteKeywordFlag = #{record.deletekeywordflag,jdbcType=VARCHAR},
       </if>
       <if test="record.settingtimestamp != null">
         settingTimeStamp = #{record.settingtimestamp,jdbcType=VARCHAR},
+      </if>
+      <if test="record.intogroupcheckflag != null">
+        intoGroupCheckFlag = #{record.intogroupcheckflag,jdbcType=VARCHAR},
+      </if>
+      <if test="record.intogroupwelcomeflag != null">
+        intoGroupWelcomeFlag = #{record.intogroupwelcomeflag,jdbcType=VARCHAR},
+      </if>
+      <if test="record.intogroupusernamecheckflag != null">
+        intoGroupUserNameCheckFlag = #{record.intogroupusernamecheckflag,jdbcType=VARCHAR},
       </if>
       <if test="record.keywords != null">
         keyWords = #{record.keywords,jdbcType=LONGVARCHAR},
@@ -265,9 +299,12 @@
       groupId = #{record.groupid,jdbcType=VARCHAR},
       ownerAndAnonymousAdmins = #{record.ownerandanonymousadmins,jdbcType=VARCHAR},
       groupName = #{record.groupname,jdbcType=VARCHAR},
-      keyWordsflag = #{record.keywordsflag,jdbcType=VARCHAR},
+      keyWordsFlag = #{record.keywordsflag,jdbcType=VARCHAR},
       deleteKeywordFlag = #{record.deletekeywordflag,jdbcType=VARCHAR},
       settingTimeStamp = #{record.settingtimestamp,jdbcType=VARCHAR},
+      intoGroupCheckFlag = #{record.intogroupcheckflag,jdbcType=VARCHAR},
+      intoGroupWelcomeFlag = #{record.intogroupwelcomeflag,jdbcType=VARCHAR},
+      intoGroupUserNameCheckFlag = #{record.intogroupusernamecheckflag,jdbcType=VARCHAR},
       keyWords = #{record.keywords,jdbcType=LONGVARCHAR},
       intoGroupRules = #{record.intogrouprules,jdbcType=LONGVARCHAR},
       ChannelSpammersWhiteList = #{record.channelspammerswhitelist,jdbcType=LONGVARCHAR}
@@ -281,9 +318,12 @@
       groupId = #{record.groupid,jdbcType=VARCHAR},
       ownerAndAnonymousAdmins = #{record.ownerandanonymousadmins,jdbcType=VARCHAR},
       groupName = #{record.groupname,jdbcType=VARCHAR},
-      keyWordsflag = #{record.keywordsflag,jdbcType=VARCHAR},
+      keyWordsFlag = #{record.keywordsflag,jdbcType=VARCHAR},
       deleteKeywordFlag = #{record.deletekeywordflag,jdbcType=VARCHAR},
-      settingTimeStamp = #{record.settingtimestamp,jdbcType=VARCHAR}
+      settingTimeStamp = #{record.settingtimestamp,jdbcType=VARCHAR},
+      intoGroupCheckFlag = #{record.intogroupcheckflag,jdbcType=VARCHAR},
+      intoGroupWelcomeFlag = #{record.intogroupwelcomeflag,jdbcType=VARCHAR},
+      intoGroupUserNameCheckFlag = #{record.intogroupusernamecheckflag,jdbcType=VARCHAR}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -301,13 +341,22 @@
         groupName = #{groupname,jdbcType=VARCHAR},
       </if>
       <if test="keywordsflag != null">
-        keyWordsflag = #{keywordsflag,jdbcType=VARCHAR},
+        keyWordsFlag = #{keywordsflag,jdbcType=VARCHAR},
       </if>
       <if test="deletekeywordflag != null">
         deleteKeywordFlag = #{deletekeywordflag,jdbcType=VARCHAR},
       </if>
       <if test="settingtimestamp != null">
         settingTimeStamp = #{settingtimestamp,jdbcType=VARCHAR},
+      </if>
+      <if test="intogroupcheckflag != null">
+        intoGroupCheckFlag = #{intogroupcheckflag,jdbcType=VARCHAR},
+      </if>
+      <if test="intogroupwelcomeflag != null">
+        intoGroupWelcomeFlag = #{intogroupwelcomeflag,jdbcType=VARCHAR},
+      </if>
+      <if test="intogroupusernamecheckflag != null">
+        intoGroupUserNameCheckFlag = #{intogroupusernamecheckflag,jdbcType=VARCHAR},
       </if>
       <if test="keywords != null">
         keyWords = #{keywords,jdbcType=LONGVARCHAR},
@@ -326,9 +375,12 @@
     set groupId = #{groupid,jdbcType=VARCHAR},
       ownerAndAnonymousAdmins = #{ownerandanonymousadmins,jdbcType=VARCHAR},
       groupName = #{groupname,jdbcType=VARCHAR},
-      keyWordsflag = #{keywordsflag,jdbcType=VARCHAR},
+      keyWordsFlag = #{keywordsflag,jdbcType=VARCHAR},
       deleteKeywordFlag = #{deletekeywordflag,jdbcType=VARCHAR},
       settingTimeStamp = #{settingtimestamp,jdbcType=VARCHAR},
+      intoGroupCheckFlag = #{intogroupcheckflag,jdbcType=VARCHAR},
+      intoGroupWelcomeFlag = #{intogroupwelcomeflag,jdbcType=VARCHAR},
+      intoGroupUserNameCheckFlag = #{intogroupusernamecheckflag,jdbcType=VARCHAR},
       keyWords = #{keywords,jdbcType=LONGVARCHAR},
       intoGroupRules = #{intogrouprules,jdbcType=LONGVARCHAR},
       ChannelSpammersWhiteList = #{channelspammerswhitelist,jdbcType=LONGVARCHAR}
@@ -339,9 +391,12 @@
     set groupId = #{groupid,jdbcType=VARCHAR},
       ownerAndAnonymousAdmins = #{ownerandanonymousadmins,jdbcType=VARCHAR},
       groupName = #{groupname,jdbcType=VARCHAR},
-      keyWordsflag = #{keywordsflag,jdbcType=VARCHAR},
+      keyWordsFlag = #{keywordsflag,jdbcType=VARCHAR},
       deleteKeywordFlag = #{deletekeywordflag,jdbcType=VARCHAR},
-      settingTimeStamp = #{settingtimestamp,jdbcType=VARCHAR}
+      settingTimeStamp = #{settingtimestamp,jdbcType=VARCHAR},
+      intoGroupCheckFlag = #{intogroupcheckflag,jdbcType=VARCHAR},
+      intoGroupWelcomeFlag = #{intogroupwelcomeflag,jdbcType=VARCHAR},
+      intoGroupUserNameCheckFlag = #{intogroupusernamecheckflag,jdbcType=VARCHAR}
     where id = #{id,jdbcType=INTEGER}
   </update>
 </mapper>

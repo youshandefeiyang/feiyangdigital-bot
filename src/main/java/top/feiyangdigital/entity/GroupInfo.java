@@ -21,6 +21,12 @@ public class GroupInfo implements Serializable {
 
     private String settingtimestamp;
 
+    private String intogroupcheckflag;
+
+    private String intogroupwelcomeflag;
+
+    private String intogroupusernamecheckflag;
+
     private static final long serialVersionUID = 1L;
 
     public Integer getId() {
@@ -79,6 +85,30 @@ public class GroupInfo implements Serializable {
         this.settingtimestamp = settingtimestamp;
     }
 
+    public String getIntogroupcheckflag() {
+        return intogroupcheckflag;
+    }
+
+    public void setIntogroupcheckflag(String intogroupcheckflag) {
+        this.intogroupcheckflag = intogroupcheckflag;
+    }
+
+    public String getIntogroupwelcomeflag() {
+        return intogroupwelcomeflag;
+    }
+
+    public void setIntogroupwelcomeflag(String intogroupwelcomeflag) {
+        this.intogroupwelcomeflag = intogroupwelcomeflag;
+    }
+
+    public String getIntogroupusernamecheckflag() {
+        return intogroupusernamecheckflag;
+    }
+
+    public void setIntogroupusernamecheckflag(String intogroupusernamecheckflag) {
+        this.intogroupusernamecheckflag = intogroupusernamecheckflag;
+    }
+
     @Override
     public boolean equals(Object that) {
         if (this == that) {
@@ -97,7 +127,10 @@ public class GroupInfo implements Serializable {
             && (this.getGroupname() == null ? other.getGroupname() == null : this.getGroupname().equals(other.getGroupname()))
             && (this.getKeywordsflag() == null ? other.getKeywordsflag() == null : this.getKeywordsflag().equals(other.getKeywordsflag()))
             && (this.getDeletekeywordflag() == null ? other.getDeletekeywordflag() == null : this.getDeletekeywordflag().equals(other.getDeletekeywordflag()))
-            && (this.getSettingtimestamp() == null ? other.getSettingtimestamp() == null : this.getSettingtimestamp().equals(other.getSettingtimestamp()));
+            && (this.getSettingtimestamp() == null ? other.getSettingtimestamp() == null : this.getSettingtimestamp().equals(other.getSettingtimestamp()))
+            && (this.getIntogroupcheckflag() == null ? other.getIntogroupcheckflag() == null : this.getIntogroupcheckflag().equals(other.getIntogroupcheckflag()))
+            && (this.getIntogroupwelcomeflag() == null ? other.getIntogroupwelcomeflag() == null : this.getIntogroupwelcomeflag().equals(other.getIntogroupwelcomeflag()))
+            && (this.getIntogroupusernamecheckflag() == null ? other.getIntogroupusernamecheckflag() == null : this.getIntogroupusernamecheckflag().equals(other.getIntogroupusernamecheckflag()));
     }
 
     @Override
@@ -111,6 +144,9 @@ public class GroupInfo implements Serializable {
         result = prime * result + ((getKeywordsflag() == null) ? 0 : getKeywordsflag().hashCode());
         result = prime * result + ((getDeletekeywordflag() == null) ? 0 : getDeletekeywordflag().hashCode());
         result = prime * result + ((getSettingtimestamp() == null) ? 0 : getSettingtimestamp().hashCode());
+        result = prime * result + ((getIntogroupcheckflag() == null) ? 0 : getIntogroupcheckflag().hashCode());
+        result = prime * result + ((getIntogroupwelcomeflag() == null) ? 0 : getIntogroupwelcomeflag().hashCode());
+        result = prime * result + ((getIntogroupusernamecheckflag() == null) ? 0 : getIntogroupusernamecheckflag().hashCode());
         return result;
     }
 
@@ -127,6 +163,9 @@ public class GroupInfo implements Serializable {
         sb.append(", keywordsflag=").append(keywordsflag);
         sb.append(", deletekeywordflag=").append(deletekeywordflag);
         sb.append(", settingtimestamp=").append(settingtimestamp);
+        sb.append(", intogroupcheckflag=").append(intogroupcheckflag);
+        sb.append(", intogroupwelcomeflag=").append(intogroupwelcomeflag);
+        sb.append(", intogroupusernamecheckflag=").append(intogroupusernamecheckflag);
         sb.append(", serialVersionUID=").append(serialVersionUID);
         sb.append("]");
         return sb.toString();

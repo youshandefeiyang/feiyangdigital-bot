@@ -395,72 +395,72 @@ public class GroupInfoExample {
         }
 
         public Criteria andKeywordsflagIsNull() {
-            addCriterion("keyWordsflag is null");
+            addCriterion("keyWordsFlag is null");
             return (Criteria) this;
         }
 
         public Criteria andKeywordsflagIsNotNull() {
-            addCriterion("keyWordsflag is not null");
+            addCriterion("keyWordsFlag is not null");
             return (Criteria) this;
         }
 
         public Criteria andKeywordsflagEqualTo(String value) {
-            addCriterion("keyWordsflag =", value, "keywordsflag");
+            addCriterion("keyWordsFlag =", value, "keywordsflag");
             return (Criteria) this;
         }
 
         public Criteria andKeywordsflagNotEqualTo(String value) {
-            addCriterion("keyWordsflag <>", value, "keywordsflag");
+            addCriterion("keyWordsFlag <>", value, "keywordsflag");
             return (Criteria) this;
         }
 
         public Criteria andKeywordsflagGreaterThan(String value) {
-            addCriterion("keyWordsflag >", value, "keywordsflag");
+            addCriterion("keyWordsFlag >", value, "keywordsflag");
             return (Criteria) this;
         }
 
         public Criteria andKeywordsflagGreaterThanOrEqualTo(String value) {
-            addCriterion("keyWordsflag >=", value, "keywordsflag");
+            addCriterion("keyWordsFlag >=", value, "keywordsflag");
             return (Criteria) this;
         }
 
         public Criteria andKeywordsflagLessThan(String value) {
-            addCriterion("keyWordsflag <", value, "keywordsflag");
+            addCriterion("keyWordsFlag <", value, "keywordsflag");
             return (Criteria) this;
         }
 
         public Criteria andKeywordsflagLessThanOrEqualTo(String value) {
-            addCriterion("keyWordsflag <=", value, "keywordsflag");
+            addCriterion("keyWordsFlag <=", value, "keywordsflag");
             return (Criteria) this;
         }
 
         public Criteria andKeywordsflagLike(String value) {
-            addCriterion("keyWordsflag like", value, "keywordsflag");
+            addCriterion("keyWordsFlag like", value, "keywordsflag");
             return (Criteria) this;
         }
 
         public Criteria andKeywordsflagNotLike(String value) {
-            addCriterion("keyWordsflag not like", value, "keywordsflag");
+            addCriterion("keyWordsFlag not like", value, "keywordsflag");
             return (Criteria) this;
         }
 
         public Criteria andKeywordsflagIn(List<String> values) {
-            addCriterion("keyWordsflag in", values, "keywordsflag");
+            addCriterion("keyWordsFlag in", values, "keywordsflag");
             return (Criteria) this;
         }
 
         public Criteria andKeywordsflagNotIn(List<String> values) {
-            addCriterion("keyWordsflag not in", values, "keywordsflag");
+            addCriterion("keyWordsFlag not in", values, "keywordsflag");
             return (Criteria) this;
         }
 
         public Criteria andKeywordsflagBetween(String value1, String value2) {
-            addCriterion("keyWordsflag between", value1, value2, "keywordsflag");
+            addCriterion("keyWordsFlag between", value1, value2, "keywordsflag");
             return (Criteria) this;
         }
 
         public Criteria andKeywordsflagNotBetween(String value1, String value2) {
-            addCriterion("keyWordsflag not between", value1, value2, "keywordsflag");
+            addCriterion("keyWordsFlag not between", value1, value2, "keywordsflag");
             return (Criteria) this;
         }
 
@@ -601,6 +601,216 @@ public class GroupInfoExample {
 
         public Criteria andSettingtimestampNotBetween(String value1, String value2) {
             addCriterion("settingTimeStamp not between", value1, value2, "settingtimestamp");
+            return (Criteria) this;
+        }
+
+        public Criteria andIntogroupcheckflagIsNull() {
+            addCriterion("intoGroupCheckFlag is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andIntogroupcheckflagIsNotNull() {
+            addCriterion("intoGroupCheckFlag is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andIntogroupcheckflagEqualTo(String value) {
+            addCriterion("intoGroupCheckFlag =", value, "intogroupcheckflag");
+            return (Criteria) this;
+        }
+
+        public Criteria andIntogroupcheckflagNotEqualTo(String value) {
+            addCriterion("intoGroupCheckFlag <>", value, "intogroupcheckflag");
+            return (Criteria) this;
+        }
+
+        public Criteria andIntogroupcheckflagGreaterThan(String value) {
+            addCriterion("intoGroupCheckFlag >", value, "intogroupcheckflag");
+            return (Criteria) this;
+        }
+
+        public Criteria andIntogroupcheckflagGreaterThanOrEqualTo(String value) {
+            addCriterion("intoGroupCheckFlag >=", value, "intogroupcheckflag");
+            return (Criteria) this;
+        }
+
+        public Criteria andIntogroupcheckflagLessThan(String value) {
+            addCriterion("intoGroupCheckFlag <", value, "intogroupcheckflag");
+            return (Criteria) this;
+        }
+
+        public Criteria andIntogroupcheckflagLessThanOrEqualTo(String value) {
+            addCriterion("intoGroupCheckFlag <=", value, "intogroupcheckflag");
+            return (Criteria) this;
+        }
+
+        public Criteria andIntogroupcheckflagLike(String value) {
+            addCriterion("intoGroupCheckFlag like", value, "intogroupcheckflag");
+            return (Criteria) this;
+        }
+
+        public Criteria andIntogroupcheckflagNotLike(String value) {
+            addCriterion("intoGroupCheckFlag not like", value, "intogroupcheckflag");
+            return (Criteria) this;
+        }
+
+        public Criteria andIntogroupcheckflagIn(List<String> values) {
+            addCriterion("intoGroupCheckFlag in", values, "intogroupcheckflag");
+            return (Criteria) this;
+        }
+
+        public Criteria andIntogroupcheckflagNotIn(List<String> values) {
+            addCriterion("intoGroupCheckFlag not in", values, "intogroupcheckflag");
+            return (Criteria) this;
+        }
+
+        public Criteria andIntogroupcheckflagBetween(String value1, String value2) {
+            addCriterion("intoGroupCheckFlag between", value1, value2, "intogroupcheckflag");
+            return (Criteria) this;
+        }
+
+        public Criteria andIntogroupcheckflagNotBetween(String value1, String value2) {
+            addCriterion("intoGroupCheckFlag not between", value1, value2, "intogroupcheckflag");
+            return (Criteria) this;
+        }
+
+        public Criteria andIntogroupwelcomeflagIsNull() {
+            addCriterion("intoGroupWelcomeFlag is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andIntogroupwelcomeflagIsNotNull() {
+            addCriterion("intoGroupWelcomeFlag is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andIntogroupwelcomeflagEqualTo(String value) {
+            addCriterion("intoGroupWelcomeFlag =", value, "intogroupwelcomeflag");
+            return (Criteria) this;
+        }
+
+        public Criteria andIntogroupwelcomeflagNotEqualTo(String value) {
+            addCriterion("intoGroupWelcomeFlag <>", value, "intogroupwelcomeflag");
+            return (Criteria) this;
+        }
+
+        public Criteria andIntogroupwelcomeflagGreaterThan(String value) {
+            addCriterion("intoGroupWelcomeFlag >", value, "intogroupwelcomeflag");
+            return (Criteria) this;
+        }
+
+        public Criteria andIntogroupwelcomeflagGreaterThanOrEqualTo(String value) {
+            addCriterion("intoGroupWelcomeFlag >=", value, "intogroupwelcomeflag");
+            return (Criteria) this;
+        }
+
+        public Criteria andIntogroupwelcomeflagLessThan(String value) {
+            addCriterion("intoGroupWelcomeFlag <", value, "intogroupwelcomeflag");
+            return (Criteria) this;
+        }
+
+        public Criteria andIntogroupwelcomeflagLessThanOrEqualTo(String value) {
+            addCriterion("intoGroupWelcomeFlag <=", value, "intogroupwelcomeflag");
+            return (Criteria) this;
+        }
+
+        public Criteria andIntogroupwelcomeflagLike(String value) {
+            addCriterion("intoGroupWelcomeFlag like", value, "intogroupwelcomeflag");
+            return (Criteria) this;
+        }
+
+        public Criteria andIntogroupwelcomeflagNotLike(String value) {
+            addCriterion("intoGroupWelcomeFlag not like", value, "intogroupwelcomeflag");
+            return (Criteria) this;
+        }
+
+        public Criteria andIntogroupwelcomeflagIn(List<String> values) {
+            addCriterion("intoGroupWelcomeFlag in", values, "intogroupwelcomeflag");
+            return (Criteria) this;
+        }
+
+        public Criteria andIntogroupwelcomeflagNotIn(List<String> values) {
+            addCriterion("intoGroupWelcomeFlag not in", values, "intogroupwelcomeflag");
+            return (Criteria) this;
+        }
+
+        public Criteria andIntogroupwelcomeflagBetween(String value1, String value2) {
+            addCriterion("intoGroupWelcomeFlag between", value1, value2, "intogroupwelcomeflag");
+            return (Criteria) this;
+        }
+
+        public Criteria andIntogroupwelcomeflagNotBetween(String value1, String value2) {
+            addCriterion("intoGroupWelcomeFlag not between", value1, value2, "intogroupwelcomeflag");
+            return (Criteria) this;
+        }
+
+        public Criteria andIntogroupusernamecheckflagIsNull() {
+            addCriterion("intoGroupUserNameCheckFlag is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andIntogroupusernamecheckflagIsNotNull() {
+            addCriterion("intoGroupUserNameCheckFlag is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andIntogroupusernamecheckflagEqualTo(String value) {
+            addCriterion("intoGroupUserNameCheckFlag =", value, "intogroupusernamecheckflag");
+            return (Criteria) this;
+        }
+
+        public Criteria andIntogroupusernamecheckflagNotEqualTo(String value) {
+            addCriterion("intoGroupUserNameCheckFlag <>", value, "intogroupusernamecheckflag");
+            return (Criteria) this;
+        }
+
+        public Criteria andIntogroupusernamecheckflagGreaterThan(String value) {
+            addCriterion("intoGroupUserNameCheckFlag >", value, "intogroupusernamecheckflag");
+            return (Criteria) this;
+        }
+
+        public Criteria andIntogroupusernamecheckflagGreaterThanOrEqualTo(String value) {
+            addCriterion("intoGroupUserNameCheckFlag >=", value, "intogroupusernamecheckflag");
+            return (Criteria) this;
+        }
+
+        public Criteria andIntogroupusernamecheckflagLessThan(String value) {
+            addCriterion("intoGroupUserNameCheckFlag <", value, "intogroupusernamecheckflag");
+            return (Criteria) this;
+        }
+
+        public Criteria andIntogroupusernamecheckflagLessThanOrEqualTo(String value) {
+            addCriterion("intoGroupUserNameCheckFlag <=", value, "intogroupusernamecheckflag");
+            return (Criteria) this;
+        }
+
+        public Criteria andIntogroupusernamecheckflagLike(String value) {
+            addCriterion("intoGroupUserNameCheckFlag like", value, "intogroupusernamecheckflag");
+            return (Criteria) this;
+        }
+
+        public Criteria andIntogroupusernamecheckflagNotLike(String value) {
+            addCriterion("intoGroupUserNameCheckFlag not like", value, "intogroupusernamecheckflag");
+            return (Criteria) this;
+        }
+
+        public Criteria andIntogroupusernamecheckflagIn(List<String> values) {
+            addCriterion("intoGroupUserNameCheckFlag in", values, "intogroupusernamecheckflag");
+            return (Criteria) this;
+        }
+
+        public Criteria andIntogroupusernamecheckflagNotIn(List<String> values) {
+            addCriterion("intoGroupUserNameCheckFlag not in", values, "intogroupusernamecheckflag");
+            return (Criteria) this;
+        }
+
+        public Criteria andIntogroupusernamecheckflagBetween(String value1, String value2) {
+            addCriterion("intoGroupUserNameCheckFlag between", value1, value2, "intogroupusernamecheckflag");
+            return (Criteria) this;
+        }
+
+        public Criteria andIntogroupusernamecheckflagNotBetween(String value1, String value2) {
+            addCriterion("intoGroupUserNameCheckFlag not between", value1, value2, "intogroupusernamecheckflag");
             return (Criteria) this;
         }
     }

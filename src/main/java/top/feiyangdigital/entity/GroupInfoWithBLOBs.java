@@ -58,6 +58,9 @@ public class GroupInfoWithBLOBs extends GroupInfo implements Serializable {
             && (this.getKeywordsflag() == null ? other.getKeywordsflag() == null : this.getKeywordsflag().equals(other.getKeywordsflag()))
             && (this.getDeletekeywordflag() == null ? other.getDeletekeywordflag() == null : this.getDeletekeywordflag().equals(other.getDeletekeywordflag()))
             && (this.getSettingtimestamp() == null ? other.getSettingtimestamp() == null : this.getSettingtimestamp().equals(other.getSettingtimestamp()))
+            && (this.getIntogroupcheckflag() == null ? other.getIntogroupcheckflag() == null : this.getIntogroupcheckflag().equals(other.getIntogroupcheckflag()))
+            && (this.getIntogroupwelcomeflag() == null ? other.getIntogroupwelcomeflag() == null : this.getIntogroupwelcomeflag().equals(other.getIntogroupwelcomeflag()))
+            && (this.getIntogroupusernamecheckflag() == null ? other.getIntogroupusernamecheckflag() == null : this.getIntogroupusernamecheckflag().equals(other.getIntogroupusernamecheckflag()))
             && (this.getKeywords() == null ? other.getKeywords() == null : this.getKeywords().equals(other.getKeywords()))
             && (this.getIntogrouprules() == null ? other.getIntogrouprules() == null : this.getIntogrouprules().equals(other.getIntogrouprules()))
             && (this.getChannelspammerswhitelist() == null ? other.getChannelspammerswhitelist() == null : this.getChannelspammerswhitelist().equals(other.getChannelspammerswhitelist()));
@@ -74,6 +77,9 @@ public class GroupInfoWithBLOBs extends GroupInfo implements Serializable {
         result = prime * result + ((getKeywordsflag() == null) ? 0 : getKeywordsflag().hashCode());
         result = prime * result + ((getDeletekeywordflag() == null) ? 0 : getDeletekeywordflag().hashCode());
         result = prime * result + ((getSettingtimestamp() == null) ? 0 : getSettingtimestamp().hashCode());
+        result = prime * result + ((getIntogroupcheckflag() == null) ? 0 : getIntogroupcheckflag().hashCode());
+        result = prime * result + ((getIntogroupwelcomeflag() == null) ? 0 : getIntogroupwelcomeflag().hashCode());
+        result = prime * result + ((getIntogroupusernamecheckflag() == null) ? 0 : getIntogroupusernamecheckflag().hashCode());
         result = prime * result + ((getKeywords() == null) ? 0 : getKeywords().hashCode());
         result = prime * result + ((getIntogrouprules() == null) ? 0 : getIntogrouprules().hashCode());
         result = prime * result + ((getChannelspammerswhitelist() == null) ? 0 : getChannelspammerswhitelist().hashCode());

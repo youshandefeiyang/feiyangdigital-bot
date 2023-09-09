@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- 主机： localhost
--- 生成日期： 2023-09-08 03:15:56
+-- 生成日期： 2023-09-09 09:38:03
 -- 服务器版本： 8.0.24
 -- PHP 版本： 8.1.12
 
@@ -31,21 +31,20 @@ time_zone = "+00:00";
 
 CREATE TABLE `groupinfo`
 (
-    `id`                       int                                                          NOT NULL,
-    `groupId`                  varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci          DEFAULT NULL,
-    `ownerAndAnonymousAdmins`  varchar(1000) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci        DEFAULT NULL,
-    `groupName`                varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci          DEFAULT NULL,
-    `keyWords`                 longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci,
-    `keyWordsflag`             varchar(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'notallow',
-    `deleteKeywordFlag`        varchar(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'notdelete',
-    `settingTimeStamp`         varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci          DEFAULT NULL,
-    `intoGroupRules`           longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci,
-    `ChannelSpammersWhiteList` longtext COLLATE utf8mb4_general_ci
+    `id`                         int                                                          NOT NULL,
+    `groupId`                    varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci          DEFAULT NULL,
+    `ownerAndAnonymousAdmins`    varchar(1000) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci        DEFAULT NULL,
+    `groupName`                  varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci          DEFAULT NULL,
+    `keyWords`                   longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci,
+    `keyWordsFlag`               varchar(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'notallow',
+    `deleteKeywordFlag`          varchar(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'notdelete',
+    `settingTimeStamp`           varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci          DEFAULT NULL,
+    `intoGroupRules`             longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci,
+    `intoGroupCheckFlag`         varchar(50) COLLATE utf8mb4_general_ci                       NOT NULL DEFAULT 'close',
+    `intoGroupWelcomeFlag`       varchar(50) COLLATE utf8mb4_general_ci                       NOT NULL DEFAULT 'close',
+    `intoGroupUserNameCheckFlag` varchar(50) COLLATE utf8mb4_general_ci                       NOT NULL DEFAULT 'close',
+    `ChannelSpammersWhiteList`   longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- 转储表的索引
---
 
 --
 -- 表的索引 `groupinfo`
@@ -55,8 +54,11 @@ ALTER TABLE `groupinfo`
   ADD UNIQUE KEY `groupId` (`groupId`),
   ADD KEY `settingTimeStamp` (`settingTimeStamp`),
   ADD KEY `groupName` (`groupName`),
-  ADD KEY `keyWordsflag` (`keyWordsflag`),
-  ADD KEY `deleteKeywordFlag` (`deleteKeywordFlag`);
+  ADD KEY `keyWordsFlag` (`keyWordsFlag`),
+  ADD KEY `deleteKeywordFlag` (`deleteKeywordFlag`),
+  ADD KEY `intoGroupCheckFlag` (`intoGroupCheckFlag`),
+  ADD KEY `intoGroupWelcomeFlag` (`intoGroupWelcomeFlag`),
+  ADD KEY `intoGroupUserNameCheckFlag` (`intoGroupUserNameCheckFlag`);
 ALTER TABLE `groupinfo`
     ADD FULLTEXT KEY `ownerAndAnonymousAdmins` (`ownerAndAnonymousAdmins`);
 ALTER TABLE `groupinfo`
