@@ -22,14 +22,14 @@ public class TgLongPollingBot extends TelegramLongPollingBot {
     @Autowired
     private GroupCommands groupCommands;
 
+    @Autowired
+    public TgLongPollingBot(List<String> list){
+        this.getOptions().setAllowedUpdates(list);
+    }
+
     @Override
     public void onUpdateReceived(Update update) {
         commonFunction.mainFunc(this,update);
-    }
-
-    public void setAllowUpdated(){
-        String[] allowUpdated = new String[]{"update_id","message","edited_message","channel_post","edited_channel_post","inline_query","chosen_inline_result","callback_query","shipping_query","pre_checkout_query","poll","poll_answer","my_chat_member","chat_member","chat_join_request"};
-        this.getOptions().setAllowedUpdates(Arrays.asList(allowUpdated));
     }
 
     public void setGroupCommands() throws TelegramApiException {
