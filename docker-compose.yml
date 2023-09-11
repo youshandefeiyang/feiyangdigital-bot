@@ -4,7 +4,7 @@ services:
   feiyangdigital-bot:
     image: youshandefeiyang/feiyangdigital-bot:latest # 使用您在DockerHub上的镜像
     ports:
-      - "35442:8080"
+      - "38442:8080"
     volumes:
       - /home/feiyangdigitalbotconf/config.json:/app/config.json
     restart: unless-stopped
