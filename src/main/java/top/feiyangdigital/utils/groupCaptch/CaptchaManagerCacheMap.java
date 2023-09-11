@@ -8,27 +8,47 @@ import java.util.concurrent.ConcurrentHashMap;
 
 @Component
 public class CaptchaManagerCacheMap {
-    private final Map<String, Integer> userToAttemptMap = new ConcurrentHashMap<>();
-    private final Map<String, Integer> userToMessageIdMap = new ConcurrentHashMap<>();
 
-    public void updateUserMapping(String userId, Integer attempt, Integer MessageId) {
-        // 每次都覆盖旧的数据，因为在任何时候，一个userId只与一个群组关联
-        userToAttemptMap.put(userId,attempt);
-        userToMessageIdMap.put(userId,MessageId);
+    private final Map<String, UserGroupInfo> userToGroupInfoMap = new ConcurrentHashMap<>();
+
+    // 内部类来存储群组的attempt和messageId信息
+    private static class UserGroupInfo {
+        private final Integer attempt;
+        private final Integer messageId;
+
+        public UserGroupInfo(Integer attempt, Integer messageId) {
+            this.attempt = attempt;
+            this.messageId = messageId;
+        }
+
+        public Integer getAttempt() {
+            return attempt;
+        }
+
+        public Integer getMessageId() {
+            return messageId;
+        }
     }
 
-    public Integer getAttemptForUser(String userId) {
-        return userToAttemptMap.get(userId);
+    private String createKey(String userId, String groupId) {
+        return userId + "|" + groupId;
     }
 
-    public Integer getMessageIdForUser(String userId) {
-        return userToMessageIdMap.get(userId);
+    public void updateUserMapping(String userId, String groupId, Integer attempt, Integer messageId) {
+        userToGroupInfoMap.put(createKey(userId, groupId), new UserGroupInfo(attempt, messageId));
     }
 
-
-    public void clearMappingsForUser(String userId) {
-        userToAttemptMap.remove(userId);
-        userToMessageIdMap.remove(userId);
+    public Integer getAttemptForUser(String userId, String groupId) {
+        UserGroupInfo info = userToGroupInfoMap.get(createKey(userId, groupId));
+        return info == null ? null : info.getAttempt();
     }
 
+    public Integer getMessageIdForUser(String userId, String groupId) {
+        UserGroupInfo info = userToGroupInfoMap.get(createKey(userId, groupId));
+        return info == null ? null : info.getMessageId();
+    }
+
+    public void clearMappingsForUser(String userId, String groupId) {
+        userToGroupInfoMap.remove(createKey(userId, groupId));
+    }
 }

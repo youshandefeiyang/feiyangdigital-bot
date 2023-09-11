@@ -13,10 +13,9 @@ public class RestrictOrUnrestrictUser {
         restrictChatMember.setUserId(userId);
 
         ChatPermissions chatPermissions = new ChatPermissions();
-        chatPermissions.setCanSendMessages(false);
-        chatPermissions.setCanSendMediaMessages(false);
+
         chatPermissions.setCanSendOtherMessages(false);
-        chatPermissions.setCanAddWebPagePreviews(false);
+
 
         restrictChatMember.setPermissions(chatPermissions);
 
@@ -33,13 +32,16 @@ public class RestrictOrUnrestrictUser {
         restrictChatMember.setChatId(chatId);
         restrictChatMember.setUserId(userId);
 
-        ChatPermissions chatPermissions = new ChatPermissions();
-        chatPermissions.setCanSendMessages(true);
-        chatPermissions.setCanSendMediaMessages(true);
-        chatPermissions.setCanSendOtherMessages(true);
-        chatPermissions.setCanAddWebPagePreviews(true);
+        ChatPermissions permissions = new ChatPermissions();
+        permissions.setCanSendMessages(true);
+        permissions.setCanSendPolls(true);
+        permissions.setCanSendOtherMessages(true);
+        permissions.setCanAddWebPagePreviews(true);
+        permissions.setCanChangeInfo(true);
+        permissions.setCanInviteUsers(true);
+        permissions.setCanPinMessages(true);
 
-        restrictChatMember.setPermissions(chatPermissions);
+        restrictChatMember.setPermissions(permissions);
 
         try {
             sender.execute(restrictChatMember); // Execute the Telegram API method

@@ -79,9 +79,9 @@ public class CaptchaGenerator {
     public void answerReplyhandle(AbsSender sender, Update update) {
         String userAnswer = update.getMessage().getText();
         String userId = update.getMessage().getFrom().getId().toString();
-        Integer messageId = captchaManagerCacheMap.getMessageIdForUser(userId);
-        Integer attempt = captchaManagerCacheMap.getAttemptForUser(userId);
         String groupId = captchaManager.getGroupIdForUser(userId);
+        Integer messageId = captchaManagerCacheMap.getMessageIdForUser(userId,groupId);
+        Integer attempt = captchaManagerCacheMap.getAttemptForUser(userId,groupId);
         String correctAnswer = captchaManager.getAnswerForUser(userId);
         if (StringUtils.hasText(userAnswer) && !correctAnswer.isEmpty()) {
             
@@ -93,7 +93,7 @@ public class CaptchaGenerator {
                 timerDelete.deleteByMessageIdImmediately(sender,groupId,messageId);
                 captchaManager.clearMappingsForUser(userId);
             } else {
-                captchaManagerCacheMap.updateUserMapping(userId,attempt+1,messageId);
+                captchaManagerCacheMap.updateUserMapping(userId,groupId,attempt+1,messageId);
                 if (attempt>=1) {
                     try {
                         sender.execute(sendContent.messageText(update, "未通过验证，你的机会已经用尽！"));

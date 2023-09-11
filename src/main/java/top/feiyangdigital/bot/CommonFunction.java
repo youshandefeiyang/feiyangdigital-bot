@@ -11,10 +11,7 @@ import top.feiyangdigital.callBack.replyRuleCallBack.AddAutoReplyRule;
 import top.feiyangdigital.entity.BaseInfo;
 import top.feiyangdigital.entity.GroupInfoWithBLOBs;
 import top.feiyangdigital.entity.KeywordsFormat;
-import top.feiyangdigital.handleService.CaptchaGenerator;
-import top.feiyangdigital.handleService.NewMemberIntoGroup;
-import top.feiyangdigital.handleService.BotHelper;
-import top.feiyangdigital.handleService.MessageHandle;
+import top.feiyangdigital.handleService.*;
 import top.feiyangdigital.sqlService.GroupInfoService;
 import top.feiyangdigital.utils.*;
 import top.feiyangdigital.utils.groupCaptch.CaptchaManager;
@@ -73,8 +70,11 @@ public class CommonFunction {
     @Autowired
     private CaptchaManager captchaManager;
 
+    @Autowired
+    private BotFirstIntoGroup botFirstIntoGroup;
 
     public void mainFunc(AbsSender sender, Update update) {
+        
         if (update.hasMessage() && update.getMessage().getChat().isUserChat()) {
 
             if (update.getMessage().getText().contains("start _groupId")) {
@@ -145,10 +145,19 @@ public class CommonFunction {
             }
         }
 
-        if (update.hasMessage() && (update.getMessage().getNewChatMembers() != null && !update.getMessage().getNewChatMembers().isEmpty())) {
-            newMemberIntoGroup.handleMessage(sender, update);
+        //检测新入群用户且状态正常的用户
+        if (update.getChatMember() != null && "left".equalsIgnoreCase(update.getChatMember().getOldChatMember().getStatus()) && "member".equalsIgnoreCase(update.getChatMember().getNewChatMember().getStatus())) {
+            
+            
+            newMemberIntoGroup.handleMessage(sender, update, null);
         }
 
+        //检测新入群Bot
+        if (update.hasMessage() && (update.getMessage().getNewChatMembers() != null && !update.getMessage().getNewChatMembers().isEmpty())) {
+            
+            
+            botFirstIntoGroup.handleMessage(sender, update);
+        }
 
         if (update.hasCallbackQuery()) {
             botHelper.handleCallbackQuery(sender, update);

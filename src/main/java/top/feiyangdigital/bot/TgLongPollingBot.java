@@ -6,6 +6,10 @@ import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 @Component
 public class TgLongPollingBot extends TelegramLongPollingBot {
 
@@ -21,6 +25,11 @@ public class TgLongPollingBot extends TelegramLongPollingBot {
     @Override
     public void onUpdateReceived(Update update) {
         commonFunction.mainFunc(this,update);
+    }
+
+    public void setAllowUpdated(){
+        String[] allowUpdated = new String[]{"update_id","message","edited_message","channel_post","edited_channel_post","inline_query","chosen_inline_result","callback_query","shipping_query","pre_checkout_query","poll","poll_answer","my_chat_member","chat_member","chat_join_request"};
+        this.getOptions().setAllowedUpdates(Arrays.asList(allowUpdated));
     }
 
     public void setGroupCommands() throws TelegramApiException {

@@ -46,9 +46,13 @@ public class SendContent {
     }
 
     public SendMessage createResponseMessage(Update update, KeywordsFormat keyword,String textFormat) {
-        String chatId = "";
+        String chatId;
         if (update.getMessage() == null) {
-            chatId = update.getCallbackQuery().getMessage().getChatId().toString();
+            if (update.getCallbackQuery() ==null){
+                chatId = update.getChatMember().getChat().getId().toString();
+            }else {
+                chatId = update.getCallbackQuery().getMessage().getChatId().toString();
+            }
         } else {
             chatId = update.getMessage().getChatId().toString();
         }
