@@ -14,13 +14,16 @@ COPY src/ src/
 RUN mvn clean package
 
 # 使用OpenJDK 17官方提供的基础镜像
-FROM openjdk:17-jdk-slim
+FROM openjdk:17-jdk
 
 # 设置应用的目录结构
 WORKDIR /app
 
 # 从构建阶段复制构建的jar文件
 COPY --from=build /app/target/*.jar app.jar
+
+# 设置Java的Headless模式
+ENV JAVA_TOOL_OPTIONS -Djava.awt.headless=true
 
 # 设置启动命令
 ENTRYPOINT ["java", "-jar", "app.jar"]

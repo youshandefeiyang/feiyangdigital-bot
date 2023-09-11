@@ -15,6 +15,7 @@ import top.feiyangdigital.bot.TgLongPollingBot;
 import top.feiyangdigital.bot.TgWebhookBot;
 import top.feiyangdigital.entity.BaseInfo;
 
+
 @SpringBootApplication
 @EnableCaching
 @MapperScan("top.feiyangdigital.mapper")
