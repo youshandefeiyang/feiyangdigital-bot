@@ -1,16 +1,11 @@
 package top.feiyangdigital.bot;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.bots.TelegramWebhookBot;
 import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
-
-import java.util.Arrays;
-import java.util.List;
 
 @Component
 public class TgWebhookBot extends TelegramWebhookBot {
@@ -26,11 +21,6 @@ public class TgWebhookBot extends TelegramWebhookBot {
 
     @Autowired
     private GroupCommands groupCommands;
-
-    @Autowired
-    public TgWebhookBot(List<String> list){
-        this.getOptions().setAllowedUpdates(list);
-    }
 
     @Override
     public BotApiMethod<?> onWebhookUpdateReceived(Update update) {

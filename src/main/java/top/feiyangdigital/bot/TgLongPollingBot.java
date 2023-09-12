@@ -6,10 +6,6 @@ import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
 @Component
 public class TgLongPollingBot extends TelegramLongPollingBot {
 
@@ -21,11 +17,6 @@ public class TgLongPollingBot extends TelegramLongPollingBot {
 
     @Autowired
     private GroupCommands groupCommands;
-
-    @Autowired
-    public TgLongPollingBot(List<String> list){
-        this.getOptions().setAllowedUpdates(list);
-    }
 
     @Override
     public void onUpdateReceived(Update update) {

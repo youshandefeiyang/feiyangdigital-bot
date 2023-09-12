@@ -15,6 +15,8 @@ import top.feiyangdigital.bot.TgLongPollingBot;
 import top.feiyangdigital.bot.TgWebhookBot;
 import top.feiyangdigital.entity.BaseInfo;
 
+import java.util.Arrays;
+
 
 @SpringBootApplication
 @EnableCaching
@@ -40,12 +42,14 @@ public class TgBotApplication implements CommandLineRunner {
             tgLongPollingBot.setBotName(BaseInfo.getBotName());
             tgLongPollingBot.setBotToken(BaseInfo.getBotToken());
             tgLongPollingBot.setGroupCommands();
+            tgLongPollingBot.getOptions().setAllowedUpdates(Arrays.asList("update_id","message","edited_message","channel_post","edited_channel_post","inline_query","chosen_inline_result","callback_query","shipping_query","pre_checkout_query","poll","poll_answer","my_chat_member","chat_member","chat_join_request"));
             TelegramBotsApi botsApi = new TelegramBotsApi(DefaultBotSession.class);
             botsApi.registerBot(tgLongPollingBot);
         } else if ("webhook".equals(BaseInfo.getBotMode())) {
             log.info("webhook模式已启动");
             tgWebhookBot.setBotToken(BaseInfo.getBotToken());
             tgWebhookBot.setGroupCommands();
+            tgWebhookBot.getOptions().setAllowedUpdates(Arrays.asList("update_id","message","edited_message","channel_post","edited_channel_post","inline_query","chosen_inline_result","callback_query","shipping_query","pre_checkout_query","poll","poll_answer","my_chat_member","chat_member","chat_join_request"));
             SetWebhook setWebhook = SetWebhook.builder().url(BaseInfo.getBotPath()).build();
             TelegramBotsApi telegramBotsApi = new TelegramBotsApi(DefaultBotSession.class);
             telegramBotsApi.registerBot(tgWebhookBot, setWebhook);
