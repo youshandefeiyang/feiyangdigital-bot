@@ -52,10 +52,11 @@ public class TgBotApplication implements CommandLineRunner {
             botsApi.registerBot(tgLongPollingBot);
         } else if ("webhook".equals(BaseInfo.getBotMode())) {
             log.info("webhook模式已启动");
+            tgWebhookBot.getOptions().setAllowedUpdates(allowed_Update);
             tgWebhookBot.setBotToken(BaseInfo.getBotToken());
             tgWebhookBot.setGroupCommands();
             TelegramBotsApi telegramBotsApi = new TelegramBotsApi(DefaultBotSession.class);
-            telegramBotsApi.registerBot(tgWebhookBot, new SetWebhook(BaseInfo.getBotPath(), null, null, allowed_Update, null, null, null));
+            telegramBotsApi.registerBot(tgWebhookBot, new SetWebhook(BaseInfo.getBotPath()));
         } else {
             throw new Exception("请将配置填写完整");
         }
