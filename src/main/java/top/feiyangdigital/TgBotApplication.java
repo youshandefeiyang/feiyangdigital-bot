@@ -15,6 +15,7 @@ import top.feiyangdigital.bot.TgLongPollingBot;
 import top.feiyangdigital.bot.TgWebhookBot;
 import top.feiyangdigital.entity.BaseInfo;
 
+import javax.annotation.PostConstruct;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -40,23 +41,28 @@ public class TgBotApplication implements CommandLineRunner {
         SpringApplication.run(TgBotApplication.class, args);
     }
 
+    @PostConstruct
+    public void init() {
+        tgLongPollingBot.getOptions().setAllowedUpdates(allowed_Update);
+        tgWebhookBot.getOptions().setAllowedUpdates(allowed_Update);
+        log.info("AllowedUpdates属性设置完毕");
+    }
+
     @Override
     public void run(String... args) throws Exception {
         if ("longPolling".equals(BaseInfo.getBotMode())) {
-            log.info("longPolling模式已启动");
-            tgLongPollingBot.getOptions().setAllowedUpdates(allowed_Update);
             tgLongPollingBot.setBotName(BaseInfo.getBotName());
             tgLongPollingBot.setBotToken(BaseInfo.getBotToken());
             tgLongPollingBot.setGroupCommands();
             TelegramBotsApi botsApi = new TelegramBotsApi(DefaultBotSession.class);
             botsApi.registerBot(tgLongPollingBot);
+            log.info("longPolling模式已启动");
         } else if ("webhook".equals(BaseInfo.getBotMode())) {
-            log.info("webhook模式已启动");
-            tgWebhookBot.getOptions().setAllowedUpdates(allowed_Update);
             tgWebhookBot.setBotToken(BaseInfo.getBotToken());
             tgWebhookBot.setGroupCommands();
             TelegramBotsApi telegramBotsApi = new TelegramBotsApi(DefaultBotSession.class);
             telegramBotsApi.registerBot(tgWebhookBot, new SetWebhook(BaseInfo.getBotPath()));
+            log.info("webhook模式已启动");
         } else {
             throw new Exception("请将配置填写完整");
         }
