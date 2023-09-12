@@ -70,7 +70,7 @@ docker-compose logs -f
 ```bash
 docker-compose down
 ```
-- 删除数据库持久卷（❗️危险操作，你需要对比本仓库里的数据库文件是否更新过，否则不要执行，删除之前请备份各种关键词文档）：  
+- 删除数据库持久卷（❗️危险操作，你需要对比本仓库里的数据库文件是否更新过，否则不要执行，删除之前请备份各种关键词文档）：</br>
 1.首先备份数据库至`/home/feiyangdigitalconf`目录下
 ```bash
 docker exec -it feiyangdigitalbotconf-mysql-1 mysqldump -uroot -ppassword bot  > /home/feiyangdigitalbotconf/bot.sql
