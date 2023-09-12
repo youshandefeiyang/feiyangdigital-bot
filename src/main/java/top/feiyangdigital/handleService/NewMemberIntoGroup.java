@@ -8,6 +8,7 @@ import org.telegram.telegrambots.meta.api.objects.User;
 import org.telegram.telegrambots.meta.api.objects.chatmember.ChatMember;
 import org.telegram.telegrambots.meta.bots.AbsSender;
 import top.feiyangdigital.entity.BaseInfo;
+import top.feiyangdigital.entity.GroupInfoWithBLOBs;
 import top.feiyangdigital.entity.KeywordsFormat;
 import top.feiyangdigital.sqlService.GroupInfoService;
 import top.feiyangdigital.utils.SendContent;
@@ -39,8 +40,6 @@ public class NewMemberIntoGroup {
 
     public void handleMessage(AbsSender sender, Update update, User outUser) {
 
-        
-        
 
         Long userId;
         String firstName;
@@ -52,16 +51,16 @@ public class NewMemberIntoGroup {
             firstName = member.getUser().getFirstName();
             chatId = update.getChatMember().getChat().getId();
             groupTitle = update.getChatMember().getChat().getTitle();
-        }else {
+        } else {
             userId = outUser.getId();
             firstName = outUser.getFirstName();
             chatId = update.getMessage().getChat().getId();
             groupTitle = update.getMessage().getChat().getTitle();
         }
 
-        
+        GroupInfoWithBLOBs groupInfoWithBLOBs = groupInfoService.selAllByGroupId(chatId.toString());
 
-        if ("open".equals(groupInfoService.selAllByGroupId(chatId.toString()).getIntogroupcheckflag())) {
+        if (groupInfoWithBLOBs != null && "open".equals(groupInfoWithBLOBs.getIntogroupcheckflag())) {
             String url = String.format("https://t.me/%s?start=_intoGroupInfo%sand%s", BaseInfo.getBotName(), chatId.toString(), userId.toString());
             restrictOrUnrestrictUser.restrictUser(sender, userId, chatId.toString());
             KeywordsFormat keywordsFormat = new KeywordsFormat();
@@ -74,7 +73,7 @@ public class NewMemberIntoGroup {
             try {
                 Message message1 = sender.execute(sendContent.createResponseMessage(update, keywordsFormat, "html"));
                 Integer messageId = message1.getMessageId();
-                captchaManagerCacheMap.updateUserMapping(userId.toString(),chatId.toString(), 0, messageId);
+                captchaManagerCacheMap.updateUserMapping(userId.toString(), chatId.toString(), 0, messageId);
                 String text1 = String.format("用户 <b><a href=\"tg://user?id=%d\">%s</a></b> 在 <b>90秒内</b> 未进行验证，永久限制发言！", userId, firstName);
                 timerDelete.deleteMessageAndNotifyAfterDelay(sender, chatId.toString(), messageId, 90, userId, text1);
             } catch (Exception e) {

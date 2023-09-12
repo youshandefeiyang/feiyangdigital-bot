@@ -147,15 +147,13 @@ public class CommonFunction {
 
         //检测新入群用户且状态正常的用户
         if (update.getChatMember() != null && "left".equalsIgnoreCase(update.getChatMember().getOldChatMember().getStatus()) && "member".equalsIgnoreCase(update.getChatMember().getNewChatMember().getStatus())) {
-            
-            
+
             newMemberIntoGroup.handleMessage(sender, update, null);
         }
 
         //检测新入群Bot
         if (update.hasMessage() && (update.getMessage().getNewChatMembers() != null && !update.getMessage().getNewChatMembers().isEmpty())) {
-            
-            
+
             botFirstIntoGroup.handleMessage(sender, update);
         }
 
