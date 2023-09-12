@@ -128,7 +128,7 @@ public class TimerDelete {
         }
     }
 
-    public void deleteMessageAndNotifyAfterDelay(AbsSender sender, String chatId, Integer messageId, int delayInSeconds,Long userId,String firstName) {
+    public void deleteMessageAndNotifyAfterDelay(AbsSender sender, String chatId, Integer messageId, int delayInSeconds, Long userId, String text) {
         new Timer().schedule(new TimerTask() {
             @Override
             public void run() {
@@ -138,7 +138,6 @@ public class TimerDelete {
                     // 在此发送提示消息
                     SendMessage notification = new SendMessage();
                     notification.setChatId(chatId);
-                    String text = String.format("用户 <b><a href=\"tg://user?id=%d\">%s</a></b> 在 <b>90秒内</b> 未进行验证，永久限制发言！", userId, firstName);
                     notification.setText(text);
                     notification.setParseMode(ParseMode.HTML);
                     Message message = sender.execute(notification);
@@ -149,6 +148,22 @@ public class TimerDelete {
                 }
             }
         }, delayInSeconds * 1000);
+    }
+
+    public void deleteMessageImmediatelyAndNotifyAfterDelay(AbsSender sender, String chatId, Integer messageId, Long userId, String text) {
+            try {
+                sender.execute(new DeleteMessage(chatId,messageId));
+                captchaManager.clearMappingsForUser(userId.toString());
+                // 在此发送提示消息
+                SendMessage notification = new SendMessage();
+                notification.setChatId(chatId);
+                notification.setText(text);
+                notification.setParseMode(ParseMode.HTML);
+                Message message = sender.execute(notification);
+                deleteMessageByMessageIdDelay(sender,chatId,message.getMessageId(),10);
+            } catch (TelegramApiException e) {
+                e.printStackTrace();
+            }
     }
 
     public void deleteMessageByMessageIdDelay(AbsSender sender, String chatId, Integer messageId, int delayInSeconds) {

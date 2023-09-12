@@ -2,15 +2,12 @@ package top.feiyangdigital.handleService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.telegram.telegrambots.meta.api.methods.groupadministration.LeaveChat;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.User;
 import org.telegram.telegrambots.meta.api.objects.chatmember.ChatMember;
 import org.telegram.telegrambots.meta.bots.AbsSender;
-import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import top.feiyangdigital.entity.BaseInfo;
-import top.feiyangdigital.entity.GroupInfoWithBLOBs;
 import top.feiyangdigital.entity.KeywordsFormat;
 import top.feiyangdigital.sqlService.GroupInfoService;
 import top.feiyangdigital.utils.SendContent;
@@ -19,7 +16,6 @@ import top.feiyangdigital.utils.groupCaptch.CaptchaManagerCacheMap;
 import top.feiyangdigital.utils.groupCaptch.RestrictOrUnrestrictUser;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 @Service
@@ -79,7 +75,8 @@ public class NewMemberIntoGroup {
                 Message message1 = sender.execute(sendContent.createResponseMessage(update, keywordsFormat, "html"));
                 Integer messageId = message1.getMessageId();
                 captchaManagerCacheMap.updateUserMapping(userId.toString(),chatId.toString(), 0, messageId);
-                timerDelete.deleteMessageAndNotifyAfterDelay(sender, chatId.toString(), messageId, 90, userId, firstName);
+                String text1 = String.format("用户 <b><a href=\"tg://user?id=%d\">%s</a></b> 在 <b>90秒内</b> 未进行验证，永久限制发言！", userId, firstName);
+                timerDelete.deleteMessageAndNotifyAfterDelay(sender, chatId.toString(), messageId, 90, userId, text1);
             } catch (Exception e) {
                 e.printStackTrace();
             }

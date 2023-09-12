@@ -39,20 +39,19 @@ public class TgBotApplication implements CommandLineRunner {
     public void run(String... args) throws Exception {
         if ("longPolling".equals(BaseInfo.getBotMode())) {
             log.info("longPolling模式已启动");
+            tgLongPollingBot.getOptions().setAllowedUpdates(Arrays.asList("update_id","message","edited_message","channel_post","edited_channel_post","inline_query","chosen_inline_result","callback_query","shipping_query","pre_checkout_query","poll","poll_answer","my_chat_member","chat_member","chat_join_request"));
             tgLongPollingBot.setBotName(BaseInfo.getBotName());
             tgLongPollingBot.setBotToken(BaseInfo.getBotToken());
             tgLongPollingBot.setGroupCommands();
-            tgLongPollingBot.getOptions().setAllowedUpdates(Arrays.asList("update_id","message","edited_message","channel_post","edited_channel_post","inline_query","chosen_inline_result","callback_query","shipping_query","pre_checkout_query","poll","poll_answer","my_chat_member","chat_member","chat_join_request"));
             TelegramBotsApi botsApi = new TelegramBotsApi(DefaultBotSession.class);
             botsApi.registerBot(tgLongPollingBot);
         } else if ("webhook".equals(BaseInfo.getBotMode())) {
             log.info("webhook模式已启动");
+            tgWebhookBot.getOptions().setAllowedUpdates(Arrays.asList("update_id","message","edited_message","channel_post","edited_channel_post","inline_query","chosen_inline_result","callback_query","shipping_query","pre_checkout_query","poll","poll_answer","my_chat_member","chat_member","chat_join_request"));
             tgWebhookBot.setBotToken(BaseInfo.getBotToken());
             tgWebhookBot.setGroupCommands();
-            tgWebhookBot.getOptions().setAllowedUpdates(Arrays.asList("update_id","message","edited_message","channel_post","edited_channel_post","inline_query","chosen_inline_result","callback_query","shipping_query","pre_checkout_query","poll","poll_answer","my_chat_member","chat_member","chat_join_request"));
-            SetWebhook setWebhook = SetWebhook.builder().url(BaseInfo.getBotPath()).build();
             TelegramBotsApi telegramBotsApi = new TelegramBotsApi(DefaultBotSession.class);
-            telegramBotsApi.registerBot(tgWebhookBot, setWebhook);
+            telegramBotsApi.registerBot(tgWebhookBot, new SetWebhook(BaseInfo.getBotPath()));
         } else {
             throw new Exception("请将配置填写完整");
         }

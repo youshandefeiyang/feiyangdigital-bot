@@ -8,11 +8,8 @@ import org.telegram.telegrambots.meta.api.methods.ParseMode;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.methods.send.SendPhoto;
 import org.telegram.telegrambots.meta.api.objects.InputFile;
-import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
-import org.telegram.telegrambots.meta.api.objects.User;
 import org.telegram.telegrambots.meta.bots.AbsSender;
-import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import top.feiyangdigital.utils.SendContent;
 import top.feiyangdigital.utils.TimerDelete;
 import top.feiyangdigital.utils.groupCaptch.CaptchaManager;
@@ -21,9 +18,6 @@ import top.feiyangdigital.utils.groupCaptch.RestrictOrUnrestrictUser;
 
 import java.io.ByteArrayInputStream;
 import java.util.Base64;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 @Service
 public class CaptchaGenerator {
@@ -84,14 +78,12 @@ public class CaptchaGenerator {
         Integer attempt = captchaManagerCacheMap.getAttemptForUser(userId,groupId);
         String correctAnswer = captchaManager.getAnswerForUser(userId);
         if (StringUtils.hasText(userAnswer) && !correctAnswer.isEmpty()) {
-            
-            
             SendMessage message;
             if (userAnswer.equalsIgnoreCase(correctAnswer)) {
                 message = sendContent.messageText(update, "验证通过，现在你可以在群里自由发言了");
                 restrictOrUnrestrictUser.unrestrictUser(sender,update.getMessage().getFrom().getId(),groupId);
-                timerDelete.deleteByMessageIdImmediately(sender,groupId,messageId);
-                captchaManager.clearMappingsForUser(userId);
+                String text = String.format("用户 <b><a href=\"tg://user?id=%d\">%s</a></b> 验证通过，解除群组限制！", update.getMessage().getFrom().getId(), update.getMessage().getFrom().getFirstName());
+                timerDelete.deleteMessageImmediatelyAndNotifyAfterDelay(sender, groupId, messageId,update.getMessage().getFrom().getId(),text);
             } else {
                 captchaManagerCacheMap.updateUserMapping(userId,groupId,attempt+1,messageId);
                 if (attempt>=1) {
