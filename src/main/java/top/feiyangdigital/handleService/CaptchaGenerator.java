@@ -83,7 +83,7 @@ public class CaptchaGenerator {
                 message = sendContent.messageText(update, "验证通过，现在你可以在群里自由发言了");
                 restrictOrUnrestrictUser.unrestrictUser(sender,update.getMessage().getFrom().getId(),groupId);
                 String text = String.format("用户 <b><a href=\"tg://user?id=%d\">%s</a></b> 验证通过，解除群组限制！", update.getMessage().getFrom().getId(), update.getMessage().getFrom().getFirstName());
-                timerDelete.deleteMessageImmediatelyAndNotifyAfterDelay(sender, groupId, messageId,update.getMessage().getFrom().getId(),text);
+                timerDelete.deleteMessageImmediatelyAndNotifyAfterDelay(sender, groupId, messageId,update.getMessage().getFrom().getId(),text,10);
             } else {
                 captchaManagerCacheMap.updateUserMapping(userId,groupId,attempt+1,messageId);
                 if (attempt>=1) {

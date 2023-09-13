@@ -75,7 +75,7 @@ public class NewMemberIntoGroup {
                 Integer messageId = message1.getMessageId();
                 captchaManagerCacheMap.updateUserMapping(userId.toString(), chatId.toString(), 0, messageId);
                 String text1 = String.format("用户 <b><a href=\"tg://user?id=%d\">%s</a></b> 在 <b>90秒内</b> 未进行验证，永久限制发言！", userId, firstName);
-                timerDelete.deleteMessageAndNotifyAfterDelay(sender, chatId.toString(), messageId, 90, userId, text1);
+                timerDelete.deleteMessageAndNotifyAfterDelay(sender, chatId.toString(), messageId, 90, userId, text1,20);
             } catch (Exception e) {
                 e.printStackTrace();
             }

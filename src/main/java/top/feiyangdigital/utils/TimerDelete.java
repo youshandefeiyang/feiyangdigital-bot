@@ -128,7 +128,7 @@ public class TimerDelete {
         }
     }
 
-    public void deleteMessageAndNotifyAfterDelay(AbsSender sender, String chatId, Integer messageId, int delayInSeconds, Long userId, String text) {
+    public void deleteMessageAndNotifyAfterDelay(AbsSender sender, String chatId, Integer messageId, int delayInSeconds, Long userId, String text,int notifyDelay) {
         new Timer().schedule(new TimerTask() {
             @Override
             public void run() {
@@ -141,7 +141,7 @@ public class TimerDelete {
                     notification.setText(text);
                     notification.setParseMode(ParseMode.HTML);
                     Message message = sender.execute(notification);
-                    deleteMessageByMessageIdDelay(sender,chatId,message.getMessageId(),20);
+                    deleteMessageByMessageIdDelay(sender,chatId,message.getMessageId(),notifyDelay);
 
                 } catch (TelegramApiException e) {
                     // 如果您仍希望不论是否出现异常都发送提示，那么将发送提示的逻辑移至catch块外部
@@ -150,7 +150,7 @@ public class TimerDelete {
         }, delayInSeconds * 1000);
     }
 
-    public void deleteMessageImmediatelyAndNotifyAfterDelay(AbsSender sender, String chatId, Integer messageId, Long userId, String text) {
+    public void deleteMessageImmediatelyAndNotifyAfterDelay(AbsSender sender, String chatId, Integer messageId, Long userId, String text,int notifyDelay) {
             try {
                 sender.execute(new DeleteMessage(chatId,messageId));
                 captchaManager.clearMappingsForUser(userId.toString());
@@ -160,7 +160,7 @@ public class TimerDelete {
                 notification.setText(text);
                 notification.setParseMode(ParseMode.HTML);
                 Message message = sender.execute(notification);
-                deleteMessageByMessageIdDelay(sender,chatId,message.getMessageId(),10);
+                deleteMessageByMessageIdDelay(sender,chatId,message.getMessageId(),notifyDelay);
             } catch (TelegramApiException e) {
                 e.printStackTrace();
             }
