@@ -40,8 +40,8 @@ public class MessageHandle {
             String regex = keywordFormat.getRegex();
             Pattern pattern = Pattern.compile(regex);
 
-            if (currentMap.containsKey("DelWelcome")) {// 这是欢迎词，不需要匹配直接返回
-                return;
+            if (currentMap.containsKey("DelWelcome")) {
+                //不执行任何操作
             } else if (currentMap.containsKey("DeleteAfterXSeconds")) {
                 if (pattern.matcher(messageText).find()) {
                     // 用户违规了

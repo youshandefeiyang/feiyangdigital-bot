@@ -75,7 +75,7 @@ public class CommonFunction {
 
     public void mainFunc(AbsSender sender, Update update) {
         
-        if (update.hasMessage() && update.getMessage().getChat().isUserChat()) {
+        if (update.hasMessage() && update.getMessage().getText()!=null && update.getMessage().getChat().isUserChat()) {
 
             if (update.getMessage().getText().contains("start _groupId")) {
                 GroupInfoWithBLOBs groupInfoWithBLOBs = groupInfoService.selAllByGroupId(update.getMessage().getText().split("_")[1].substring(7));
