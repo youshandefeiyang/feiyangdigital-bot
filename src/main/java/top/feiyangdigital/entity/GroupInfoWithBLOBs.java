@@ -9,8 +9,6 @@ import java.io.Serializable;
 public class GroupInfoWithBLOBs extends GroupInfo implements Serializable {
     private String keywords;
 
-    private String intogrouprules;
-
     private String channelspammerswhitelist;
 
     private static final long serialVersionUID = 1L;
@@ -21,14 +19,6 @@ public class GroupInfoWithBLOBs extends GroupInfo implements Serializable {
 
     public void setKeywords(String keywords) {
         this.keywords = keywords;
-    }
-
-    public String getIntogrouprules() {
-        return intogrouprules;
-    }
-
-    public void setIntogrouprules(String intogrouprules) {
-        this.intogrouprules = intogrouprules;
     }
 
     public String getChannelspammerswhitelist() {
@@ -62,7 +52,6 @@ public class GroupInfoWithBLOBs extends GroupInfo implements Serializable {
             && (this.getIntogroupwelcomeflag() == null ? other.getIntogroupwelcomeflag() == null : this.getIntogroupwelcomeflag().equals(other.getIntogroupwelcomeflag()))
             && (this.getIntogroupusernamecheckflag() == null ? other.getIntogroupusernamecheckflag() == null : this.getIntogroupusernamecheckflag().equals(other.getIntogroupusernamecheckflag()))
             && (this.getKeywords() == null ? other.getKeywords() == null : this.getKeywords().equals(other.getKeywords()))
-            && (this.getIntogrouprules() == null ? other.getIntogrouprules() == null : this.getIntogrouprules().equals(other.getIntogrouprules()))
             && (this.getChannelspammerswhitelist() == null ? other.getChannelspammerswhitelist() == null : this.getChannelspammerswhitelist().equals(other.getChannelspammerswhitelist()));
     }
 
@@ -81,7 +70,6 @@ public class GroupInfoWithBLOBs extends GroupInfo implements Serializable {
         result = prime * result + ((getIntogroupwelcomeflag() == null) ? 0 : getIntogroupwelcomeflag().hashCode());
         result = prime * result + ((getIntogroupusernamecheckflag() == null) ? 0 : getIntogroupusernamecheckflag().hashCode());
         result = prime * result + ((getKeywords() == null) ? 0 : getKeywords().hashCode());
-        result = prime * result + ((getIntogrouprules() == null) ? 0 : getIntogrouprules().hashCode());
         result = prime * result + ((getChannelspammerswhitelist() == null) ? 0 : getChannelspammerswhitelist().hashCode());
         return result;
     }
@@ -93,7 +81,6 @@ public class GroupInfoWithBLOBs extends GroupInfo implements Serializable {
         sb.append(" [");
         sb.append("Hash = ").append(hashCode());
         sb.append(", keywords=").append(keywords);
-        sb.append(", intogrouprules=").append(intogrouprules);
         sb.append(", channelspammerswhitelist=").append(channelspammerswhitelist);
         sb.append(", serialVersionUID=").append(serialVersionUID);
         sb.append("]");

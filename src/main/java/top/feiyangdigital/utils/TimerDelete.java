@@ -44,7 +44,7 @@ public class TimerDelete {
                 sender.execute(new DeleteMessage(update.getCallbackQuery().getMessage().getChatId().toString(), update.getCallbackQuery().getMessage().getMessageId()));
                 sender.execute(sendContent.messageText(update,"当前群组ID："+ addRuleCacheMap.getGroupIdForUser(userId)+" \n当前可输入状态："+ addRuleCacheMap.getKeywordsFlagForUser(userId)+"\n你已退出 "+ addRuleCacheMap.getGroupNameForUser(userId)+" 的设置"));
             } catch (TelegramApiException e) {
-                e.printStackTrace();
+                // 这里可以捕获异常，但是我们可以选择不执行任何操作，因为我们不关心消息是否确实已经被删除
             }
     }
 
@@ -53,7 +53,7 @@ public class TimerDelete {
             sender.execute(new DeleteMessage(update.getCallbackQuery().getMessage().getChatId().toString(), update.getCallbackQuery().getMessage().getMessageId()));
             sender.execute(sendContent.messageText(update,"你已退出设置"));
         } catch (TelegramApiException e) {
-            e.printStackTrace();
+            // 这里可以捕获异常，但是我们可以选择不执行任何操作，因为我们不关心消息是否确实已经被删除
         }
     }
 
@@ -62,7 +62,7 @@ public class TimerDelete {
             try {
                 sender.execute(new DeleteMessage(update.getMessage().getChatId().toString(), update.getMessage().getMessageId()));
             } catch (TelegramApiException e) {
-                e.printStackTrace();
+                // 这里可以捕获异常，但是我们可以选择不执行任何操作，因为我们不关心消息是否确实已经被删除
             }
         }
     }
@@ -75,7 +75,7 @@ public class TimerDelete {
                     try {
                         sender.execute(new DeleteMessage(update.getMessage().getChatId().toString(), update.getMessage().getMessageId()));
                     } catch (TelegramApiException e) {
-                        e.printStackTrace();
+                        // 这里可以捕获异常，但是我们可以选择不执行任何操作，因为我们不关心消息是否确实已经被删除
                     }
                 }
             }, delayInSeconds * 1000);
@@ -94,7 +94,7 @@ public class TimerDelete {
                         try {
                             sender.execute(new DeleteMessage(sentMessage.getChatId().toString(), sentMessage.getMessageId()));
                         } catch (TelegramApiException e) {
-                            e.printStackTrace();
+                            // 这里可以捕获异常，但是我们可以选择不执行任何操作，因为我们不关心消息是否确实已经被删除
                         }
                     }
                 }, delayInSeconds * 1000);
@@ -105,7 +105,7 @@ public class TimerDelete {
             return null;
 
         } catch (TelegramApiException e) {
-            e.printStackTrace();
+            // 这里可以捕获异常，但是我们可以选择不执行任何操作，因为我们不关心消息是否确实已经被删除
             return null;
         }
     }
@@ -123,12 +123,12 @@ public class TimerDelete {
             return null;
 
         } catch (TelegramApiException e) {
-            e.printStackTrace();
+            // 这里可以捕获异常，但是我们可以选择不执行任何操作，因为我们不关心消息是否确实已经被删除
             return null;
         }
     }
 
-    public void deleteMessageAndNotifyAfterDelay(AbsSender sender, String chatId, Integer messageId, int delayInSeconds, Long userId, String text,int notifyDelay) {
+    public void deleteMessageAndNotifyAfterDelay(AbsSender sender,SendMessage sendMessage, String chatId, Integer messageId, int delayInSeconds, Long userId, int notifyDelay) {
         new Timer().schedule(new TimerTask() {
             @Override
             public void run() {
@@ -136,11 +136,7 @@ public class TimerDelete {
                     sender.execute(new DeleteMessage(chatId, messageId));
                     captchaManager.clearMappingsForUser(userId.toString());
                     // 在此发送提示消息
-                    SendMessage notification = new SendMessage();
-                    notification.setChatId(chatId);
-                    notification.setText(text);
-                    notification.setParseMode(ParseMode.HTML);
-                    Message message = sender.execute(notification);
+                    Message message = sender.execute(sendMessage);
                     deleteMessageByMessageIdDelay(sender,chatId,message.getMessageId(),notifyDelay);
 
                 } catch (TelegramApiException e) {
@@ -150,20 +146,19 @@ public class TimerDelete {
         }, delayInSeconds * 1000);
     }
 
-    public void deleteMessageImmediatelyAndNotifyAfterDelay(AbsSender sender, String chatId, Integer messageId, Long userId, String text,int notifyDelay) {
+    public Integer deleteMessageImmediatelyAndNotifyAfterDelay(AbsSender sender,SendMessage sendMessage, String chatId, Integer messageId, Long userId,int notifyDelay) {
+           Integer msgId = 0;
             try {
                 sender.execute(new DeleteMessage(chatId,messageId));
                 captchaManager.clearMappingsForUser(userId.toString());
                 // 在此发送提示消息
-                SendMessage notification = new SendMessage();
-                notification.setChatId(chatId);
-                notification.setText(text);
-                notification.setParseMode(ParseMode.HTML);
-                Message message = sender.execute(notification);
-                deleteMessageByMessageIdDelay(sender,chatId,message.getMessageId(),notifyDelay);
+                Message message = sender.execute(sendMessage);
+                msgId = message.getMessageId();
+                deleteMessageByMessageIdDelay(sender,chatId,msgId,notifyDelay);
             } catch (TelegramApiException e) {
-                e.printStackTrace();
+                // 这里可以捕获异常，但是我们可以选择不执行任何操作，因为我们不关心消息是否确实已经被删除
             }
+            return msgId;
     }
 
     public void deleteMessageByMessageIdDelay(AbsSender sender, String chatId, Integer messageId, int delayInSeconds) {
@@ -184,7 +179,7 @@ public class TimerDelete {
             DeleteMessage deleteMessage = new DeleteMessage(chatId, messageId);
             sender.execute(deleteMessage);
         } catch (TelegramApiException e) {
-            e.printStackTrace();
+            // 这里可以捕获异常，但是我们可以选择不执行任何操作，因为我们不关心消息是否确实已经被删除
         }
     }
 }

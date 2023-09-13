@@ -15,7 +15,6 @@
   </resultMap>
   <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="top.feiyangdigital.entity.GroupInfoWithBLOBs">
     <result column="keyWords" jdbcType="LONGVARCHAR" property="keywords" />
-    <result column="intoGroupRules" jdbcType="LONGVARCHAR" property="intogrouprules" />
     <result column="ChannelSpammersWhiteList" jdbcType="LONGVARCHAR" property="channelspammerswhitelist" />
   </resultMap>
   <sql id="Example_Where_Clause">
@@ -81,7 +80,7 @@
     settingTimeStamp, intoGroupCheckFlag, intoGroupWelcomeFlag, intoGroupUserNameCheckFlag
   </sql>
   <sql id="Blob_Column_List">
-    keyWords, intoGroupRules, ChannelSpammersWhiteList
+    keyWords, ChannelSpammersWhiteList
   </sql>
   <select id="selectByExampleWithBLOBs" parameterType="top.feiyangdigital.entity.GroupInfoExample" resultMap="ResultMapWithBLOBs">
     select
@@ -152,14 +151,12 @@
       groupName, keyWordsFlag, deleteKeywordFlag, 
       settingTimeStamp, intoGroupCheckFlag, intoGroupWelcomeFlag, 
       intoGroupUserNameCheckFlag, keyWords, 
-      intoGroupRules, ChannelSpammersWhiteList
-      )
+      ChannelSpammersWhiteList)
     values (#{groupid,jdbcType=VARCHAR}, #{ownerandanonymousadmins,jdbcType=VARCHAR}, 
       #{groupname,jdbcType=VARCHAR}, #{keywordsflag,jdbcType=VARCHAR}, #{deletekeywordflag,jdbcType=VARCHAR}, 
       #{settingtimestamp,jdbcType=VARCHAR}, #{intogroupcheckflag,jdbcType=VARCHAR}, #{intogroupwelcomeflag,jdbcType=VARCHAR}, 
       #{intogroupusernamecheckflag,jdbcType=VARCHAR}, #{keywords,jdbcType=LONGVARCHAR}, 
-      #{intogrouprules,jdbcType=LONGVARCHAR}, #{channelspammerswhitelist,jdbcType=LONGVARCHAR}
-      )
+      #{channelspammerswhitelist,jdbcType=LONGVARCHAR})
   </insert>
   <insert id="insertSelective" keyColumn="id" keyProperty="id" parameterType="top.feiyangdigital.entity.GroupInfoWithBLOBs" useGeneratedKeys="true">
     insert into groupinfo
@@ -193,9 +190,6 @@
       </if>
       <if test="keywords != null">
         keyWords,
-      </if>
-      <if test="intogrouprules != null">
-        intoGroupRules,
       </if>
       <if test="channelspammerswhitelist != null">
         ChannelSpammersWhiteList,
@@ -231,9 +225,6 @@
       </if>
       <if test="keywords != null">
         #{keywords,jdbcType=LONGVARCHAR},
-      </if>
-      <if test="intogrouprules != null">
-        #{intogrouprules,jdbcType=LONGVARCHAR},
       </if>
       <if test="channelspammerswhitelist != null">
         #{channelspammerswhitelist,jdbcType=LONGVARCHAR},
@@ -282,9 +273,6 @@
       <if test="record.keywords != null">
         keyWords = #{record.keywords,jdbcType=LONGVARCHAR},
       </if>
-      <if test="record.intogrouprules != null">
-        intoGroupRules = #{record.intogrouprules,jdbcType=LONGVARCHAR},
-      </if>
       <if test="record.channelspammerswhitelist != null">
         ChannelSpammersWhiteList = #{record.channelspammerswhitelist,jdbcType=LONGVARCHAR},
       </if>
@@ -306,7 +294,6 @@
       intoGroupWelcomeFlag = #{record.intogroupwelcomeflag,jdbcType=VARCHAR},
       intoGroupUserNameCheckFlag = #{record.intogroupusernamecheckflag,jdbcType=VARCHAR},
       keyWords = #{record.keywords,jdbcType=LONGVARCHAR},
-      intoGroupRules = #{record.intogrouprules,jdbcType=LONGVARCHAR},
       ChannelSpammersWhiteList = #{record.channelspammerswhitelist,jdbcType=LONGVARCHAR}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
@@ -361,9 +348,6 @@
       <if test="keywords != null">
         keyWords = #{keywords,jdbcType=LONGVARCHAR},
       </if>
-      <if test="intogrouprules != null">
-        intoGroupRules = #{intogrouprules,jdbcType=LONGVARCHAR},
-      </if>
       <if test="channelspammerswhitelist != null">
         ChannelSpammersWhiteList = #{channelspammerswhitelist,jdbcType=LONGVARCHAR},
       </if>
@@ -382,7 +366,6 @@
       intoGroupWelcomeFlag = #{intogroupwelcomeflag,jdbcType=VARCHAR},
       intoGroupUserNameCheckFlag = #{intogroupusernamecheckflag,jdbcType=VARCHAR},
       keyWords = #{keywords,jdbcType=LONGVARCHAR},
-      intoGroupRules = #{intogrouprules,jdbcType=LONGVARCHAR},
       ChannelSpammersWhiteList = #{channelspammerswhitelist,jdbcType=LONGVARCHAR}
     where id = #{id,jdbcType=INTEGER}
   </update>

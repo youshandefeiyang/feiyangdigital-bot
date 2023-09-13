@@ -58,12 +58,12 @@ public class ReplyLegal {
 
             // 确保操作有效
             String operation = botActionParts[0];
-            if (!Arrays.asList("del", "kick", "ban", "welcome").contains(operation)) return false;
+            if (!Arrays.asList("del", "kick", "ban", "intoGroupBan", "welcome").contains(operation)) return false;
 
             // 如果只有操作和字符串（针对welcome）
-            if (operation.equals("welcome") && botActionParts.length == 2){
+            if (operation.equals("welcome") && botActionParts.length == 2) {
                 return true;
-            }else if (botActionParts.length == 2){
+            } else if (botActionParts.length == 2) {
                 return false;
             }
 

@@ -10,7 +10,8 @@ public class KeywordsFormat {
 
     private List<String> keywordsButtons = new ArrayList<>();
 
-    private Map<String, String> delMap = new ConcurrentHashMap<>();
+    private Map<String, String> ruleMap = new ConcurrentHashMap<>();
+
 
     public KeywordsFormat(){
 
@@ -29,8 +30,10 @@ public class KeywordsFormat {
                 String[] btnParts = action.substring(5).split("\\$\\$\\$");
                 keywordsButtons.addAll(Arrays.asList(btnParts));
             } else if (action.startsWith("del=")) {
-                delMap.put("DeleteAfterXSeconds", action.substring(4).split("、")[0].split("=")[1]);
-                delMap.put("DeleteReplyAfterYSeconds", action.substring(4).split("、")[1].split("=")[1]);
+                ruleMap.put("DeleteAfterXSeconds", action.substring(4).split("、")[0].split("=")[1]);
+                ruleMap.put("DeleteReplyAfterYSeconds", action.substring(4).split("、")[1].split("=")[1]);
+            } else if (action.startsWith("welcome=")){
+                ruleMap.put("DelWelcome",action.substring(8));
             }
         }
     }
@@ -53,8 +56,8 @@ public class KeywordsFormat {
         return keywordsButtons;
     }
 
-    public Map<String, String> getDelMap() {
-        return delMap;
+    public Map<String, String> getRuleMap() {
+        return ruleMap;
     }
 
     public void setUuid(String uuid) {
@@ -73,8 +76,8 @@ public class KeywordsFormat {
         this.keywordsButtons = keywordsButtons;
     }
 
-    public void setDelMap(Map<String, String> map) {
-        this.delMap = map;
+    public void setRuleMap(Map<String, String> map) {
+        this.ruleMap = map;
     }
 
     @Override
@@ -84,7 +87,7 @@ public class KeywordsFormat {
                 ", regex='" + regex + '\'' +
                 ", replyText='" + replyText + '\'' +
                 ", keywordsButtons=" + keywordsButtons +
-                ", map=" + delMap +
+                ", map=" + ruleMap +
                 '}';
     }
 }

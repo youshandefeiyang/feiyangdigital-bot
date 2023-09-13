@@ -36,12 +36,13 @@ public class MessageHandle {
         }
 
         for (KeywordsFormat keywordFormat : keywordsList) {
-            Map<String, String> currentMap = keywordFormat.getDelMap();
-            // 还可以添加其他map，比如禁言的map和封禁的map
+            Map<String, String> currentMap = keywordFormat.getRuleMap();
             String regex = keywordFormat.getRegex();
             Pattern pattern = Pattern.compile(regex);
 
-            if (currentMap.containsKey("DeleteAfterXSeconds")) {
+            if (currentMap.containsKey("DelWelcome")) {// 这是欢迎词，不需要匹配直接返回
+                return;
+            } else if (currentMap.containsKey("DeleteAfterXSeconds")) {
                 if (pattern.matcher(messageText).find()) {
                     // 用户违规了
                     int deleteAfterXSeconds = Integer.parseInt(currentMap.get("DeleteAfterXSeconds"));

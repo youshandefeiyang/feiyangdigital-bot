@@ -51,10 +51,18 @@ public class AddAutoReplyRule {
                         } else {
                             String waitRule = UUID.randomUUID().toString() + " | " + newRule;
                             String oldContent = groupInfoWithBLOBs.getKeywords();
-                            String newContent = "";
+                            String newContent;
                             if (oldContent==null||oldContent.isEmpty()){
                                 newContent = waitRule;
                             }else {
+                                if (oldContent.contains("&&welcome=") && newRule.contains("&&welcome=")) {
+                                    try {
+                                        sender.execute(sendContent.messageText(update, "欢迎词只能设置一个！"));
+                                    } catch (TelegramApiException e) {
+                                        e.printStackTrace();
+                                    }
+                                    return;
+                                }
                                 newContent = groupInfoWithBLOBs.getKeywords() + ("\n\n" + waitRule);
                             }
                             GroupInfoWithBLOBs groupInfoWithBLOBs1 = new GroupInfoWithBLOBs();

@@ -249,6 +249,68 @@ public class SendContent {
         return message;
     }
 
+    public SendMessage createGroupMessage(String chatId, KeywordsFormat keyword,String textFormat) {
+        String replyText = keyword.getReplyText();
+        List<String> keywordsButtons = keyword.getKeywordsButtons();
+        List<List<InlineKeyboardButton>> keyboard = new ArrayList<>();
+
+        for (String buttonLine : keywordsButtons) {
+            List<InlineKeyboardButton> row = new ArrayList<>();
+            String[] buttons = buttonLine.split("%%");
+
+            for (String btnData : buttons) {
+                InlineKeyboardButton button = new InlineKeyboardButton();
+
+                if (btnData.contains("$$")) {
+                    String[] buttonParts = btnData.split("\\$\\$");
+                    if (buttonParts.length == 2) {
+                        button.setText(buttonParts[0]);
+                        button.setUrl(buttonParts[1]);
+                    }
+                } else if (btnData.contains("##")) {
+                    String[] buttonParts = btnData.split("##");
+                    if (buttonParts.length == 2) {
+                        button.setText(buttonParts[0]);
+                        button.setCallbackData(buttonParts[1]);
+                    }
+                }
+
+                row.add(button);
+            }
+
+            keyboard.add(row);
+        }
+
+        InlineKeyboardMarkup markup = new InlineKeyboardMarkup();
+        markup.setKeyboard(keyboard);
+
+        SendMessage message = new SendMessage();
+        message.setChatId(chatId);
+
+        switch (textFormat) {
+            case "markdown":
+                message.setText(replyText);
+                message.setParseMode(ParseMode.MARKDOWN);
+                break;
+            case "markdownV2":
+                message.setText(escapeMarkdownV2(replyText));
+                message.setParseMode(ParseMode.MARKDOWNV2);
+                break;
+            case "html":
+                message.setText(replyText);
+                message.setParseMode(ParseMode.HTML);
+                break;
+            default:
+                message.setText(replyText);
+        }
+
+        message.setReplyMarkup(markup);
+
+        return message;
+    }
+
+
+
 
     private String escapeMarkdownV2(String text) {
         String[] symbols = new String[]{"_", "*", "[", "]", "(", ")", "~", "`", ">", "#", "+", "-", "=", "|", "{", "}", ".", "!"};

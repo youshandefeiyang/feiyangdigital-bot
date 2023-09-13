@@ -106,6 +106,9 @@ public class BotHelper {
             AnswerCallbackQuery answer = new AnswerCallbackQuery();
             answer.setCallbackQueryId(callbackQuery.getId());
             switch (callbackData) {
+                case "changeGroupWelcomeStatus":
+                    setGroupSettingView.changeGroupWelcomeStatus(sender,update);
+                    break;
                 case "autoReply":
                     setAutoReplyMenu.hadleCallBack(sender, update);
                     break;
