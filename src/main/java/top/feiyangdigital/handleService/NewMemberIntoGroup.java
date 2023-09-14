@@ -88,7 +88,9 @@ public class NewMemberIntoGroup {
                                 .replaceAll("@userId", String.format("<b><a href=\"tg://user?id=%d\">%s</a></b>", userId, firstName))
                                 .replaceAll("@groupName", String.format("<b>%s</b>", groupInfoWithBLOBs.getGroupname()));
                         newKeyFormat.setReplyText(text);
-                        String msgId = timerDelete.sendTimedMessage(sender,sendContent.createGroupMessage(chatId.toString(),newKeyFormat,"html"),Integer.parseInt(currentMap.get("DelWelcome")));
+                        SendMessage sendMessage = sendContent.createGroupMessage(chatId.toString(),newKeyFormat,"html");
+                        sendMessage.setDisableWebPagePreview(true);
+                        String msgId = timerDelete.sendTimedMessage(sender,sendMessage,Integer.parseInt(currentMap.get("DelWelcome")));
                         groupMessageIdCacheMap.setGroupMessageId(chatId.toString(), Integer.valueOf(msgId));
                     }
                 }

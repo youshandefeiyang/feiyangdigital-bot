@@ -112,7 +112,9 @@ public class CaptchaGenerator {
                                         .replaceAll("@userId", String.format("<b><a href=\"tg://user?id=%d\">%s</a></b>", update.getMessage().getFrom().getId(), update.getMessage().getFrom().getFirstName()))
                                         .replaceAll("@groupName", String.format("<b>%s</b>", groupInfoWithBLOBs.getGroupname()));
                                 newKeyFormat.setReplyText(text);
-                                Integer msgId = timerDelete.deleteMessageImmediatelyAndNotifyAfterDelay(sender, sendContent.createGroupMessage(groupId, newKeyFormat, "html"), groupId, messageId, update.getMessage().getFrom().getId(), Integer.parseInt(currentMap.get("DelWelcome")));
+                                SendMessage sendMessage = sendContent.createGroupMessage(groupId, newKeyFormat, "html");
+                                sendMessage.setDisableWebPagePreview(true);
+                                Integer msgId = timerDelete.deleteMessageImmediatelyAndNotifyAfterDelay(sender,sendMessage , groupId, messageId, update.getMessage().getFrom().getId(), Integer.parseInt(currentMap.get("DelWelcome")));
                                 groupMessageIdCacheMap.setGroupMessageId(groupId, msgId);
                             }
                         }
