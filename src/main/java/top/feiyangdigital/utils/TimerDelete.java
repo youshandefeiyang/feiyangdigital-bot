@@ -11,6 +11,7 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.bots.AbsSender;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import top.feiyangdigital.utils.groupCaptch.CaptchaManager;
+import top.feiyangdigital.utils.groupCaptch.CaptchaManagerCacheMap;
 import top.feiyangdigital.utils.ruleCacheMap.AddRuleCacheMap;
 import top.feiyangdigital.utils.ruleCacheMap.DeleteRuleCacheMap;
 
@@ -35,6 +36,9 @@ public class TimerDelete {
 
     @Autowired
     private CaptchaManager captchaManager;
+
+    @Autowired
+    private CaptchaManagerCacheMap captchaManagerCacheMap;
 
     public void deletePrivateMessageImmediately(AbsSender sender, Update update) {
         String userId = update.getCallbackQuery().getFrom().getId().toString();
@@ -151,6 +155,7 @@ public class TimerDelete {
             try {
                 sender.execute(new DeleteMessage(chatId,messageId));
                 captchaManager.clearMappingsForUser(userId.toString());
+                captchaManagerCacheMap.clearMappingsForUser(userId.toString(), chatId);
                 // 在此发送提示消息
                 Message message = sender.execute(sendMessage);
                 msgId = message.getMessageId();

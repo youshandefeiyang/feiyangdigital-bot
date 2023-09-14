@@ -132,22 +132,24 @@ public class CaptchaGenerator {
                 notification.setParseMode(ParseMode.HTML);
                 timerDelete.deleteMessageImmediatelyAndNotifyAfterDelay(sender, notification, groupId, messageId, update.getMessage().getFrom().getId(), 10);
             } else {
-                captchaManagerCacheMap.updateUserMapping(userId, groupId, attempt + 1, messageId);
-                if (attempt >= 1) {
+                if(attempt != null) {
+                    captchaManagerCacheMap.updateUserMapping(userId, groupId, attempt + 1, messageId);
+                    if (attempt >= 1) {
+                        try {
+                            sender.execute(sendContent.messageText(update, "未通过验证，你的机会已经用尽！"));
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                        timerDelete.deleteByMessageIdImmediately(sender, groupId, messageId);
+                        captchaManager.clearMappingsForUser(userId);
+                        return;
+                    }
+                    SendMessage message = sendContent.messageText(update, "未通过验证，请再试一次，你只有两次机会，次数用尽/超时都将会永久禁言");
                     try {
-                        sender.execute(sendContent.messageText(update, "未通过验证，你的机会已经用尽！"));
+                        sender.execute(message);
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
-                    timerDelete.deleteByMessageIdImmediately(sender, groupId, messageId);
-                    captchaManager.clearMappingsForUser(userId);
-                    return;
-                }
-                SendMessage message = sendContent.messageText(update, "未通过验证，请再试一次，你只有两次机会，次数用尽/超时都将会永久禁言");
-                try {
-                    sender.execute(message);
-                } catch (Exception e) {
-                    e.printStackTrace();
                 }
             }
         }
