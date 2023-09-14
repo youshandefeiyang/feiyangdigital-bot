@@ -93,9 +93,13 @@ public class CaptchaGenerator {
         String correctAnswer = captchaManager.getAnswerForUser(userId);
         GroupInfoWithBLOBs groupInfoWithBLOBs = groupInfoService.selAllByGroupId(groupId);
         if (StringUtils.hasText(userAnswer) && !correctAnswer.isEmpty()) {
-            SendMessage message;
             if (userAnswer.equalsIgnoreCase(correctAnswer)) {
-                message = sendContent.messageText(update, "验证通过，现在你可以在群里自由发言了");
+                SendMessage message = sendContent.messageText(update, "验证通过，现在你可以在群里自由发言了");
+                try {
+                    sender.execute(message);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
                 restrictOrUnrestrictUser.unrestrictUser(sender, update.getMessage().getFrom().getId(), groupId);
                 if (groupInfoWithBLOBs != null && "open".equals(groupInfoWithBLOBs.getIntogroupwelcomeflag())) {
                     if (StringUtils.hasText(groupInfoWithBLOBs.getKeywords()) && groupInfoWithBLOBs.getKeywords().contains("&&welcome=")) {
@@ -139,12 +143,12 @@ public class CaptchaGenerator {
                     captchaManager.clearMappingsForUser(userId);
                     return;
                 }
-                message = sendContent.messageText(update, "未通过验证，请再试一次，你只有两次机会，次数用尽/超时都将会永久禁言");
-            }
-            try {
-                sender.execute(message);
-            } catch (Exception e) {
-                e.printStackTrace();
+                SendMessage message = sendContent.messageText(update, "未通过验证，请再试一次，你只有两次机会，次数用尽/超时都将会永久禁言");
+                try {
+                    sender.execute(message);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         }
     }
