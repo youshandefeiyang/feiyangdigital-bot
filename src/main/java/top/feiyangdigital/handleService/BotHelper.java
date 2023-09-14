@@ -107,6 +107,9 @@ public class BotHelper {
         AnswerCallbackQuery answer = new AnswerCallbackQuery();
         answer.setCallbackQueryId(callbackQuery.getId());
         switch (callbackData) {
+            case "changeIntoGroupUserNameCheckStatus":
+                setGroupSettingView.changeIntoGroupUserNameCheckStatus(sender,update);
+                return;
             case "changeGroupWelcomeStatus":
                 setGroupSettingView.changeGroupWelcomeStatus(sender, update);
                 return;
