@@ -84,7 +84,7 @@ public class BotHelper {
 
     public void sendInlineKeyboard(AbsSender sender, Update update) {
         String userId = update.getMessage().getFrom().getId().toString();
-        
+
         List<String> keywordsButtons = new ArrayList<>();
         KeywordsFormat keywordsFormat = new KeywordsFormat();
         keywordsButtons.add("📝自动回复##autoReply%%⚙️群组设置##groupSetting");
@@ -102,80 +102,81 @@ public class BotHelper {
     public void handleCallbackQuery(AbsSender sender, Update update) {
         CallbackQuery callbackQuery = update.getCallbackQuery();
         String callbackData = callbackQuery.getData();
-        if (callbackData != null && !callbackData.isEmpty()) {
-            AnswerCallbackQuery answer = new AnswerCallbackQuery();
-            answer.setCallbackQueryId(callbackQuery.getId());
-            switch (callbackData) {
-                case "changeGroupWelcomeStatus":
-                    setGroupSettingView.changeGroupWelcomeStatus(sender,update);
-                    break;
-                case "autoReply":
-                    setAutoReplyMenu.hadleCallBack(sender, update);
-                    break;
-                case "groupSetting":
-                    setGroupSettingView.hadleCallBack(sender,update);
-                    break;
-                case "changeGroupCheckStatus":
-                    setGroupSettingView.changeGroupCheckStatus(sender,update);
-                    break;
-                case "addReplyRule":
-                    setAutoReplyMenu.addReplyRule(sender, update);
-                    break;
-                case "selAllReplyRules":
-                    keywordFileSender.sendKeywordsFile(sender,update);
-                    break;
-                case "selAndDeleteReplyRule":
-                    setDeleteView.deleteRuleView(sender, update);
-                    break;
-                case "backToAutoReply":
-                    setAutoReplyMenu.backToAutoReply(sender, update);
-                    break;
-                case "deleteBackToAutoReply":
-                    setDeleteView.deleteBackToAutoReply(sender, update);
-                    break;
-                case "backMainMenu":
-                    commonCallBack.backMainMenu(sender, update);
-                    break;
-                case "closeMenu":
-                    timerDelete.deletePrivateMessageImmediately(sender, update);
-                    break;
-                case "close":
-                    timerDelete.deletePrivateUsualMessageImmediately(sender,update);
-                    break;
-                default:
-            }
+        if (callbackData == null || callbackData.isEmpty()) return;
 
-            if (callbackData.startsWith("adminUnrestrict")){
-                
-                for (ChatMember admin : adminList.getAdmins(sender, callbackQuery.getMessage().getChatId().toString())) {
-                    if ("GroupAnonymousBot".equals(callbackQuery.getFrom().getUserName()) || admin.getUser().getId().equals(callbackQuery.getFrom().getId())) {
-                        adminAllow.allow(sender,Long.valueOf(callbackData.substring(15)),callbackQuery.getMessage().getChatId().toString(),captchaManagerCacheMap.getMessageIdForUser(callbackData.substring(15),callbackQuery.getMessage().getChatId().toString()),answer);
-                        return;
-                    }
-                }
-                answer.setText("❌你无权执行该操作！");
-                try {
-                    sender.execute(answer);
-                } catch (TelegramApiException e) {
-                    e.printStackTrace();
-                }
-            }
-
-            if (deleteGropuRuleMap.getGroupRuleMapSize() > 0) {
-                String chatId = deleteRuleCacheMap.getGroupIdForUser(update.getCallbackQuery().getFrom().getId().toString());
-                String longUuid = deleteGropuRuleMap.getAllRulesFromGroupId(chatId).getShortUuidToFullUuidMap().get(callbackData);
-                if (longUuid != null && callbackData.equals(longUuid.substring(0, 5))) {
-                    DeleteGropuRuleMapEntity deleteGropuRuleMapEntity = new DeleteGropuRuleMapEntity(deleteGropuRuleMap);
-                    GroupInfoWithBLOBs groupInfoWithBLOBs = new GroupInfoWithBLOBs();
-                    groupInfoWithBLOBs.setKeywords(deleteGropuRuleMapEntity.removeRuleAndAssembleString(chatId, longUuid).trim());
-                    if (groupInfoService.updateSelectiveByChatId(groupInfoWithBLOBs, chatId)) {
-                        setDeleteView.deleteRuleSuccessCallBack(sender,update);
-                    }
-
-                }
-            }
+        AnswerCallbackQuery answer = new AnswerCallbackQuery();
+        answer.setCallbackQueryId(callbackQuery.getId());
+        switch (callbackData) {
+            case "changeGroupWelcomeStatus":
+                setGroupSettingView.changeGroupWelcomeStatus(sender, update);
+                return;
+            case "autoReply":
+                setAutoReplyMenu.hadleCallBack(sender, update);
+                return;
+            case "groupSetting":
+                setGroupSettingView.hadleCallBack(sender, update);
+                return;
+            case "changeGroupCheckStatus":
+                setGroupSettingView.changeGroupCheckStatus(sender, update);
+                return;
+            case "addReplyRule":
+                setAutoReplyMenu.addReplyRule(sender, update);
+                return;
+            case "selAllReplyRules":
+                keywordFileSender.sendKeywordsFile(sender, update);
+                return;
+            case "selAndDeleteReplyRule":
+                setDeleteView.deleteRuleView(sender, update);
+                return;
+            case "backToAutoReply":
+                setAutoReplyMenu.backToAutoReply(sender, update);
+                return;
+            case "deleteBackToAutoReply":
+                setDeleteView.deleteBackToAutoReply(sender, update);
+                return;
+            case "backMainMenu":
+                commonCallBack.backMainMenu(sender, update);
+                return;
+            case "closeMenu":
+                timerDelete.deletePrivateMessageImmediately(sender, update);
+                return;
+            case "close":
+                timerDelete.deletePrivateUsualMessageImmediately(sender, update);
+                return;
+            default:
         }
 
+        if (callbackData.startsWith("adminUnrestrict")) {
+
+            for (ChatMember admin : adminList.getAdmins(sender, callbackQuery.getMessage().getChatId().toString())) {
+                if ("GroupAnonymousBot".equals(callbackQuery.getFrom().getUserName()) || admin.getUser().getId().equals(callbackQuery.getFrom().getId())) {
+                    adminAllow.allow(sender, Long.valueOf(callbackData.substring(15)), callbackQuery.getMessage().getChatId().toString(), captchaManagerCacheMap.getMessageIdForUser(callbackData.substring(15), callbackQuery.getMessage().getChatId().toString()), answer);
+                    return;
+                }
+            }
+            answer.setText("❌你无权执行该操作！");
+            try {
+                sender.execute(answer);
+            } catch (TelegramApiException e) {
+                e.printStackTrace();
+            }
+            return;
+        }
+
+        if (deleteGropuRuleMap.getGroupRuleMapSize() > 0) {
+            String chatId = deleteRuleCacheMap.getGroupIdForUser(update.getCallbackQuery().getFrom().getId().toString());
+            String longUuid = deleteGropuRuleMap.getAllRulesFromGroupId(chatId).getShortUuidToFullUuidMap().get(callbackData);
+            if (longUuid != null && callbackData.equals(longUuid.substring(0, 5))) {
+                DeleteGropuRuleMapEntity deleteGropuRuleMapEntity = new DeleteGropuRuleMapEntity(deleteGropuRuleMap);
+                GroupInfoWithBLOBs groupInfoWithBLOBs = new GroupInfoWithBLOBs();
+                groupInfoWithBLOBs.setKeywords(deleteGropuRuleMapEntity.removeRuleAndAssembleString(chatId, longUuid).trim());
+                if (groupInfoService.updateSelectiveByChatId(groupInfoWithBLOBs, chatId)) {
+                    setDeleteView.deleteRuleSuccessCallBack(sender, update);
+                }
+
+            }
+        }
     }
+
 
 }
