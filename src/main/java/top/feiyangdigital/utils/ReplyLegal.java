@@ -1,9 +1,6 @@
 package top.feiyangdigital.utils;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import top.feiyangdigital.sqlService.GroupInfoService;
-import top.feiyangdigital.utils.ruleCacheMap.AddRuleCacheMap;
 
 import java.util.Arrays;
 import java.util.regex.Pattern;
@@ -11,15 +8,6 @@ import java.util.regex.PatternSyntaxException;
 
 @Component
 public class ReplyLegal {
-
-    @Autowired
-    private GroupInfoService groupInfoService;
-
-    @Autowired
-    private AddRuleCacheMap addRuleCacheMap;
-
-    @Autowired
-    private MatchList matchList;
 
     public boolean validateRule(String input) {
         if (input.contains(" | ")) return false;
@@ -44,7 +32,7 @@ public class ReplyLegal {
             for (String buttonLine : buttonsLines) {
                 String[] buttons = buttonLine.split("%%");
                 for (String button : buttons) {
-                    String[] buttonParts = button.split("\\$\\$");
+                    String[] buttonParts = button.split("\\$\\$|##");
                     if (buttonParts.length != 2) return false;
                     if (buttonParts[0].trim().isEmpty() || buttonParts[1].trim().isEmpty()) return false;
                 }
@@ -61,7 +49,7 @@ public class ReplyLegal {
             if (!Arrays.asList("del", "kick", "ban", "intoGroupBan", "welcome").contains(operation)) return false;
 
             // 如果只有操作和字符串（针对welcome）
-            if (operation.equals("welcome") && botActionParts.length == 2) {
+            if ((operation.equals("welcome") || operation.equals("intoGroupBan")) && botActionParts.length == 2) {
                 return true;
             } else if (botActionParts.length == 2) {
                 return false;

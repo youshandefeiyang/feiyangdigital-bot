@@ -40,7 +40,7 @@ public class MessageHandle {
             String regex = keywordFormat.getRegex();
             Pattern pattern = Pattern.compile(regex);
 
-            if (currentMap.containsKey("DelWelcome")) {
+            if (currentMap.containsKey("DelWelcome") || currentMap.containsKey("DelIntoGroupBan")) {
                 //不执行任何操作
             } else if (currentMap.containsKey("DeleteAfterXSeconds")) {
                 if (pattern.matcher(messageText).find()) {
@@ -75,6 +75,7 @@ public class MessageHandle {
                     } catch (TelegramApiException e) {
                         e.printStackTrace();
                     }
+                    break;
                 }
             }
         }

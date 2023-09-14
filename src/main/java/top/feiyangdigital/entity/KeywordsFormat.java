@@ -34,6 +34,8 @@ public class KeywordsFormat {
                 ruleMap.put("DeleteReplyAfterYSeconds", action.substring(4).split("、")[1].split("=")[1]);
             } else if (action.startsWith("welcome=")){
                 ruleMap.put("DelWelcome",action.substring(8));
+            } else if (action.startsWith("intoGroupBan=")) {
+                ruleMap.put("DelIntoGroupBan",action.substring(13));
             }
         }
     }
