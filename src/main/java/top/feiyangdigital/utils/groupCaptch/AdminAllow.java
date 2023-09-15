@@ -18,11 +18,15 @@ public class AdminAllow {
     @Autowired
     private CaptchaManager captchaManager;
 
+    @Autowired
+    private CaptchaManagerCacheMap captchaManagerCacheMap;
+
     public void allow(AbsSender sender, Long userId, String chatId,Integer messageId, AnswerCallbackQuery answer){
         restrictOrUnrestrictUser.unrestrictUser(sender,userId,chatId);
         answer.setText("用户已被手动解禁");
         timerDelete.deleteByMessageIdImmediately(sender,chatId,messageId);
         captchaManager.clearMappingsForUser(userId.toString());
+        captchaManagerCacheMap.clearMappingsForUser(userId.toString(), chatId);
         try {
             sender.execute(answer);
         } catch (TelegramApiException e) {
