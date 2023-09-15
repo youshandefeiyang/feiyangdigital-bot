@@ -98,7 +98,10 @@ public class NewMemberIntoGroup {
                             newKeyFormat.setKeywordsButtons(Collections.singletonList(keywordFormat.getKeywordsButtons().get(0).replaceAll("@singleUserId", userId.toString())));
                             SendMessage sendMessage = sendContent.createGroupMessage(chatId.toString(), newKeyFormat, "html");
                             sendMessage.setDisableWebPagePreview(true);
-                            timerDelete.sendTimedMessage(sender, sendMessage, Integer.parseInt(currentMap.get("DelIntoGroupBan")));
+                            String msgId = timerDelete.sendTimedMessage(sender, sendMessage, Integer.parseInt(currentMap.get("DelIntoGroupBan")));
+                            if (StringUtils.hasText(msgId)){
+                                captchaManagerCacheMap.updateUserMapping(userId.toString(), chatId.toString(), 0, Integer.valueOf(msgId));
+                            }
                             return;
                         }
                     }
