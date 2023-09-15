@@ -153,8 +153,7 @@ public class BotHelper {
 
             for (ChatMember admin : adminList.getAdmins(sender, callbackQuery.getMessage().getChatId().toString())) {
                 if ("GroupAnonymousBot".equals(callbackQuery.getFrom().getUserName()) || admin.getUser().getId().equals(callbackQuery.getFrom().getId())) {
-                    String[] userInfo = callbackData.substring(15).split("andFirstNameEqualTo");
-                    adminAllow.allow(sender,userInfo[1], Long.valueOf(userInfo[0]), callbackQuery.getMessage().getChatId().toString(), captchaManagerCacheMap.getMessageIdForUser(userInfo[0], callbackQuery.getMessage().getChatId().toString()), answer);
+                    adminAllow.allow(sender, Long.valueOf(callbackData.substring(15)), callbackQuery.getMessage().getChatId().toString(), captchaManagerCacheMap.getMessageIdForUser(callbackData.substring(15), callbackQuery.getMessage().getChatId().toString()), answer);
                     return;
                 }
             }

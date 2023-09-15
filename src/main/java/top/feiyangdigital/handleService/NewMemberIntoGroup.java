@@ -95,11 +95,10 @@ public class NewMemberIntoGroup {
                                     .replaceAll("@userId", String.format("<b><a href=\"tg://user?id=%d\">%s</a></b>", userId, firstName))
                                     .replaceAll("@groupName", String.format("<b>%s</b>", groupInfoWithBLOBs.getGroupname()));
                             newKeyFormat.setReplyText(text);
-                            newKeyFormat.setKeywordsButtons(Collections.singletonList(keywordFormat.getKeywordsButtons().get(0).replaceAll("@singleUserId", userId.toString()).replaceAll("@singleFirstName",firstName)));
+                            newKeyFormat.setKeywordsButtons(Collections.singletonList(keywordFormat.getKeywordsButtons().get(0).replaceAll("@singleUserId", userId.toString())));
                             SendMessage sendMessage = sendContent.createGroupMessage(chatId.toString(), newKeyFormat, "html");
                             sendMessage.setDisableWebPagePreview(true);
-                            String msgId = timerDelete.sendTimedMessage(sender, sendMessage, Integer.parseInt(currentMap.get("DelIntoGroupBan")));
-                            captchaManagerCacheMap.updateUserMapping(userId.toString(), chatId.toString(), 0, Integer.valueOf(msgId));
+                            timerDelete.sendTimedMessage(sender, sendMessage, Integer.parseInt(currentMap.get("DelIntoGroupBan")));
                             return;
                         }
                     }
@@ -143,7 +142,7 @@ public class NewMemberIntoGroup {
             restrictOrUnrestrictUser.restrictUser(sender, userId, chatId.toString());
             KeywordsFormat keywordsFormat = new KeywordsFormat();
             List<String> keywordsButtons = new ArrayList<>();
-            keywordsButtons.add("👥管理员解封##adminUnrestrict" + userId + "andFirstNameEqualTo" + firstName);
+            keywordsButtons.add("👥管理员解封##adminUnrestrict" + userId);
             keywordsButtons.add("❗️点击验证$$" + url);
             keywordsFormat.setKeywordsButtons(keywordsButtons);
             String text = String.format("欢迎 <b><a href=\"tg://user?id=%d\">%s</a></b> 加入<b> %s </b>, 现在你需要在<b>90秒内</b>点击下面的验证按钮完成验证，超时将永久限制发言！", userId, firstName, groupTitle);
