@@ -2,7 +2,7 @@ version: '3'
 
 services:
   feiyangdigital-bot:
-    image: youshandefeiyang/feiyangdigital-bot:latest # 使用您在DockerHub上的镜像
+    image: youshandefeiyang/feiyangdigital-bot:latest
     ports:
       - "38455:8080"
     volumes:
@@ -28,6 +28,19 @@ services:
     volumes:
       - mysql-data:/var/lib/mysql
       - /home/feiyangdigitalbotconf/bot.sql:/docker-entrypoint-initdb.d/bot.sql
+    restart: unless-stopped
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin:latest
+    ports:
+      - "38422:80"
+    depends_on:
+      - mysql
+    environment:
+      PMA_HOST: mysql
+      PMA_PORT: 3306
+      PMA_USER: root
+      PMA_PASSWORD: password
     restart: unless-stopped
 
 volumes:
