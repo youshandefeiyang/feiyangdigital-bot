@@ -262,7 +262,7 @@ public class CommonFunction {
                         timerDelete.deleteMessageImmediatelyAndNotifyAfterDelay(sender, notification, groupId, messageId, Long.valueOf(userId), 90);
                         botRecord1.setViolationcount(violationCount + 1);
                     } else if (StringUtils.hasText(realUpdateText)) {
-                        checkMessage(sender, update);
+                        contentAiOption(sender,groupId,userId,firstName,messageId,realUpdateText);
                     } else {
                         botRecord1.setNormalcount(normalCount + 1);
                     }
@@ -290,11 +290,11 @@ public class CommonFunction {
         }
         GroupInfoWithBLOBs groupInfoWithBLOBs = groupInfoService.selAllByGroupId(groupId);
         if (groupInfoWithBLOBs != null && "open".equals(groupInfoWithBLOBs.getAiflag()) && StringUtils.hasText(content)) {
-            contentAiOption(sender, update, groupId, userId, firstName, messageId, content);
+            contentAiOption(sender, groupId, userId, firstName, messageId, content);
         }
     }
 
-    public void contentAiOption(AbsSender sender, Update update, String groupId, String userId, String firstName, Integer messageId, String content) {
+    public void contentAiOption(AbsSender sender, String groupId, String userId, String firstName, Integer messageId, String content) {
         BotRecord botRecord = botRecordService.selBotRecordByGidAndUid(groupId, userId);
         if (botRecord != null) {
             Integer violationCount = botRecord.getViolationcount();
