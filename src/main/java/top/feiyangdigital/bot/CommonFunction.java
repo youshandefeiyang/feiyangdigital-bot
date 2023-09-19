@@ -195,75 +195,73 @@ public class CommonFunction {
         GroupInfoWithBLOBs groupInfoWithBLOBs = groupInfoService.selAllByGroupId(groupId);
         if (groupInfoWithBLOBs != null && "open".equals(groupInfoWithBLOBs.getAiflag())) {
             BotRecord botRecord = botRecordService.selBotRecordByGidAndUid(groupId, userId);
-            if (botRecord != null && StringUtils.hasText(botRecord.getJointimestamp())) {
-                if (daysDifference(Long.parseLong(botRecord.getJointimestamp())) < 10) {
-                    Integer violationCount = botRecord.getViolationcount();
-                    Integer normalCount = botRecord.getNormalcount();
-                    if (violationCount >= 5) {
-                        String text = String.format("用户 <b><a href=\"tg://user?id=%d\">%s</a></b> 已被AI检测违规超过5次，永久限制发言！", Long.valueOf(userId), firstName);
+            if (botRecord != null) {
+                Integer violationCount = botRecord.getViolationcount();
+                Integer normalCount = botRecord.getNormalcount();
+                if (violationCount >= 5) {
+                    String text = String.format("用户 <b><a href=\"tg://user?id=%d\">%s</a></b> 已被AI检测违规超过5次，永久限制发言！", Long.valueOf(userId), firstName);
+                    SendMessage notification = new SendMessage();
+                    notification.setChatId(groupId);
+                    notification.setText(text);
+                    notification.setParseMode(ParseMode.HTML);
+                    timerDelete.deleteMessageImmediatelyAndNotifyAfterDelay(sender, notification, groupId, messageId, Long.valueOf(userId), 90);
+                    restrictOrUnrestrictUser.restrictUser(sender, Long.valueOf(userId), groupId);
+                } else if (normalCount >= 5) {
+                    return;
+                }
+                String fileId = "";
+                if (update.getMessage().hasPhoto()) {
+                    fileId = update.getMessage().getPhoto().get(update.getMessage().getPhoto().size() - 1).getFileId();
+                } else if (update.getMessage().hasDocument() && update.getMessage().getDocument().getThumbnail() != null) {
+                    fileId = update.getMessage().getDocument().getThumbnail().getFileId();
+                } else if (update.getMessage().hasSticker() && update.getMessage().getSticker().getThumbnail() != null) {
+                    fileId = update.getMessage().getSticker().getThumbnail().getFileId();
+                } else if ((update.getMessage().hasVideo() || update.getMessage().hasVideoNote()) && (update.getMessage().getVideo().getThumbnail() != null || update.getMessage().getVideoNote().getThumbnail() != null)) {
+                    if (update.getMessage().getVideo().getThumbnail() != null) {
+                        fileId = update.getMessage().getVideo().getThumbnail().getFileId();
+                    } else if (update.getMessage().getVideoNote().getThumbnail() != null) {
+                        fileId = update.getMessage().getVideoNote().getThumbnail().getFileId();
+                    }
+                }
+                if (StringUtils.hasText(fileId)) {
+                    GetFile getFile = GetFile.builder()
+                            .fileId(fileId)
+                            .build();
+                    String url;
+                    File file = null;
+                    try {
+                        url = sender.execute(getFile).getFileUrl(BaseInfo.getBotToken());
+                        file = googleCloudVisionService.downloadFileWithOkHttp(url);
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    String miaoshu = "";
+                    List<EntityAnnotation> list = googleCloudVisionService.detectTextFromLocalImage(file);
+                    if (!list.isEmpty()) {
+                        miaoshu = list.get(0).getDescription();
+                    }
+                    SafeSearchAnnotation safeSearchAnnotation = googleCloudVisionService.detectSafeSearchFromLocalImage(file);
+                    BotRecord botRecord1 = new BotRecord();
+                    update.getMessage().setText(miaoshu);
+                    String content = update.getMessage().getText();
+                    if (safeSearchAnnotation.getAdultValue() >= 3 || safeSearchAnnotation.getViolenceValue() >= 3 || safeSearchAnnotation.getRacyValue() >= 3) {
+                        String text = String.format("用户 <b><a href=\"tg://user?id=%d\">%s</a></b> 已被AI检测发送违规媒体，直接删除！", Long.valueOf(userId), firstName);
                         SendMessage notification = new SendMessage();
                         notification.setChatId(groupId);
                         notification.setText(text);
                         notification.setParseMode(ParseMode.HTML);
                         timerDelete.deleteMessageImmediatelyAndNotifyAfterDelay(sender, notification, groupId, messageId, Long.valueOf(userId), 90);
-                        restrictOrUnrestrictUser.restrictUser(sender, Long.valueOf(userId), groupId);
-                    } else if (normalCount >= 5) {
-                        return;
+                        botRecord1.setViolationcount(violationCount + 1);
+                    } else if (StringUtils.hasText(miaoshu)) {
+                        checkMessage(sender, update);
+                    } else {
+                        botRecord1.setNormalcount(normalCount + 1);
                     }
-                    String fileId = "";
-                    if (update.getMessage().hasPhoto()) {
-                        fileId = update.getMessage().getPhoto().get(update.getMessage().getPhoto().size() - 1).getFileId();
-                    } else if (update.getMessage().hasDocument() && update.getMessage().getDocument().getThumbnail() != null) {
-                        fileId = update.getMessage().getDocument().getThumbnail().getFileId();
-                    } else if (update.getMessage().hasSticker() && update.getMessage().getSticker().getThumbnail() != null) {
-                        fileId = update.getMessage().getSticker().getThumbnail().getFileId();
-                    } else if ((update.getMessage().hasVideo() || update.getMessage().hasVideoNote()) && (update.getMessage().getVideo().getThumbnail() != null || update.getMessage().getVideoNote().getThumbnail() != null)) {
-                        if (update.getMessage().getVideo().getThumbnail() != null) {
-                            fileId = update.getMessage().getVideo().getThumbnail().getFileId();
-                        } else if (update.getMessage().getVideoNote().getThumbnail() != null) {
-                            fileId = update.getMessage().getVideoNote().getThumbnail().getFileId();
-                        }
-                    }
-                    if (StringUtils.hasText(fileId)) {
-                        GetFile getFile = GetFile.builder()
-                                .fileId(fileId)
-                                .build();
-                        String url;
-                        File file = null;
-                        try {
-                            url = sender.execute(getFile).getFileUrl(BaseInfo.getBotToken());
-                            file = googleCloudVisionService.downloadFileWithOkHttp(url);
-
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                        String miaoshu = "";
-                        List<EntityAnnotation> list = googleCloudVisionService.detectTextFromLocalImage(file);
-                        if (!list.isEmpty()) {
-                            miaoshu = list.get(0).getDescription();
-                        }
-                        SafeSearchAnnotation safeSearchAnnotation = googleCloudVisionService.detectSafeSearchFromLocalImage(file);
-                        BotRecord botRecord1 = new BotRecord();
-                        update.getMessage().setText(miaoshu);
-                        String content = update.getMessage().getText();
-                        if (safeSearchAnnotation.getAdultValue() >= 3 || safeSearchAnnotation.getViolenceValue() >= 3 || safeSearchAnnotation.getRacyValue() >= 3) {
-                            String text = String.format("用户 <b><a href=\"tg://user?id=%d\">%s</a></b> 已被AI检测发送违规媒体，直接删除！", Long.valueOf(userId), firstName);
-                            SendMessage notification = new SendMessage();
-                            notification.setChatId(groupId);
-                            notification.setText(text);
-                            notification.setParseMode(ParseMode.HTML);
-                            timerDelete.deleteMessageImmediatelyAndNotifyAfterDelay(sender, notification, groupId, messageId, Long.valueOf(userId), 90);
-                            botRecord1.setViolationcount(violationCount + 1);
-                        } else if (StringUtils.hasText(miaoshu)) {
-                            checkMessage(sender, update);
-                        } else {
-                            botRecord1.setNormalcount(normalCount + 1);
-                        }
-                        botRecord1.setLastmessage(content);
-                        botRecordService.updateRecordByGidAndUid(groupId, userId, botRecord1);
-                        if (file != null) {
-                            file.delete();
-                        }
+                    botRecord1.setLastmessage(content);
+                    botRecordService.updateRecordByGidAndUid(groupId, userId, botRecord1);
+                    if (file != null) {
+                        file.delete();
                     }
                 }
             }
@@ -290,41 +288,39 @@ public class CommonFunction {
 
     public void contentAiOption(AbsSender sender, Update update, String groupId, String userId, String firstName, Integer messageId, String content) {
         BotRecord botRecord = botRecordService.selBotRecordByGidAndUid(groupId, userId);
-        if (botRecord != null && StringUtils.hasText(botRecord.getJointimestamp())) {
-            if (daysDifference(Long.parseLong(botRecord.getJointimestamp())) < 10) {
-                Integer violationCount = botRecord.getViolationcount();
-                Integer normalCount = botRecord.getNormalcount();
-                if (violationCount >= 5) {
-                    String text = String.format("用户 <b><a href=\"tg://user?id=%d\">%s</a></b> 已被AI检测违规超过5次，永久限制发言！", Long.valueOf(userId), firstName);
+        if (botRecord != null) {
+            Integer violationCount = botRecord.getViolationcount();
+            Integer normalCount = botRecord.getNormalcount();
+            if (violationCount >= 5) {
+                String text = String.format("用户 <b><a href=\"tg://user?id=%d\">%s</a></b> 已被AI检测违规超过5次，永久限制发言！", Long.valueOf(userId), firstName);
+                SendMessage notification = new SendMessage();
+                notification.setChatId(groupId);
+                notification.setText(text);
+                notification.setParseMode(ParseMode.HTML);
+                timerDelete.deleteMessageImmediatelyAndNotifyAfterDelay(sender, notification, groupId, messageId, Long.valueOf(userId), 90);
+                restrictOrUnrestrictUser.restrictUser(sender, Long.valueOf(userId), groupId);
+            } else if (normalCount >= 5) {
+                return;
+            }
+            List<ChatChoice> list = openAiApiService.getOpenAiAnalyzeResult(content);
+            if (!list.isEmpty()) {
+                JSONObject jsonObject = JSONObject.parseObject(list.get(0).getMessage().getContent());
+                Integer spamChance = jsonObject.getInteger("spamChance");
+                String spamReason = jsonObject.getString("spamReason");
+                BotRecord botRecord1 = new BotRecord();
+                if (spamChance >= 6) {
+                    String text = String.format("用户 <b><a href=\"tg://user?id=%d\">%s</a></b> 已被AI检测发送违规词，判断原因如下：\n<tg-spoiler>%s</tg-spoiler>", Long.valueOf(userId), firstName, spamReason);
                     SendMessage notification = new SendMessage();
                     notification.setChatId(groupId);
                     notification.setText(text);
                     notification.setParseMode(ParseMode.HTML);
                     timerDelete.deleteMessageImmediatelyAndNotifyAfterDelay(sender, notification, groupId, messageId, Long.valueOf(userId), 90);
-                    restrictOrUnrestrictUser.restrictUser(sender, Long.valueOf(userId), groupId);
-                } else if (normalCount >= 5) {
-                    return;
+                    botRecord1.setViolationcount(violationCount + 1);
+                } else {
+                    botRecord1.setNormalcount(normalCount + 1);
                 }
-                List<ChatChoice> list = openAiApiService.getOpenAiAnalyzeResult(content);
-                if (!list.isEmpty()) {
-                    JSONObject jsonObject = JSONObject.parseObject(list.get(0).getMessage().getContent());
-                    Integer spamChance = jsonObject.getInteger("spamChance");
-                    String spamReason = jsonObject.getString("spamReason");
-                    BotRecord botRecord1 = new BotRecord();
-                    if (spamChance >= 6) {
-                        String text = String.format("用户 <b><a href=\"tg://user?id=%d\">%s</a></b> 已被AI检测发送违规词，判断原因如下：\n<tg-spoiler>%s</tg-spoiler>", Long.valueOf(userId), firstName, spamReason);
-                        SendMessage notification = new SendMessage();
-                        notification.setChatId(groupId);
-                        notification.setText(text);
-                        notification.setParseMode(ParseMode.HTML);
-                        timerDelete.deleteMessageImmediatelyAndNotifyAfterDelay(sender, notification, groupId, messageId, Long.valueOf(userId), 90);
-                        botRecord1.setViolationcount(violationCount + 1);
-                    } else {
-                        botRecord1.setNormalcount(normalCount + 1);
-                    }
-                    botRecord1.setLastmessage(content);
-                    botRecordService.updateRecordByGidAndUid(groupId, userId, botRecord1);
-                }
+                botRecord1.setLastmessage(content);
+                botRecordService.updateRecordByGidAndUid(groupId, userId, botRecord1);
             }
         }
     }

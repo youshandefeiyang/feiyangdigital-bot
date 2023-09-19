@@ -116,6 +116,10 @@ public class NewMemberIntoGroup {
             }
         }
 
+        if (groupInfoWithBLOBs != null && "close".equals(groupInfoWithBLOBs.getIntogroupcheckflag()) && "close".equals(groupInfoWithBLOBs.getIntogroupwelcomeflag())) {
+            botRecordService.addUserRecord(chatId.toString(),userId.toString(),joinedTime);
+        }
+
         if (groupInfoWithBLOBs != null && "close".equals(groupInfoWithBLOBs.getIntogroupcheckflag()) && "open".equals(groupInfoWithBLOBs.getIntogroupwelcomeflag())) {
             if (groupMessageIdCacheMap.getGroupMessageId(chatId.toString()) != null) {
                 timerDelete.deleteByMessageIdImmediately(sender, chatId.toString(), groupMessageIdCacheMap.getGroupMessageId(chatId.toString()));
