@@ -245,7 +245,6 @@ public class CommonFunction {
                         SafeSearchAnnotation safeSearchAnnotation = googleCloudVisionService.detectSafeSearchFromLocalImage(file);
                         BotRecord botRecord1 = new BotRecord();
                         update.getMessage().setText(miaoshu);
-                        System.out.println("新的getText是：" + update.getMessage().getText());
                         String content = update.getMessage().getText();
                         if (safeSearchAnnotation.getAdultValue() >= 3 || safeSearchAnnotation.getViolenceValue() >= 3 || safeSearchAnnotation.getRacyValue() >= 3) {
                             String text = String.format("用户 <b><a href=\"tg://user?id=%d\">%s</a></b> 已被AI检测发送违规媒体，直接删除！", Long.valueOf(userId), firstName);
@@ -284,7 +283,7 @@ public class CommonFunction {
             }
         }
         GroupInfoWithBLOBs groupInfoWithBLOBs = groupInfoService.selAllByGroupId(groupId);
-        if (groupInfoWithBLOBs != null && "open".equals(groupInfoWithBLOBs.getAiflag())) {
+        if (groupInfoWithBLOBs != null && "open".equals(groupInfoWithBLOBs.getAiflag()) && StringUtils.hasText(content)) {
             contentAiOption(sender, update, groupId, userId, firstName, messageId, content);
         }
     }
