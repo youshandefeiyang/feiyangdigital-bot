@@ -2,7 +2,7 @@
 🤖 Feiyang Digital Telegram 群管机器人
 ===========================================
 
-基于 **SpringBoot** 和 **Telegrambot-Api** 打造的多功能 Telegram 群管理机器人，Powered By **OpenAI** And **Google Cloud Vision**。
+基于 **SpringBoot** 和 **Telegrambot-Api** 打造的多功能 Telegram 群管理机器人，**Powered By OpenAI And Google Cloud Vision**。
 
 1️⃣ 开始之前
 ----------------
