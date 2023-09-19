@@ -113,7 +113,10 @@ public class CommonFunction {
                 timerDelete.sendTimedMessage(sender, sendContent.messageText(update, "你没有权限执行此命令"), 10);
                 return;
             }
-            checkMessage(sender, update);
+            if (update.getMessage().hasText()) {
+                checkMessage(sender, update);
+                return;
+            }
             checkMedia(sender, update);
         }
 
@@ -206,6 +209,7 @@ public class CommonFunction {
                     notification.setParseMode(ParseMode.HTML);
                     timerDelete.deleteMessageImmediatelyAndNotifyAfterDelay(sender, notification, groupId, messageId, Long.valueOf(userId), 90);
                     restrictOrUnrestrictUser.restrictUser(sender, Long.valueOf(userId), groupId);
+                    return;
                 } else if (normalCount >= 5) {
                     return;
                 }
@@ -244,7 +248,7 @@ public class CommonFunction {
                     SafeSearchAnnotation safeSearchAnnotation = googleCloudVisionService.detectSafeSearchFromLocalImage(file);
                     BotRecord botRecord1 = new BotRecord();
                     String realUpdateText = miaoshu;
-                    if (StringUtils.hasText(update.getMessage().getCaption())){
+                    if (StringUtils.hasText(update.getMessage().getCaption())) {
                         realUpdateText += "\n" + update.getMessage().getCaption();
                     }
                     update.getMessage().setText(realUpdateText);
