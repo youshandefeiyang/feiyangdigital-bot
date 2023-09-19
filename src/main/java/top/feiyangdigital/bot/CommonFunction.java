@@ -303,6 +303,7 @@ public class CommonFunction {
                 notification.setParseMode(ParseMode.HTML);
                 timerDelete.deleteMessageImmediatelyAndNotifyAfterDelay(sender, notification, groupId, messageId, Long.valueOf(userId), 90);
                 restrictOrUnrestrictUser.restrictUser(sender, Long.valueOf(userId), groupId);
+                return;
             } else if (normalCount >= 5) {
                 return;
             }
