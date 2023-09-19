@@ -12,6 +12,7 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.bots.AbsSender;
 import top.feiyangdigital.entity.GroupInfoWithBLOBs;
 import top.feiyangdigital.entity.KeywordsFormat;
+import top.feiyangdigital.sqlService.BotRecordService;
 import top.feiyangdigital.sqlService.GroupInfoService;
 import top.feiyangdigital.utils.SendContent;
 import top.feiyangdigital.utils.TimerDelete;
@@ -33,6 +34,9 @@ public class CaptchaGenerator {
 
     @Autowired
     private GroupInfoService groupInfoService;
+
+    @Autowired
+    private BotRecordService botRecordService;
 
     @Autowired
     private SendContent sendContent;
@@ -101,6 +105,7 @@ public class CaptchaGenerator {
                     e.printStackTrace();
                 }
                 restrictOrUnrestrictUser.unrestrictUser(sender, update.getMessage().getFrom().getId(), groupId);
+                botRecordService.addUserRecord(groupId,userId,update.getMessage().getDate().toString());
                 if (groupInfoWithBLOBs != null && "open".equals(groupInfoWithBLOBs.getIntogroupwelcomeflag())) {
                     if (groupMessageIdCacheMap.getGroupMessageId(groupId) != null) {
                         timerDelete.deleteByMessageIdImmediately(sender, groupId, groupMessageIdCacheMap.getGroupMessageId(groupId));

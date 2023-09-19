@@ -5,14 +5,12 @@ import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import com.alibaba.fastjson2.JSONReader;
 
-import javax.ws.rs.core.Feature;
 import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Paths;
-import java.util.ArrayList;
 import java.util.List;
 
 public class BaseInfo {
@@ -52,6 +50,13 @@ public class BaseInfo {
 
     public static String getBotLimitStatus(){
         return getConfigValue("groupLimit", "status");
+    }
+
+    public static JSONArray getOpenAIApiKey(){
+        return CONFIG.getJSONArray("openAIApiKey");
+    }
+    public static JSONObject getGoogleServiceAccountConfig(){
+        return getConfig("googleServiceAccount");
     }
 
     public static List<String> getGroupWhiteList(){

@@ -813,6 +813,76 @@ public class GroupInfoExample {
             addCriterion("intoGroupUserNameCheckFlag not between", value1, value2, "intogroupusernamecheckflag");
             return (Criteria) this;
         }
+
+        public Criteria andAiflagIsNull() {
+            addCriterion("aiFlag is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andAiflagIsNotNull() {
+            addCriterion("aiFlag is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andAiflagEqualTo(String value) {
+            addCriterion("aiFlag =", value, "aiflag");
+            return (Criteria) this;
+        }
+
+        public Criteria andAiflagNotEqualTo(String value) {
+            addCriterion("aiFlag <>", value, "aiflag");
+            return (Criteria) this;
+        }
+
+        public Criteria andAiflagGreaterThan(String value) {
+            addCriterion("aiFlag >", value, "aiflag");
+            return (Criteria) this;
+        }
+
+        public Criteria andAiflagGreaterThanOrEqualTo(String value) {
+            addCriterion("aiFlag >=", value, "aiflag");
+            return (Criteria) this;
+        }
+
+        public Criteria andAiflagLessThan(String value) {
+            addCriterion("aiFlag <", value, "aiflag");
+            return (Criteria) this;
+        }
+
+        public Criteria andAiflagLessThanOrEqualTo(String value) {
+            addCriterion("aiFlag <=", value, "aiflag");
+            return (Criteria) this;
+        }
+
+        public Criteria andAiflagLike(String value) {
+            addCriterion("aiFlag like", value, "aiflag");
+            return (Criteria) this;
+        }
+
+        public Criteria andAiflagNotLike(String value) {
+            addCriterion("aiFlag not like", value, "aiflag");
+            return (Criteria) this;
+        }
+
+        public Criteria andAiflagIn(List<String> values) {
+            addCriterion("aiFlag in", values, "aiflag");
+            return (Criteria) this;
+        }
+
+        public Criteria andAiflagNotIn(List<String> values) {
+            addCriterion("aiFlag not in", values, "aiflag");
+            return (Criteria) this;
+        }
+
+        public Criteria andAiflagBetween(String value1, String value2) {
+            addCriterion("aiFlag between", value1, value2, "aiflag");
+            return (Criteria) this;
+        }
+
+        public Criteria andAiflagNotBetween(String value1, String value2) {
+            addCriterion("aiFlag not between", value1, value2, "aiflag");
+            return (Criteria) this;
+        }
     }
 
     /**

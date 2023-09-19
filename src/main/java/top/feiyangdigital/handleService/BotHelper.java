@@ -89,8 +89,9 @@ public class BotHelper {
         KeywordsFormat keywordsFormat = new KeywordsFormat();
         keywordsButtons.add("📝自动回复##autoReply%%⚙️群组设置##groupSetting");
         keywordsButtons.add("👨🏻‍💻仓库地址$$https://github.com/youshandefeiyang/feiyangdigital-bot%%👥官方群组$$https://t.me/feiyangdigital");
+        keywordsButtons.add("🔮打开/关闭AI##aiOption");
         keywordsButtons.add("❌关闭菜单##closeMenu");
-        keywordsFormat.setReplyText("当前群组：<b>" + addRuleCacheMap.getGroupNameForUser(userId) + "</b>\n当前群组ID：<b>" + addRuleCacheMap.getGroupIdForUser(userId) + "</b>\n当前可输入状态：<b>" + addRuleCacheMap.getKeywordsFlagForUser(userId) + "</b>\n⚡️请选择一个操作!⚡️");
+        keywordsFormat.setReplyText("当前群组：<b>" + addRuleCacheMap.getGroupNameForUser(userId) + "</b>\n当前群组ID：<b>" + addRuleCacheMap.getGroupIdForUser(userId) + "</b>\n当前可输入状态：<b>" + addRuleCacheMap.getKeywordsFlagForUser(userId) + "</b>\n当前AI状态：<b>" + addRuleCacheMap.getAiFlagForUser(userId) + "</b>\n⚡️请选择一个操作!⚡️");
         keywordsFormat.setKeywordsButtons(keywordsButtons);
         try {
             sender.execute(sendContent.createResponseMessage(update, keywordsFormat, "html"));
@@ -108,7 +109,7 @@ public class BotHelper {
         answer.setCallbackQueryId(callbackQuery.getId());
         switch (callbackData) {
             case "changeIntoGroupUserNameCheckStatus":
-                setGroupSettingView.changeIntoGroupUserNameCheckStatus(sender,update);
+                setGroupSettingView.changeIntoGroupUserNameCheckStatus(sender, update);
                 return;
             case "changeGroupWelcomeStatus":
                 setGroupSettingView.changeGroupWelcomeStatus(sender, update);
@@ -142,6 +143,9 @@ public class BotHelper {
                 return;
             case "closeMenu":
                 timerDelete.deletePrivateMessageImmediately(sender, update);
+                return;
+            case "aiOption":
+                commonCallBack.aiOption(sender,update);
                 return;
             case "close":
                 timerDelete.deletePrivateUsualMessageImmediately(sender, update);

@@ -22,17 +22,17 @@ public class MessageHandle {
     @Autowired
     private SendContent sendContent;
 
-    public void processUserMessage(AbsSender sender, Update update, List<KeywordsFormat> keywordsList) {
+    public boolean processUserMessage(AbsSender sender, Update update, List<KeywordsFormat> keywordsList) {
         String messageText = update.getMessage().getText();
 
         // 如果消息文本为null，直接返回，不做处理
         if (messageText == null) {
-            return;
+            return true;
         }
         //这代表的是从群组绑定频道发过来的消息，直接返回，不做处理
         //ToDo 反频道马甲机器人
         if ("Telegram".equals(update.getMessage().getFrom().getFirstName()) && update.getMessage().getSenderChat().isChannelChat()) {
-            return;
+            return true;
         }
 
         for (KeywordsFormat keywordFormat : keywordsList) {
@@ -65,7 +65,7 @@ public class MessageHandle {
                             timerDelete.sendTimedMessage(sender, sendContent.createResponseMessage(update, keywordFormat, "markdown"), deleteReplyAfterYSeconds);
                         }
                     }
-                    break;
+                    return true;
                 }
             } // 可以判断后续逻辑，比如是否ban或者禁言
             else {
@@ -75,9 +75,10 @@ public class MessageHandle {
                     } catch (TelegramApiException e) {
                         e.printStackTrace();
                     }
-                    break;
+                    return true;
                 }
             }
         }
+        return false;
     }
 }

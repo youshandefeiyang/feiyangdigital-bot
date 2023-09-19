@@ -41,7 +41,7 @@ public class SetAutoReplyMenu {
     public void addReplyRule(AbsSender sender, Update update){
         String userId = update.getCallbackQuery().getFrom().getId().toString();
         
-        addRuleCacheMap.updateUserMapping(userId, addRuleCacheMap.getGroupIdForUser(userId), addRuleCacheMap.getGroupNameForUser(userId),"allow");
+        addRuleCacheMap.updateUserMapping(userId, addRuleCacheMap.getGroupIdForUser(userId), addRuleCacheMap.getGroupNameForUser(userId),"allow", addRuleCacheMap.getAiFlagForUser(userId));
         List<String> keywordsButtons = new ArrayList<>();
         KeywordsFormat keywordsFormat = new KeywordsFormat();
         keywordsButtons.add("🔎查看使用文档$$https://github.com/youshandefeiyang/feiyangdigital-bot");
@@ -59,7 +59,7 @@ public class SetAutoReplyMenu {
     public void backToAutoReply(AbsSender sender, Update update) {
         String userId = update.getCallbackQuery().getFrom().getId().toString();
         
-        addRuleCacheMap.updateUserMapping(userId, addRuleCacheMap.getGroupIdForUser(userId), addRuleCacheMap.getGroupNameForUser(userId),"notallow");
+        addRuleCacheMap.updateUserMapping(userId, addRuleCacheMap.getGroupIdForUser(userId), addRuleCacheMap.getGroupNameForUser(userId),"notallow", addRuleCacheMap.getAiFlagForUser(userId));
         List<String> keywordsButtons = new ArrayList<>();
         KeywordsFormat keywordsFormat = new KeywordsFormat();
         keywordsButtons.add("➕添加回复规则##addReplyRule%%📝查看所有规则##selAllReplyRules");

@@ -13,6 +13,7 @@ import org.telegram.telegrambots.meta.bots.AbsSender;
 import top.feiyangdigital.entity.BaseInfo;
 import top.feiyangdigital.entity.GroupInfoWithBLOBs;
 import top.feiyangdigital.entity.KeywordsFormat;
+import top.feiyangdigital.sqlService.BotRecordService;
 import top.feiyangdigital.sqlService.GroupInfoService;
 import top.feiyangdigital.utils.SendContent;
 import top.feiyangdigital.utils.TimerDelete;
@@ -30,6 +31,9 @@ public class NewMemberIntoGroup {
 
     @Autowired
     private GroupInfoService groupInfoService;
+
+    @Autowired
+    private BotRecordService botRecordService;
 
     @Autowired
     private RestrictOrUnrestrictUser restrictOrUnrestrictUser;
@@ -55,6 +59,7 @@ public class NewMemberIntoGroup {
         String lastName;
         Long chatId;
         String groupTitle;
+        String joinedTime;
         if (outUser == null) {
             ChatMember member = update.getChatMember().getNewChatMember();
             userId = member.getUser().getId();
@@ -62,12 +67,14 @@ public class NewMemberIntoGroup {
             lastName = member.getUser().getLastName();
             chatId = update.getChatMember().getChat().getId();
             groupTitle = update.getChatMember().getChat().getTitle();
+            joinedTime = update.getChatMember().getDate().toString();
         } else {
             userId = outUser.getId();
             firstName = outUser.getFirstName();
             lastName = outUser.getLastName();
             chatId = update.getMessage().getChat().getId();
             groupTitle = update.getMessage().getChat().getTitle();
+            joinedTime = update.getMessage().getDate().toString();
         }
 
         if (lastName == null) {
@@ -134,7 +141,7 @@ public class NewMemberIntoGroup {
                     }
                 }
             }
-
+            botRecordService.addUserRecord(chatId.toString(),userId.toString(),joinedTime);
         }
 
         if (groupInfoWithBLOBs != null && "open".equals(groupInfoWithBLOBs.getIntogroupcheckflag())) {

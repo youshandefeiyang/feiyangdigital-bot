@@ -42,7 +42,7 @@ public class TimerDelete {
 
     public void deletePrivateMessageImmediately(AbsSender sender, Update update) {
         String userId = update.getCallbackQuery().getFrom().getId().toString();
-        addRuleCacheMap.updateUserMapping(userId, addRuleCacheMap.getGroupIdForUser(userId), addRuleCacheMap.getGroupNameForUser(userId),"notallow");
+        addRuleCacheMap.updateUserMapping(userId, addRuleCacheMap.getGroupIdForUser(userId), addRuleCacheMap.getGroupNameForUser(userId),"notallow",addRuleCacheMap.getAiFlagForUser(userId));
         deleteRuleCacheMap.updateUserMapping(userId, deleteRuleCacheMap.getGroupIdForUser(userId), deleteRuleCacheMap.getGroupNameForUser(userId), "notdelete");
             try {
                 sender.execute(new DeleteMessage(update.getCallbackQuery().getMessage().getChatId().toString(), update.getCallbackQuery().getMessage().getMessageId()));
