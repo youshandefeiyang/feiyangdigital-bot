@@ -7,6 +7,7 @@ import com.google.auth.Credentials;
 import com.google.auth.oauth2.GoogleCredentials;
 import com.google.cloud.vision.v1.*;
 import com.google.protobuf.ByteString;
+import lombok.extern.slf4j.Slf4j;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -18,6 +19,7 @@ import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 
+@Slf4j
 @Service
 public class GoogleCloudVisionService {
 
@@ -58,7 +60,7 @@ public class GoogleCloudVisionService {
             Credentials credentials = GoogleCredentials.fromStream(new ByteArrayInputStream(googleServiceAccountConfig.toString().getBytes()));
             return ImageAnnotatorClient.create(ImageAnnotatorSettings.newBuilder().setCredentialsProvider(FixedCredentialsProvider.create(credentials)).build());
         } catch (IOException e) {
-
+            log.error("读取本地配置创建Google Vision客户端失败，请检查配置是否正确");
             return null;
         }
     }
@@ -145,6 +147,7 @@ public class GoogleCloudVisionService {
                 return res.getTextAnnotationsList();
             }
         } catch (Exception e) {
+            log.error("解析图像文本失败，请将报错日志截图发送给开发者");
             return new ArrayList<>();
         }
     }
@@ -175,6 +178,7 @@ public class GoogleCloudVisionService {
                 return res.getSafeSearchAnnotation();
             }
         } catch (Exception e) {
+            log.error("图片分级失败，请将报错日志截图发送给开发者");
             return null;
         }
     }
