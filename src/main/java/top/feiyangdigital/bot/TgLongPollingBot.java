@@ -30,7 +30,6 @@ public class TgLongPollingBot extends TelegramLongPollingBot {
 
     @Override
     public void onUpdateReceived(Update update) {
-//        System.out.println(update);
         commonFunction.mainFunc(this,update);
     }
 

@@ -93,22 +93,21 @@ public class CommonFunction {
     public void mainFunc(AbsSender sender, Update update) {
 
 
-        if (update.hasMessage() && update.getMessage().hasText() && (update.getMessage().getChat().isGroupChat() || update.getMessage().getChat().isSuperGroupChat())) {
-            if (setBot.adminSetBot(sender, update)) {
-                return;
-            } else if (banOrUnBan.banOption(sender, update)) {
-                return;
-            } else if (banOrUnBan.dbanOption(sender, update)) {
-                return;
-            } else if (banOrUnBan.unBanOption(sender, update)) {
-                return;
-            }else if (restrictOrUnrestrictUser.muteOption(sender,update)){
-                return;
-            }else if (restrictOrUnrestrictUser.unMuteOption(sender,update)){
-                return;
-            }
-
+        if (update.hasMessage() && (update.getMessage().getChat().isGroupChat() || update.getMessage().getChat().isSuperGroupChat())) {
             if (update.getMessage().hasText()) {
+                if (setBot.adminSetBot(sender, update)) {
+                    return;
+                } else if (banOrUnBan.banOption(sender, update)) {
+                    return;
+                } else if (banOrUnBan.dbanOption(sender, update)) {
+                    return;
+                } else if (banOrUnBan.unBanOption(sender, update)) {
+                    return;
+                } else if (restrictOrUnrestrictUser.muteOption(sender, update)) {
+                    return;
+                } else if (restrictOrUnrestrictUser.unMuteOption(sender, update)) {
+                    return;
+                }
                 aiCheckMessage.checkMessage(sender, update);
                 return;
             }
