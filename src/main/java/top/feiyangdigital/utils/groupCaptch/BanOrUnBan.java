@@ -83,7 +83,6 @@ public class BanOrUnBan {
             ) {
                 try {
                     if (update.getMessage().hasEntities() && !"bot_command".equals(update.getMessage().getEntities().get(update.getMessage().getEntities().size() - 1).getType())) {
-                        System.out.println(update.getMessage());
                         MessageEntity messageEntity = update.getMessage().getEntities().get(update.getMessage().getEntities().size() - 1);
                         if (text.split(" ").length >= 2 && text.split(" ")[1].contains("@") && "mention".equals(messageEntity.getType())) {
                             JSONObject jsonObject = obtainUserId.fetchUserWithOkHttp(messageEntity.getText());
