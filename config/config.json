@@ -10,6 +10,7 @@
     "whiteList": ["",""]
   },
   "openAIApiKey": [""],
+  "api-server": "",
   "googleServiceAccount": {
     "type": "",
     "project_id": "",

@@ -2,6 +2,8 @@ package top.feiyangdigital.sqlService;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,6 +20,7 @@ public class BotRecordService {
     @Autowired
     private BotRecordMapper botRecordMapper;
 
+    @CacheEvict(value = "botrecord", key = "#groupId + #userId")
     public boolean addUserRecord(String groupId,String userId,String joinTimestamp){
         BotRecordExample example = new BotRecordExample();
         BotRecordExample.Criteria criteria = example.createCriteria();
@@ -33,6 +36,7 @@ public class BotRecordService {
         return botRecordMapper.insertSelective(botRecord) > 0;
     }
 
+    @CacheEvict(value = "botrecord", key = "#groupId + #userId")
     public boolean updateRecordByGidAndUid(String groupId,String userId,BotRecord botRecord){
         BotRecordExample example = new BotRecordExample();
         BotRecordExample.Criteria criteria = example.createCriteria();
@@ -41,6 +45,7 @@ public class BotRecordService {
         return botRecordMapper.updateByExampleSelective(botRecord, example) > 0;
     }
 
+    @Cacheable(value = "botrecord", key = "#groupId + #userId")
     @Transactional(propagation = Propagation.NEVER)
     public BotRecord selBotRecordByGidAndUid(String groupId,String userId){
         BotRecordExample example = new BotRecordExample();

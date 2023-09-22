@@ -14,4 +14,12 @@
             overflowToDisk="false"
             memoryStoreEvictionPolicy="LRU"
     />
+    <!-- 针对botrecord表的缓存 -->
+    <cache
+            name="botrecord"
+            maxElementsInMemory="200000"
+            eternal="true"
+            overflowToDisk="false"
+            memoryStoreEvictionPolicy="LRU"
+    />
 </ehcache>

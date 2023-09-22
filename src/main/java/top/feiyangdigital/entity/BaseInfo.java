@@ -55,6 +55,11 @@ public class BaseInfo {
     public static JSONArray getOpenAIApiKey(){
         return CONFIG.getJSONArray("openAIApiKey");
     }
+
+    public static String getApiServer(){
+        return CONFIG.getString("api-server");
+    }
+
     public static JSONObject getGoogleServiceAccountConfig(){
         return getConfig("googleServiceAccount");
     }
@@ -80,4 +85,5 @@ public class BaseInfo {
     public static String getBotPath() {
         return getConfigValue("botConfig","path");
     }
+
 }

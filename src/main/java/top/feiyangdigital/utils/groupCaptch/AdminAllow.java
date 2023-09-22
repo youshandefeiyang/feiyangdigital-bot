@@ -13,6 +13,9 @@ public class AdminAllow {
     private RestrictOrUnrestrictUser restrictOrUnrestrictUser;
 
     @Autowired
+    private BanOrUnBan banOrUnBan;
+
+    @Autowired
     private TimerDelete timerDelete;
 
     @Autowired
@@ -21,11 +24,25 @@ public class AdminAllow {
     @Autowired
     private CaptchaManagerCacheMap captchaManagerCacheMap;
 
-    public void allow(AbsSender sender, Long userId, String chatId,Integer messageId, AnswerCallbackQuery answer){
+    public void allow(AbsSender sender, Long userId, String chatId,Integer messageId, AnswerCallbackQuery answer,boolean haveAnswer){
         restrictOrUnrestrictUser.unrestrictUser(sender,userId,chatId);
         answer.setText("用户已被手动解禁");
         timerDelete.deleteByMessageIdImmediately(sender,chatId,messageId);
-        captchaManager.clearMappingsForUser(userId.toString());
+        if (haveAnswer){
+            captchaManager.clearMappingsForUser(userId.toString());
+        }
+        captchaManagerCacheMap.clearMappingsForUser(userId.toString(), chatId);
+        try {
+            sender.execute(answer);
+        } catch (TelegramApiException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void allowUnBan(AbsSender sender, Long userId, String chatId, Integer messageId, AnswerCallbackQuery answer){
+        banOrUnBan.unBanUserById(sender,userId,chatId);
+        answer.setText("用户已被手动解封");
+        timerDelete.deleteByMessageIdImmediately(sender,chatId,messageId);
         captchaManagerCacheMap.clearMappingsForUser(userId.toString(), chatId);
         try {
             sender.execute(answer);

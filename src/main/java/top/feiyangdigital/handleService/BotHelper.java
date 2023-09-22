@@ -157,7 +157,39 @@ public class BotHelper {
 
             for (ChatMember admin : adminList.getAdmins(sender, callbackQuery.getMessage().getChatId().toString())) {
                 if ("GroupAnonymousBot".equals(callbackQuery.getFrom().getUserName()) || admin.getUser().getId().equals(callbackQuery.getFrom().getId())) {
-                    adminAllow.allow(sender, Long.valueOf(callbackData.substring(15)), callbackQuery.getMessage().getChatId().toString(), captchaManagerCacheMap.getMessageIdForUser(callbackData.substring(15), callbackQuery.getMessage().getChatId().toString()), answer);
+                    adminAllow.allow(sender, Long.valueOf(callbackData.substring(15)), callbackQuery.getMessage().getChatId().toString(), captchaManagerCacheMap.getMessageIdForUser(callbackData.substring(15), callbackQuery.getMessage().getChatId().toString()), answer,true);
+                    return;
+                }
+            }
+            answer.setText("❌你无权执行该操作！");
+            try {
+                sender.execute(answer);
+            } catch (TelegramApiException e) {
+                e.printStackTrace();
+            }
+            return;
+        }
+
+        if (callbackData.startsWith("adminUnBan")){
+            for (ChatMember admin : adminList.getAdmins(sender, callbackQuery.getMessage().getChatId().toString())) {
+                if ("GroupAnonymousBot".equals(callbackQuery.getFrom().getUserName()) || admin.getUser().getId().equals(callbackQuery.getFrom().getId())) {
+                    adminAllow.allowUnBan(sender, Long.valueOf(callbackData.substring(10)), callbackQuery.getMessage().getChatId().toString(),captchaManagerCacheMap.getMessageIdForUser(callbackData.substring(10), callbackQuery.getMessage().getChatId().toString()), answer);
+                    return;
+                }
+            }
+            answer.setText("❌你无权执行该操作！");
+            try {
+                sender.execute(answer);
+            } catch (TelegramApiException e) {
+                e.printStackTrace();
+            }
+            return;
+        }
+
+        if (callbackData.startsWith("adminUnmute")){
+            for (ChatMember admin : adminList.getAdmins(sender, callbackQuery.getMessage().getChatId().toString())) {
+                if ("GroupAnonymousBot".equals(callbackQuery.getFrom().getUserName()) || admin.getUser().getId().equals(callbackQuery.getFrom().getId())) {
+                    adminAllow.allow(sender, Long.valueOf(callbackData.substring(11)), callbackQuery.getMessage().getChatId().toString(),captchaManagerCacheMap.getMessageIdForUser(callbackData.substring(11), callbackQuery.getMessage().getChatId().toString()), answer,false);
                     return;
                 }
             }

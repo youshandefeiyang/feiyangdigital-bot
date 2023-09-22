@@ -4,12 +4,14 @@ import com.alibaba.fastjson2.JSONObject;
 import com.google.cloud.vision.v1.EntityAnnotation;
 import com.google.cloud.vision.v1.SafeSearchAnnotation;
 import com.unfbx.chatgpt.entity.chat.ChatChoice;
+import org.checkerframework.checker.units.qual.K;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.telegram.telegrambots.meta.api.methods.GetFile;
 import org.telegram.telegrambots.meta.api.methods.ParseMode;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
+import org.telegram.telegrambots.meta.api.methods.updatingmessages.DeleteMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.bots.AbsSender;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
@@ -25,8 +27,10 @@ import top.feiyangdigital.sqlService.GroupInfoService;
 import top.feiyangdigital.utils.*;
 import top.feiyangdigital.utils.aiMessageCheck.AiCheckMedia;
 import top.feiyangdigital.utils.aiMessageCheck.AiCheckMessage;
+import top.feiyangdigital.utils.groupCaptch.BanOrUnBan;
 import top.feiyangdigital.utils.groupCaptch.CaptchaManager;
 import top.feiyangdigital.utils.groupCaptch.RestrictOrUnrestrictUser;
+import top.feiyangdigital.utils.groupCaptch.SetBot;
 import top.feiyangdigital.utils.ruleCacheMap.AddRuleCacheMap;
 import top.feiyangdigital.utils.ruleCacheMap.DeleteRuleCacheMap;
 
@@ -45,19 +49,10 @@ public class CommonFunction {
     private AiCheckMedia aiCheckMedia;
 
     @Autowired
-    private CheckUser checkUser;
-
-    @Autowired
-    private TimerDelete timerDelete;
-
-    @Autowired
     private NewMemberIntoGroup newMemberIntoGroup;
 
     @Autowired
     private BotHelper botHelper;
-
-    @Autowired
-    private AdminList adminList;
 
     @Autowired
     private GroupInfoService groupInfoService;
@@ -86,22 +81,33 @@ public class CommonFunction {
     @Autowired
     private BotFirstIntoGroup botFirstIntoGroup;
 
+    @Autowired
+    private BanOrUnBan banOrUnBan;
+
+    @Autowired
+    private RestrictOrUnrestrictUser restrictOrUnrestrictUser;
+
+    @Autowired
+    private SetBot setBot;
+
     public void mainFunc(AbsSender sender, Update update) {
 
 
-        if (update.hasMessage() && (update.getMessage().getChat().isGroupChat() || update.getMessage().getChat().isSuperGroupChat())) {
-            if (("/setbot".equals(update.getMessage().getText()) || ("/setbot@" + BaseInfo.getBotName()).equals(update.getMessage().getText())) && ("GroupAnonymousBot".equals(update.getMessage().getFrom().getUserName()) || checkUser.isChatOwner(sender, update))) {
-                GroupInfoWithBLOBs groupInfo = new GroupInfoWithBLOBs();
-                groupInfo.setOwnerandanonymousadmins(adminList.fetchHighAdminList(sender, update));
-                groupInfo.setGroupname(update.getMessage().getChat().getTitle());
-                groupInfo.setSettingtimestamp(String.valueOf(new Date().getTime()));
-                groupInfoService.updateSelectiveByChatId(groupInfo, update.getMessage().getChatId().toString());
-                botHelper.sendAdminButton(sender, update);
+        if (update.hasMessage() && update.getMessage().hasText() && (update.getMessage().getChat().isGroupChat() || update.getMessage().getChat().isSuperGroupChat())) {
+            if (setBot.adminSetBot(sender, update)) {
                 return;
-            } else if ("/setbot".equals(update.getMessage().getText()) || ("/setbot@" + BaseInfo.getBotName()).equals(update.getMessage().getText())) {
-                timerDelete.sendTimedMessage(sender, sendContent.messageText(update, "你没有权限执行此命令"), 10);
+            } else if (banOrUnBan.banOption(sender, update)) {
+                return;
+            } else if (banOrUnBan.dbanOption(sender, update)) {
+                return;
+            } else if (banOrUnBan.unBanOption(sender, update)) {
+                return;
+            }else if (restrictOrUnrestrictUser.muteOption(sender,update)){
+                return;
+            }else if (restrictOrUnrestrictUser.unMuteOption(sender,update)){
                 return;
             }
+
             if (update.getMessage().hasText()) {
                 aiCheckMessage.checkMessage(sender, update);
                 return;
