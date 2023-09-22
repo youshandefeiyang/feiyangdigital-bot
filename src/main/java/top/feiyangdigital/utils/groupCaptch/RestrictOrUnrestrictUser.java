@@ -83,7 +83,7 @@ public class RestrictOrUnrestrictUser {
                     || text.startsWith("/mute") || text.startsWith("/mute@" + BaseInfo.getBotName())
             ) {
                 try {
-                    if (update.getMessage().hasEntities()) {
+                    if (update.getMessage().hasEntities() && !"bot_command".equals(update.getMessage().getEntities().get(update.getMessage().getEntities().size() - 1).getType())) {
                         MessageEntity messageEntity = update.getMessage().getEntities().get(update.getMessage().getEntities().size() - 1);
                         if (text.split(" ").length >= 2 && text.split(" ")[1].contains("@") && "mention".equals(messageEntity.getType())) {
                             JSONObject jsonObject = obtainUserId.fetchUserWithOkHttp(messageEntity.getText());
@@ -140,7 +140,7 @@ public class RestrictOrUnrestrictUser {
                     || text.startsWith("/unmute") || text.startsWith("/unmute@" + BaseInfo.getBotName())
             ) {
                 try {
-                    if (update.getMessage().hasEntities()) {
+                    if (update.getMessage().hasEntities() && !"bot_command".equals(update.getMessage().getEntities().get(update.getMessage().getEntities().size() - 1).getType())) {
                         MessageEntity messageEntity = update.getMessage().getEntities().get(update.getMessage().getEntities().size() - 1);
                         if (text.split(" ").length >= 2 && text.split(" ")[1].contains("@") && "mention".equals(messageEntity.getType())) {
                             JSONObject jsonObject = obtainUserId.fetchUserWithOkHttp(messageEntity.getText());

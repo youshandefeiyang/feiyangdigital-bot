@@ -82,7 +82,8 @@ public class BanOrUnBan {
                     || text.startsWith("/ban") || text.startsWith("/ban@" + BaseInfo.getBotName())
             ) {
                 try {
-                    if (update.getMessage().hasEntities()) {
+                    if (update.getMessage().hasEntities() && !"bot_command".equals(update.getMessage().getEntities().get(update.getMessage().getEntities().size() - 1).getType())) {
+                        System.out.println(update.getMessage());
                         MessageEntity messageEntity = update.getMessage().getEntities().get(update.getMessage().getEntities().size() - 1);
                         if (text.split(" ").length >= 2 && text.split(" ")[1].contains("@") && "mention".equals(messageEntity.getType())) {
                             JSONObject jsonObject = obtainUserId.fetchUserWithOkHttp(messageEntity.getText());
@@ -178,7 +179,7 @@ public class BanOrUnBan {
                     || text.startsWith("/unban") || text.startsWith("/unban@" + BaseInfo.getBotName())
             ) {
                 try {
-                    if (update.getMessage().hasEntities()) {
+                    if (update.getMessage().hasEntities() && !"bot_command".equals(update.getMessage().getEntities().get(update.getMessage().getEntities().size() - 1).getType())) {
                         MessageEntity messageEntity = update.getMessage().getEntities().get(update.getMessage().getEntities().size() - 1);
                         if (text.split(" ").length >= 2 && text.split(" ")[1].contains("@") && "mention".equals(messageEntity.getType())) {
                             JSONObject jsonObject = obtainUserId.fetchUserWithOkHttp(messageEntity.getText());
