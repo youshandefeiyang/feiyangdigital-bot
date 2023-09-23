@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- 主机： localhost
--- 生成日期： 2023-09-19 12:26:26
+-- 生成日期： 2023-09-23 13:04:16
 -- 服务器版本： 8.0.24
 -- PHP 版本： 8.1.12
 
@@ -54,10 +54,11 @@ CREATE TABLE `groupinfo`
     `keyWordsFlag`               varchar(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'notallow',
     `deleteKeywordFlag`          varchar(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'notdelete',
     `settingTimeStamp`           varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci          DEFAULT NULL,
-    `intoGroupCheckFlag`         varchar(50) COLLATE utf8mb4_general_ci                       NOT NULL DEFAULT 'close',
-    `intoGroupWelcomeFlag`       varchar(50) COLLATE utf8mb4_general_ci                       NOT NULL DEFAULT 'close',
-    `intoGroupUserNameCheckFlag` varchar(50) COLLATE utf8mb4_general_ci                       NOT NULL DEFAULT 'close',
+    `intoGroupCheckFlag`         varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'close',
+    `intoGroupWelcomeFlag`       varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'close',
+    `intoGroupUserNameCheckFlag` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'close',
     `aiFlag`                     varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'close',
+    `crontabFlag`                varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci          DEFAULT 'close',
     `ChannelSpammersWhiteList`   longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -91,7 +92,8 @@ ALTER TABLE `groupinfo`
   ADD KEY `intoGroupCheckFlag` (`intoGroupCheckFlag`),
   ADD KEY `intoGroupWelcomeFlag` (`intoGroupWelcomeFlag`),
   ADD KEY `intoGroupUserNameCheckFlag` (`intoGroupUserNameCheckFlag`),
-  ADD KEY `aiFlag` (`aiFlag`);
+  ADD KEY `aiFlag` (`aiFlag`),
+  ADD KEY `crontabFlag` (`crontabFlag`);
 ALTER TABLE `groupinfo`
     ADD FULLTEXT KEY `ownerAndAnonymousAdmins` (`ownerAndAnonymousAdmins`);
 ALTER TABLE `groupinfo`

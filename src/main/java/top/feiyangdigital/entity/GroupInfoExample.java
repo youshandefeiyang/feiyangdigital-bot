@@ -883,6 +883,76 @@ public class GroupInfoExample {
             addCriterion("aiFlag not between", value1, value2, "aiflag");
             return (Criteria) this;
         }
+
+        public Criteria andCrontabflagIsNull() {
+            addCriterion("crontabFlag is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andCrontabflagIsNotNull() {
+            addCriterion("crontabFlag is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andCrontabflagEqualTo(String value) {
+            addCriterion("crontabFlag =", value, "crontabflag");
+            return (Criteria) this;
+        }
+
+        public Criteria andCrontabflagNotEqualTo(String value) {
+            addCriterion("crontabFlag <>", value, "crontabflag");
+            return (Criteria) this;
+        }
+
+        public Criteria andCrontabflagGreaterThan(String value) {
+            addCriterion("crontabFlag >", value, "crontabflag");
+            return (Criteria) this;
+        }
+
+        public Criteria andCrontabflagGreaterThanOrEqualTo(String value) {
+            addCriterion("crontabFlag >=", value, "crontabflag");
+            return (Criteria) this;
+        }
+
+        public Criteria andCrontabflagLessThan(String value) {
+            addCriterion("crontabFlag <", value, "crontabflag");
+            return (Criteria) this;
+        }
+
+        public Criteria andCrontabflagLessThanOrEqualTo(String value) {
+            addCriterion("crontabFlag <=", value, "crontabflag");
+            return (Criteria) this;
+        }
+
+        public Criteria andCrontabflagLike(String value) {
+            addCriterion("crontabFlag like", value, "crontabflag");
+            return (Criteria) this;
+        }
+
+        public Criteria andCrontabflagNotLike(String value) {
+            addCriterion("crontabFlag not like", value, "crontabflag");
+            return (Criteria) this;
+        }
+
+        public Criteria andCrontabflagIn(List<String> values) {
+            addCriterion("crontabFlag in", values, "crontabflag");
+            return (Criteria) this;
+        }
+
+        public Criteria andCrontabflagNotIn(List<String> values) {
+            addCriterion("crontabFlag not in", values, "crontabflag");
+            return (Criteria) this;
+        }
+
+        public Criteria andCrontabflagBetween(String value1, String value2) {
+            addCriterion("crontabFlag between", value1, value2, "crontabflag");
+            return (Criteria) this;
+        }
+
+        public Criteria andCrontabflagNotBetween(String value1, String value2) {
+            addCriterion("crontabFlag not between", value1, value2, "crontabflag");
+            return (Criteria) this;
+        }
     }
 
     /**

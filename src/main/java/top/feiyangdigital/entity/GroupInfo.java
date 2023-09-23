@@ -29,6 +29,8 @@ public class GroupInfo implements Serializable {
 
     private String aiflag;
 
+    private String crontabflag;
+
     private static final long serialVersionUID = 1L;
 
     public Integer getId() {
@@ -119,6 +121,14 @@ public class GroupInfo implements Serializable {
         this.aiflag = aiflag;
     }
 
+    public String getCrontabflag() {
+        return crontabflag;
+    }
+
+    public void setCrontabflag(String crontabflag) {
+        this.crontabflag = crontabflag;
+    }
+
     @Override
     public boolean equals(Object that) {
         if (this == that) {
@@ -141,7 +151,8 @@ public class GroupInfo implements Serializable {
             && (this.getIntogroupcheckflag() == null ? other.getIntogroupcheckflag() == null : this.getIntogroupcheckflag().equals(other.getIntogroupcheckflag()))
             && (this.getIntogroupwelcomeflag() == null ? other.getIntogroupwelcomeflag() == null : this.getIntogroupwelcomeflag().equals(other.getIntogroupwelcomeflag()))
             && (this.getIntogroupusernamecheckflag() == null ? other.getIntogroupusernamecheckflag() == null : this.getIntogroupusernamecheckflag().equals(other.getIntogroupusernamecheckflag()))
-            && (this.getAiflag() == null ? other.getAiflag() == null : this.getAiflag().equals(other.getAiflag()));
+            && (this.getAiflag() == null ? other.getAiflag() == null : this.getAiflag().equals(other.getAiflag()))
+            && (this.getCrontabflag() == null ? other.getCrontabflag() == null : this.getCrontabflag().equals(other.getCrontabflag()));
     }
 
     @Override
@@ -159,6 +170,7 @@ public class GroupInfo implements Serializable {
         result = prime * result + ((getIntogroupwelcomeflag() == null) ? 0 : getIntogroupwelcomeflag().hashCode());
         result = prime * result + ((getIntogroupusernamecheckflag() == null) ? 0 : getIntogroupusernamecheckflag().hashCode());
         result = prime * result + ((getAiflag() == null) ? 0 : getAiflag().hashCode());
+        result = prime * result + ((getCrontabflag() == null) ? 0 : getCrontabflag().hashCode());
         return result;
     }
 
@@ -179,6 +191,7 @@ public class GroupInfo implements Serializable {
         sb.append(", intogroupwelcomeflag=").append(intogroupwelcomeflag);
         sb.append(", intogroupusernamecheckflag=").append(intogroupusernamecheckflag);
         sb.append(", aiflag=").append(aiflag);
+        sb.append(", crontabflag=").append(crontabflag);
         sb.append(", serialVersionUID=").append(serialVersionUID);
         sb.append("]");
         return sb.toString();
