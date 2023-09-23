@@ -26,7 +26,7 @@ public class SetAutoReplyMenu {
         
         List<String> keywordsButtons = new ArrayList<>();
         KeywordsFormat keywordsFormat = new KeywordsFormat();
-        keywordsButtons.add("➕添加回复规则##addReplyRule%%📝查看所有规则##selAllReplyRules");
+        keywordsButtons.add("➕添加群组规则##addReplyRule%%📝查看所有规则##selAllReplyRules");
         keywordsButtons.add("🔍查找并删除规则##selAndDeleteReplyRule%%◀️返回主菜单##backMainMenu");
         keywordsButtons.add("❌关闭菜单##closeMenu");
         keywordsFormat.setReplyText("当前群组：<b>"+ addRuleCacheMap.getGroupNameForUser(userId)+"</b>\n当前群组ID：<b>"+ addRuleCacheMap.getGroupIdForUser(userId)+"</b>\n当前可输入状态：<b>"+ addRuleCacheMap.getKeywordsFlagForUser(userId)+"</b>\n⚡️请选择一个操作!⚡️");
@@ -62,7 +62,7 @@ public class SetAutoReplyMenu {
         addRuleCacheMap.updateUserMapping(userId, addRuleCacheMap.getGroupIdForUser(userId), addRuleCacheMap.getGroupNameForUser(userId),"notallow", addRuleCacheMap.getAiFlagForUser(userId));
         List<String> keywordsButtons = new ArrayList<>();
         KeywordsFormat keywordsFormat = new KeywordsFormat();
-        keywordsButtons.add("➕添加回复规则##addReplyRule%%📝查看所有规则##selAllReplyRules");
+        keywordsButtons.add("➕添加群组规则##addReplyRule%%📝查看所有规则##selAllReplyRules");
         keywordsButtons.add("🔍查找并删除规则##selAndDeleteReplyRule%%◀️返回主菜单##backMainMenu");
         keywordsButtons.add("❌关闭菜单##closeMenu");
         keywordsFormat.setReplyText("当前群组：<b>"+ addRuleCacheMap.getGroupNameForUser(userId)+"</b>\n当前群组ID：<b>"+ addRuleCacheMap.getGroupIdForUser(userId)+"</b>\n当前可输入状态：<b>"+ addRuleCacheMap.getKeywordsFlagForUser(userId)+"</b>\n⚡️请选择一个操作!⚡️");

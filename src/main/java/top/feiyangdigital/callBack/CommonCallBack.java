@@ -47,7 +47,7 @@ public class CommonCallBack {
         }
         List<String> keywordsButtons = new ArrayList<>();
         KeywordsFormat keywordsFormat = new KeywordsFormat();
-        keywordsButtons.add("📝自动回复##autoReply%%⚙️群组设置##groupSetting");
+        keywordsButtons.add("📝规则设置##autoReply%%⚙️群组设置##groupSetting");
         keywordsButtons.add("👨🏻‍💻仓库地址$$https://github.com/youshandefeiyang/feiyangdigital-bot%%👥官方群组$$https://t.me/feiyangdigital");
         keywordsButtons.add("🔮打开/关闭AI##aiOption");
         keywordsButtons.add("❌关闭菜单##closeMenu");
@@ -65,7 +65,7 @@ public class CommonCallBack {
         String userId = update.getCallbackQuery().getFrom().getId().toString();
         List<String> keywordsButtons = new ArrayList<>();
         KeywordsFormat keywordsFormat = new KeywordsFormat();
-        keywordsButtons.add("📝自动回复##autoReply%%⚙️群组设置##groupSetting");
+        keywordsButtons.add("📝规则设置##autoReply%%⚙️群组设置##groupSetting");
         keywordsButtons.add("👨🏻‍💻仓库地址$$https://github.com/youshandefeiyang/feiyangdigital-bot%%👥官方群组$$https://t.me/feiyangdigital");
         keywordsButtons.add("🔮打开/关闭AI##aiOption");
         keywordsButtons.add("❌关闭菜单##closeMenu");
