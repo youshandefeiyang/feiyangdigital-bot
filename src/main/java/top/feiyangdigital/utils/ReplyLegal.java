@@ -1,5 +1,6 @@
 package top.feiyangdigital.utils;
 
+import org.quartz.CronExpression;
 import org.springframework.stereotype.Component;
 
 import java.util.Arrays;
@@ -46,10 +47,17 @@ public class ReplyLegal {
 
             // 确保操作有效
             String operation = botActionParts[0];
-            if (!Arrays.asList("del", "kick", "ban", "intoGroupBan", "welcome").contains(operation)) return false;
+            if (!Arrays.asList("del", "kick", "ban", "intoGroupBan","crontab", "welcome").contains(operation)) return false;
 
-            // 如果只有操作和字符串（针对welcome）
-            if ((operation.equals("welcome") || operation.equals("intoGroupBan")) && botActionParts.length == 2) {
+            // 如果只有操作和字符串（针对部分群组设置）
+            if ((operation.equals("welcome") || operation.equals("intoGroupBan") || operation.equals("crontab")) && botActionParts.length == 2) {
+                if (operation.equals("crontab")){
+                    try {
+                        new CronExpression(conditions[0]);
+                    } catch (Exception e) {
+                        return false;
+                    }
+                }
                 return true;
             } else if (botActionParts.length == 2) {
                 return false;

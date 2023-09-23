@@ -36,6 +36,8 @@ public class KeywordsFormat {
                 ruleMap.put("DelWelcome",action.substring(8));
             } else if (action.startsWith("intoGroupBan=")) {
                 ruleMap.put("DelIntoGroupBan",action.substring(13));
+            }else if (action.startsWith("crontab=")) {
+                ruleMap.put("crontabOption",action.substring(8));
             }
         }
     }
