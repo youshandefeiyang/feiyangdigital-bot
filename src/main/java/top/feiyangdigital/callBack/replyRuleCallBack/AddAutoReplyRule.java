@@ -47,7 +47,7 @@ public class AddAutoReplyRule {
                             } catch (TelegramApiException e) {
                                 e.printStackTrace();
                             }
-                            addRuleCacheMap.updateUserMapping(userId, addRuleCacheMap.getGroupIdForUser(userId), addRuleCacheMap.getGroupNameForUser(userId), "notallow",addRuleCacheMap.getAiFlagForUser(userId));
+                            addRuleCacheMap.updateUserMapping(userId, addRuleCacheMap.getGroupIdForUser(userId), addRuleCacheMap.getGroupNameForUser(userId), "notallow",addRuleCacheMap.getAiFlagForUser(userId),addRuleCacheMap.getCrontabFlagForUser(userId));
                         } else {
                             String waitRule = UUID.randomUUID().toString() + " | " + newRule;
                             String oldContent = groupInfoWithBLOBs.getKeywords();

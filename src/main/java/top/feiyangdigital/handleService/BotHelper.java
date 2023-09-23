@@ -88,10 +88,10 @@ public class BotHelper {
         List<String> keywordsButtons = new ArrayList<>();
         KeywordsFormat keywordsFormat = new KeywordsFormat();
         keywordsButtons.add("📝规则设置##autoReply%%⚙️群组设置##groupSetting");
+        keywordsButtons.add("🕐打开/关闭定时任务##cronOption%%🔮打开/关闭AI##aiOption");
         keywordsButtons.add("👨🏻‍💻仓库地址$$https://github.com/youshandefeiyang/feiyangdigital-bot%%👥官方群组$$https://t.me/feiyangdigital");
-        keywordsButtons.add("🔮打开/关闭AI##aiOption");
         keywordsButtons.add("❌关闭菜单##closeMenu");
-        keywordsFormat.setReplyText("当前群组：<b>" + addRuleCacheMap.getGroupNameForUser(userId) + "</b>\n当前群组ID：<b>" + addRuleCacheMap.getGroupIdForUser(userId) + "</b>\n当前可输入状态：<b>" + addRuleCacheMap.getKeywordsFlagForUser(userId) + "</b>\n当前AI状态：<b>" + addRuleCacheMap.getAiFlagForUser(userId) + "</b>\n⚡️请选择一个操作!⚡️");
+        keywordsFormat.setReplyText("当前群组：<b>" + addRuleCacheMap.getGroupNameForUser(userId) + "</b>\n当前群组ID：<b>" + addRuleCacheMap.getGroupIdForUser(userId) + "</b>\n当前可输入状态：<b>" + addRuleCacheMap.getKeywordsFlagForUser(userId) + "</b>\n当前定时任务状态：<b>" + addRuleCacheMap.getCrontabFlagForUser(userId) + "</b>\n当前AI状态：<b>" + addRuleCacheMap.getAiFlagForUser(userId) + "</b>\n⚡️请选择一个操作!⚡️");
         keywordsFormat.setKeywordsButtons(keywordsButtons);
         try {
             sender.execute(sendContent.createResponseMessage(update, keywordsFormat, "html"));
@@ -146,6 +146,9 @@ public class BotHelper {
                 return;
             case "aiOption":
                 commonCallBack.aiOption(sender,update);
+                return;
+            case "cronOption":
+                commonCallBack.cronOption(sender,update);
                 return;
             case "close":
                 timerDelete.deletePrivateUsualMessageImmediately(sender, update);

@@ -26,6 +26,44 @@ public class CommonCallBack {
     @Autowired
     private GroupInfoService groupInfoService;
 
+
+    public void cronOption(AbsSender sender, Update update) {
+        String userId = update.getCallbackQuery().getFrom().getId().toString();
+        GroupInfoWithBLOBs groupInfoWithBLOBs = groupInfoService.selAllByGroupId(addRuleCacheMap.getGroupIdForUser(userId));
+        String crontabFlag = "";
+        String text = "";
+        GroupInfoWithBLOBs groupInfoWithBLOBs1 = new GroupInfoWithBLOBs();
+        if ("close".equals(groupInfoWithBLOBs.getCrontabflag())) {
+            groupInfoWithBLOBs1.setCrontabflag("open");
+            if (groupInfoService.updateSelectiveByChatId(groupInfoWithBLOBs1, addRuleCacheMap.getGroupIdForUser(userId))) {
+                crontabFlag = "open";
+                text = "✅定时任务已打开";
+            }
+        } else {
+            groupInfoWithBLOBs1.setCrontabflag("close");
+            if (groupInfoService.updateSelectiveByChatId(groupInfoWithBLOBs1, addRuleCacheMap.getGroupIdForUser(userId))) {
+                crontabFlag = "close";
+                text = "❗定时任务已关闭";
+            }
+        }
+        List<String> keywordsButtons = new ArrayList<>();
+        KeywordsFormat keywordsFormat = new KeywordsFormat();
+        keywordsButtons.add("📝规则设置##autoReply%%⚙️群组设置##groupSetting");
+        keywordsButtons.add("🕐打开/关闭定时任务##cronOption%%🔮打开/关闭AI##aiOption");
+        keywordsButtons.add("👨🏻‍💻仓库地址$$https://github.com/youshandefeiyang/feiyangdigital-bot%%👥官方群组$$https://t.me/feiyangdigital");
+        keywordsButtons.add("❌关闭菜单##closeMenu");
+        keywordsFormat.setReplyText(text + "\n当前群组：<b>" + addRuleCacheMap.getGroupNameForUser(userId) + "</b>\n当前群组ID：<b>" + addRuleCacheMap.getGroupIdForUser(userId) + "</b>\n当前可输入状态：<b>" + addRuleCacheMap.getKeywordsFlagForUser(userId) + "</b>\n当前定时任务状态：<b>" + crontabFlag + "</b>\n当前AI状态：<b>" + addRuleCacheMap.getAiFlagForUser(userId) + "</b>\n⚡️请选择一个操作!⚡️");
+        keywordsFormat.setKeywordsButtons(keywordsButtons);
+        addRuleCacheMap.updateUserMapping(userId,addRuleCacheMap.getGroupIdForUser(userId),addRuleCacheMap.getGroupNameForUser(userId),addRuleCacheMap.getKeywordsFlagForUser(userId),addRuleCacheMap.getAiFlagForUser(userId),crontabFlag);
+        try {
+            sender.execute(sendContent.editResponseMessage(update, keywordsFormat, "html"));
+        } catch (TelegramApiException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+
     public void aiOption(AbsSender sender, Update update) {
         String userId = update.getCallbackQuery().getFrom().getId().toString();
         GroupInfoWithBLOBs groupInfoWithBLOBs = groupInfoService.selAllByGroupId(addRuleCacheMap.getGroupIdForUser(userId));
@@ -48,11 +86,12 @@ public class CommonCallBack {
         List<String> keywordsButtons = new ArrayList<>();
         KeywordsFormat keywordsFormat = new KeywordsFormat();
         keywordsButtons.add("📝规则设置##autoReply%%⚙️群组设置##groupSetting");
+        keywordsButtons.add("🕐打开/关闭定时任务##cronOption%%🔮打开/关闭AI##aiOption");
         keywordsButtons.add("👨🏻‍💻仓库地址$$https://github.com/youshandefeiyang/feiyangdigital-bot%%👥官方群组$$https://t.me/feiyangdigital");
-        keywordsButtons.add("🔮打开/关闭AI##aiOption");
         keywordsButtons.add("❌关闭菜单##closeMenu");
-        keywordsFormat.setReplyText(text + "\n当前群组：<b>" + addRuleCacheMap.getGroupNameForUser(userId) + "</b>\n当前群组ID：<b>" + addRuleCacheMap.getGroupIdForUser(userId) + "</b>\n当前可输入状态：<b>" + addRuleCacheMap.getKeywordsFlagForUser(userId) + "</b>\n当前AI状态：<b>" + aiFlag + "</b>\n⚡️请选择一个操作!⚡️");
+        keywordsFormat.setReplyText(text + "\n当前群组：<b>" + addRuleCacheMap.getGroupNameForUser(userId) + "</b>\n当前群组ID：<b>" + addRuleCacheMap.getGroupIdForUser(userId) + "</b>\n当前可输入状态：<b>" + addRuleCacheMap.getKeywordsFlagForUser(userId) + "</b>\n当前定时任务状态：<b>" + addRuleCacheMap.getCrontabFlagForUser(userId)  + "</b>\n当前AI状态：<b>" + aiFlag + "</b>\n⚡️请选择一个操作!⚡️");
         keywordsFormat.setKeywordsButtons(keywordsButtons);
+        addRuleCacheMap.updateUserMapping(userId,addRuleCacheMap.getGroupIdForUser(userId),addRuleCacheMap.getGroupNameForUser(userId),addRuleCacheMap.getKeywordsFlagForUser(userId),aiFlag,addRuleCacheMap.getCrontabFlagForUser(userId));
         try {
             sender.execute(sendContent.editResponseMessage(update, keywordsFormat, "html"));
         } catch (TelegramApiException e) {
@@ -66,10 +105,10 @@ public class CommonCallBack {
         List<String> keywordsButtons = new ArrayList<>();
         KeywordsFormat keywordsFormat = new KeywordsFormat();
         keywordsButtons.add("📝规则设置##autoReply%%⚙️群组设置##groupSetting");
+        keywordsButtons.add("🕐打开/关闭定时任务##cronOption%%🔮打开/关闭AI##aiOption");
         keywordsButtons.add("👨🏻‍💻仓库地址$$https://github.com/youshandefeiyang/feiyangdigital-bot%%👥官方群组$$https://t.me/feiyangdigital");
-        keywordsButtons.add("🔮打开/关闭AI##aiOption");
         keywordsButtons.add("❌关闭菜单##closeMenu");
-        keywordsFormat.setReplyText("当前群组：<b>" + addRuleCacheMap.getGroupNameForUser(userId) + "</b>\n当前群组ID：<b>" + addRuleCacheMap.getGroupIdForUser(userId) + "</b>\n当前可输入状态：<b>" + addRuleCacheMap.getKeywordsFlagForUser(userId) + "</b>\n当前AI状态：<b>" + addRuleCacheMap.getAiFlagForUser(userId) + "</b>\n⚡️请选择一个操作!⚡️");
+        keywordsFormat.setReplyText("当前群组：<b>" + addRuleCacheMap.getGroupNameForUser(userId) + "</b>\n当前群组ID：<b>" + addRuleCacheMap.getGroupIdForUser(userId) + "</b>\n当前可输入状态：<b>" + addRuleCacheMap.getKeywordsFlagForUser(userId) + "</b>\n当前定时任务状态：<b>" + addRuleCacheMap.getCrontabFlagForUser(userId) + "</b>\n当前AI状态：<b>" + addRuleCacheMap.getAiFlagForUser(userId) + "</b>\n⚡️请选择一个操作!⚡️");
         keywordsFormat.setKeywordsButtons(keywordsButtons);
         try {
             sender.execute(sendContent.editResponseMessage(update, keywordsFormat, "html"));
