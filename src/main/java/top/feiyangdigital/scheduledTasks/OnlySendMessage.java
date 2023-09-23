@@ -32,7 +32,7 @@ public class OnlySendMessage implements Job {
         String groupId = dataMap.getString("groupId");
         KeywordsFormat keywordsFormat = new KeywordsFormat();
         keywordsFormat.setKeywordsButtons((List<String>) dataMap.get("keyButtons"));
-        keywordsFormat.setReplyText("定时任务测试中：这是定时任务11111");
-        timerDelete.sendTimedMessage(sender,sendContent.createGroupMessage(groupId,keywordsFormat,"html"),20);
+        keywordsFormat.setReplyText("定时任务测试中：该任务每10分钟执行一次");
+        timerDelete.sendTimedMessage(sender,sendContent.createGroupMessage(groupId,keywordsFormat,"html"),60);
     }
 }
