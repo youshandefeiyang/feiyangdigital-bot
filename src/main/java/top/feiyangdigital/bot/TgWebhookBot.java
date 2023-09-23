@@ -16,6 +16,7 @@ public class TgWebhookBot extends TelegramWebhookBot {
 
     private String botPath;
 
+
     @Autowired
     private CommonFunction commonFunction;
 

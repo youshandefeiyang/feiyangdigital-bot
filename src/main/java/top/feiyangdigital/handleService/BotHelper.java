@@ -2,6 +2,7 @@ package top.feiyangdigital.handleService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 import org.telegram.telegrambots.meta.api.methods.AnswerCallbackQuery;
 import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 import org.telegram.telegrambots.meta.api.objects.Update;
@@ -16,6 +17,7 @@ import top.feiyangdigital.entity.BaseInfo;
 import top.feiyangdigital.entity.DeleteGropuRuleMapEntity;
 import top.feiyangdigital.entity.GroupInfoWithBLOBs;
 import top.feiyangdigital.entity.KeywordsFormat;
+import top.feiyangdigital.scheduledTasks.HandleOption;
 import top.feiyangdigital.sqlService.GroupInfoService;
 import top.feiyangdigital.utils.*;
 import top.feiyangdigital.utils.groupCaptch.AdminAllow;
@@ -70,6 +72,9 @@ public class BotHelper {
 
     @Autowired
     private CaptchaManagerCacheMap captchaManagerCacheMap;
+
+    @Autowired
+    private HandleOption handleOption;
 
     public void sendAdminButton(AbsSender sender, Update update) {
         String url = String.format("https://t.me/%s?start=_groupId%s", BaseInfo.getBotName(), update.getMessage().getChatId().toString());
@@ -213,6 +218,11 @@ public class BotHelper {
                 GroupInfoWithBLOBs groupInfoWithBLOBs = new GroupInfoWithBLOBs();
                 groupInfoWithBLOBs.setKeywords(deleteGropuRuleMapEntity.removeRuleAndAssembleString(chatId, longUuid).trim());
                 if (groupInfoService.updateSelectiveByChatId(groupInfoWithBLOBs, chatId)) {
+                    GroupInfoWithBLOBs groupInfoWithBLOBs2 = groupInfoService.selAllByGroupId(addRuleCacheMap.getGroupIdForUser(update.getCallbackQuery().getFrom().getId().toString()));
+                    String keyWords = groupInfoWithBLOBs2.getKeywords();
+                    if (StringUtils.hasText(keyWords) && "open".equals(groupInfoWithBLOBs2.getCrontabflag())){
+                        handleOption.ruleHandle(sender, addRuleCacheMap.getGroupIdForUser(update.getCallbackQuery().getFrom().getId().toString()),keyWords);
+                    }
                     setDeleteView.deleteRuleSuccessCallBack(sender, update);
                 }
 

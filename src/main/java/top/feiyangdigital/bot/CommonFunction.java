@@ -22,6 +22,7 @@ import top.feiyangdigital.entity.BotRecord;
 import top.feiyangdigital.entity.GroupInfoWithBLOBs;
 import top.feiyangdigital.entity.KeywordsFormat;
 import top.feiyangdigital.handleService.*;
+import top.feiyangdigital.scheduledTasks.HandleOption;
 import top.feiyangdigital.sqlService.BotRecordService;
 import top.feiyangdigital.sqlService.GroupInfoService;
 import top.feiyangdigital.utils.*;
@@ -41,6 +42,8 @@ import java.util.List;
 
 @Component
 public class CommonFunction {
+
+    private boolean timeFlag = true;
 
     @Autowired
     private AiCheckMessage aiCheckMessage;
@@ -90,10 +93,21 @@ public class CommonFunction {
     @Autowired
     private SetBot setBot;
 
+    @Autowired
+    private HandleOption handleOption;
+
     public void mainFunc(AbsSender sender, Update update) {
 
 
         if (update.hasMessage() && (update.getMessage().getChat().isGroupChat() || update.getMessage().getChat().isSuperGroupChat())) {
+            if (timeFlag) {
+                GroupInfoWithBLOBs groupInfoWithBLOBs = groupInfoService.selAllByGroupId(update.getMessage().getChatId().toString());
+                String keyWords = groupInfoWithBLOBs.getKeywords();
+                if (StringUtils.hasText(keyWords) && "open".equals(groupInfoWithBLOBs.getCrontabflag())) {
+                    handleOption.ruleHandle(sender, update.getMessage().getChatId().toString(), keyWords);
+                }
+                timeFlag = false;
+            }
             if (update.getMessage().hasText()) {
                 if (setBot.adminSetBot(sender, update)) {
                     return;

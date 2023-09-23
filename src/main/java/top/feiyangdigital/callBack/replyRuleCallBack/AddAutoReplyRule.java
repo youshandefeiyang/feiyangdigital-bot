@@ -2,11 +2,13 @@ package top.feiyangdigital.callBack.replyRuleCallBack;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.bots.AbsSender;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import top.feiyangdigital.entity.GroupInfoWithBLOBs;
 import top.feiyangdigital.entity.KeywordsFormat;
+import top.feiyangdigital.scheduledTasks.HandleOption;
 import top.feiyangdigital.sqlService.GroupInfoService;
 import top.feiyangdigital.utils.ruleCacheMap.AddRuleCacheMap;
 import top.feiyangdigital.utils.ReplyLegal;
@@ -31,6 +33,8 @@ public class AddAutoReplyRule {
 
     @Autowired
     private ReplyLegal replyLegal;
+    @Autowired
+    private HandleOption handleOption;
 
     public void addNewRule(AbsSender sender, Update update) {
         if (update.getMessage().getText() != null && !update.getMessage().getText().trim().isEmpty()) {
@@ -69,6 +73,11 @@ public class AddAutoReplyRule {
                             groupInfoWithBLOBs1.setKeywords(newContent);
                             if (groupInfoService.updateSelectiveByChatId(groupInfoWithBLOBs1, addRuleCacheMap.getGroupIdForUser(userId))) {
                                 try {
+                                    GroupInfoWithBLOBs groupInfoWithBLOBs2 = groupInfoService.selAllByGroupId(addRuleCacheMap.getGroupIdForUser(userId));
+                                    String keyWords = groupInfoWithBLOBs2.getKeywords();
+                                    if (StringUtils.hasText(keyWords) && "open".equals(groupInfoWithBLOBs2.getCrontabflag())){
+                                        handleOption.ruleHandle(sender, addRuleCacheMap.getGroupIdForUser(userId),keyWords);
+                                    }
                                     sender.execute(sendContent.createResponseMessage(update, new KeywordsFormat(waitRule), "html"));
                                 } catch (TelegramApiException e) {
                                     e.printStackTrace();

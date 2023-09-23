@@ -2,11 +2,14 @@ package top.feiyangdigital.callBack;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.bots.AbsSender;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import top.feiyangdigital.entity.GroupInfoWithBLOBs;
 import top.feiyangdigital.entity.KeywordsFormat;
+import top.feiyangdigital.scheduledTasks.HandleOption;
+import top.feiyangdigital.scheduledTasks.SchedulerService;
 import top.feiyangdigital.sqlService.GroupInfoService;
 import top.feiyangdigital.utils.ruleCacheMap.AddRuleCacheMap;
 import top.feiyangdigital.utils.SendContent;
@@ -26,10 +29,17 @@ public class CommonCallBack {
     @Autowired
     private GroupInfoService groupInfoService;
 
+    @Autowired
+    private SchedulerService schedulerService;
+
+    @Autowired
+    private HandleOption handleOption;
+
 
     public void cronOption(AbsSender sender, Update update) {
         String userId = update.getCallbackQuery().getFrom().getId().toString();
         GroupInfoWithBLOBs groupInfoWithBLOBs = groupInfoService.selAllByGroupId(addRuleCacheMap.getGroupIdForUser(userId));
+        String keyWords = groupInfoWithBLOBs.getKeywords();
         String crontabFlag = "";
         String text = "";
         GroupInfoWithBLOBs groupInfoWithBLOBs1 = new GroupInfoWithBLOBs();
@@ -38,12 +48,16 @@ public class CommonCallBack {
             if (groupInfoService.updateSelectiveByChatId(groupInfoWithBLOBs1, addRuleCacheMap.getGroupIdForUser(userId))) {
                 crontabFlag = "open";
                 text = "✅定时任务已打开";
+                if (StringUtils.hasText(keyWords)){
+                    handleOption.ruleHandle(sender, addRuleCacheMap.getGroupIdForUser(userId),keyWords);
+                }
             }
         } else {
             groupInfoWithBLOBs1.setCrontabflag("close");
             if (groupInfoService.updateSelectiveByChatId(groupInfoWithBLOBs1, addRuleCacheMap.getGroupIdForUser(userId))) {
                 crontabFlag = "close";
                 text = "❗定时任务已关闭";
+                schedulerService.clearAllJobs();
             }
         }
         List<String> keywordsButtons = new ArrayList<>();
