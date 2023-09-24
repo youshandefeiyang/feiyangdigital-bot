@@ -137,7 +137,9 @@ public class TimerDelete {
             @Override
             public void run() {
                 try {
-                    sender.execute(new DeleteMessage(chatId, messageId));
+                    if (messageId!=null){
+                        sender.execute(new DeleteMessage(chatId, messageId));
+                    }
                     captchaManager.clearMappingsForUser(userId.toString());
                     // 在此发送提示消息
                     Message message = sender.execute(sendMessage);
@@ -173,7 +175,9 @@ public class TimerDelete {
             @Override
             public void run() {
                 try {
-                    sender.execute(new DeleteMessage(chatId, messageId));
+                    if (messageId !=null){
+                        sender.execute(new DeleteMessage(chatId, messageId));
+                    }
                 } catch (TelegramApiException e) {
                     // 这里可以捕获异常，但是我们可以选择不执行任何操作，因为我们不关心消息是否确实已经被删除
                 }
@@ -183,8 +187,10 @@ public class TimerDelete {
 
     public void deleteByMessageIdImmediately(AbsSender sender, String chatId, Integer messageId) {
         try {
-            DeleteMessage deleteMessage = new DeleteMessage(chatId, messageId);
-            sender.execute(deleteMessage);
+            if (messageId!=null){
+                DeleteMessage deleteMessage = new DeleteMessage(chatId, messageId);
+                sender.execute(deleteMessage);
+            }
         } catch (TelegramApiException e) {
             // 这里可以捕获异常，但是我们可以选择不执行任何操作，因为我们不关心消息是否确实已经被删除
         }
