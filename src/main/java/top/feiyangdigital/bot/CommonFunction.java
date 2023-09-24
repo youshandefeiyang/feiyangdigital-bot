@@ -96,6 +96,9 @@ public class CommonFunction {
     @Autowired
     private NightMode nightMode;
 
+    @Autowired
+    private ReportToOwner reportToOwner;
+
     public void mainFunc(AbsSender sender, Update update) {
 
         if (update.hasMessage() && (update.getMessage().getChat().isGroupChat() || update.getMessage().getChat().isSuperGroupChat())) {
@@ -107,8 +110,8 @@ public class CommonFunction {
                 }
                 timeFlag = false;
             }
-            if ("open".equals(groupInfoWithBLOBs.getCansendmediaflag())){
-                if (nightMode.deleteMedia(sender,update)){
+            if ("open".equals(groupInfoWithBLOBs.getCansendmediaflag())) {
+                if (nightMode.deleteMedia(sender, update)) {
                     return;
                 }
             }
@@ -124,6 +127,8 @@ public class CommonFunction {
                 } else if (restrictOrUnrestrictUser.muteOption(sender, update)) {
                     return;
                 } else if (restrictOrUnrestrictUser.unMuteOption(sender, update)) {
+                    return;
+                } else if (reportToOwner.haddle(sender, update)) {
                     return;
                 }
                 aiCheckMessage.checkMessage(sender, update);

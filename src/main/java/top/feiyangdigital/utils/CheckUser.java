@@ -13,6 +13,8 @@ import org.telegram.telegrambots.meta.bots.AbsSender;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 @Component
 public class CheckUser {
@@ -49,6 +51,21 @@ public class CheckUser {
             }
         }
         return false;
+    }
+
+    public Map<String,String> getChatOwner(AbsSender sender, Update update) {
+        Map<String,String> map = new ConcurrentHashMap<>();
+        String chatId = "";
+        if (update.hasMessage()){
+            chatId = update.getMessage().getChatId().toString();
+        }
+        for (ChatMember admin : adminList.getAdmins(sender, chatId)) {
+                if (admin instanceof ChatMemberOwner) {
+                    map.put("ownerId",admin.getUser().getId().toString());
+                    map.put("ownerFirstName",admin.getUser().getFirstName());
+                }
+        }
+        return map;
     }
 
 }
