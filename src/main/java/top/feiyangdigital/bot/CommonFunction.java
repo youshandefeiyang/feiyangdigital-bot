@@ -36,11 +36,13 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 @Component
 public class CommonFunction {
 
-    private boolean timeFlag = true;
+    private final Map<Long, Boolean> groupFlags = new ConcurrentHashMap<>();
 
     @Autowired
     private AiCheckMessage aiCheckMessage;
@@ -103,12 +105,15 @@ public class CommonFunction {
 
         if (update.hasMessage() && (update.getMessage().getChat().isGroupChat() || update.getMessage().getChat().isSuperGroupChat())) {
             GroupInfoWithBLOBs groupInfoWithBLOBs = groupInfoService.selAllByGroupId(update.getMessage().getChatId().toString());
-            if (timeFlag) {
+            Long chatId = update.getMessage().getChatId();
+            groupFlags.putIfAbsent(chatId, true);
+            Boolean flag = groupFlags.get(chatId);
+            if (flag != null && flag) {
                 String keyWords = groupInfoWithBLOBs.getKeywords();
                 if (StringUtils.hasText(keyWords)) {
-                    handleOption.ruleHandle(sender, update.getMessage().getChatId().toString(), keyWords);
+                    handleOption.ruleHandle(sender, chatId.toString(), keyWords);
                 }
-                timeFlag = false;
+                groupFlags.put(chatId, false);
             }
             if ("open".equals(groupInfoWithBLOBs.getCansendmediaflag())) {
                 if (nightMode.deleteMedia(sender, update)) {
