@@ -31,7 +31,7 @@ public class MessageHandle {
         }
         //这代表的是从群组绑定频道发过来的消息，直接返回，不做处理
         //ToDo 反频道马甲机器人
-        if ("Telegram".equalsIgnoreCase(update.getMessage().getFrom().getFirstName()) && update.getMessage().getSenderChat().isChannelChat()) {
+        if ("Telegram".equals(update.getMessage().getFrom().getFirstName()) && update.getMessage().getSenderChat().isChannelChat()) {
             return true;
         }
 

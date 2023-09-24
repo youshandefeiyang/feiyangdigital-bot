@@ -107,7 +107,7 @@ public class CommonFunction {
                 }
                 timeFlag = false;
             }
-            if ("open".equalsIgnoreCase(groupInfoWithBLOBs.getCansendmediaflag())){
+            if ("open".equals(groupInfoWithBLOBs.getCansendmediaflag())){
                 if (nightMode.deleteMedia(sender,update)){
                     return;
                 }
@@ -147,7 +147,7 @@ public class CommonFunction {
                 String userId = idGroup[1];
                 String currentChatId = update.getMessage().getChatId().toString();
                 String firstName = update.getMessage().getChat().getFirstName();
-                if (update.getMessage().getFrom().getId().toString().equalsIgnoreCase(userId) && "open".equalsIgnoreCase(groupInfoService.selAllByGroupId(chatId).getIntogroupcheckflag())) {
+                if (update.getMessage().getFrom().getId().toString().equals(userId) && "open".equals(groupInfoService.selAllByGroupId(chatId).getIntogroupcheckflag())) {
 
                     captchaGenerator.sendCaptcha(sender, update.getMessage().getFrom().getId(), chatId, currentChatId, firstName);
                 } else {
@@ -157,7 +157,7 @@ public class CommonFunction {
                         e.printStackTrace();
                     }
                 }
-            } else if ("/start".equalsIgnoreCase(update.getMessage().getText())) {
+            } else if ("/start".equals(update.getMessage().getText())) {
                 String url = String.format("https://t.me/%s?startgroup=start", BaseInfo.getBotName());
                 List<String> keywordsButtons = new ArrayList<>();
                 KeywordsFormat keywordsFormat = new KeywordsFormat();
@@ -172,9 +172,9 @@ public class CommonFunction {
                 }
             } else {
                 String userId = update.getMessage().getFrom().getId().toString();
-                if ("allow".equalsIgnoreCase(addRuleCacheMap.getKeywordsFlagForUser(userId))) {
+                if ("allow".equals(addRuleCacheMap.getKeywordsFlagForUser(userId))) {
                     addAutoReplyRule.addNewRule(sender, update);
-                } else if ("candelete".equalsIgnoreCase(deleteRuleCacheMap.getDeleteKeywordFlagMap(userId))) {
+                } else if ("candelete".equals(deleteRuleCacheMap.getDeleteKeywordFlagMap(userId))) {
                     deleteSingleRuleByKeyWord.DeleteOption(sender, update);
                 } else if (StringUtils.hasText(captchaManager.getAnswerForUser(userId))) {
                     captchaGenerator.answerReplyhandle(sender, update);
@@ -186,7 +186,7 @@ public class CommonFunction {
 
 
         //检测新入群用户且状态正常的用户
-        if (update.getChatMember() != null && "left".equalsIgnoreCase(update.getChatMember().getOldChatMember().getStatus()) && "member".equalsIgnoreCase(update.getChatMember().getNewChatMember().getStatus())) {
+        if (update.getChatMember() != null && "left".equals(update.getChatMember().getOldChatMember().getStatus()) && "member".equals(update.getChatMember().getNewChatMember().getStatus())) {
 
             newMemberIntoGroup.handleMessage(sender, update, null);
         }

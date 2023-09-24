@@ -106,7 +106,7 @@ public class CaptchaGenerator {
                 }
                 restrictOrUnrestrictUser.unrestrictUser(sender, update.getMessage().getFrom().getId(), groupId);
                 botRecordService.addUserRecord(groupId,userId,update.getMessage().getDate().toString());
-                if (groupInfoWithBLOBs != null && "open".equalsIgnoreCase(groupInfoWithBLOBs.getIntogroupwelcomeflag())) {
+                if (groupInfoWithBLOBs != null && "open".equals(groupInfoWithBLOBs.getIntogroupwelcomeflag())) {
                     if (groupMessageIdCacheMap.getGroupMessageId(groupId) != null) {
                         timerDelete.deleteByMessageIdImmediately(sender, groupId, groupMessageIdCacheMap.getGroupMessageId(groupId));
                     }

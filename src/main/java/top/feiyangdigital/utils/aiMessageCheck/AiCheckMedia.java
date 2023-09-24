@@ -49,7 +49,7 @@ public class AiCheckMedia {
         Integer messageId = update.getMessage().getMessageId();
         String firstName = update.getMessage().getFrom().getFirstName();
         GroupInfoWithBLOBs groupInfoWithBLOBs = groupInfoService.selAllByGroupId(groupId);
-        if (groupInfoWithBLOBs != null && "open".equalsIgnoreCase(groupInfoWithBLOBs.getAiflag())) {
+        if (groupInfoWithBLOBs != null && "open".equals(groupInfoWithBLOBs.getAiflag())) {
             BotRecord botRecord = botRecordService.selBotRecordByGidAndUid(groupId, userId);
             if (botRecord != null) {
                 Integer violationCount = botRecord.getViolationcount();

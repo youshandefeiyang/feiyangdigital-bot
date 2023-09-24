@@ -83,7 +83,7 @@ public class NewMemberIntoGroup {
 
         GroupInfoWithBLOBs groupInfoWithBLOBs = groupInfoService.selAllByGroupId(chatId.toString());
 
-        if (groupInfoWithBLOBs != null && "open".equalsIgnoreCase(groupInfoWithBLOBs.getIntogroupusernamecheckflag())) {
+        if (groupInfoWithBLOBs != null && "open".equals(groupInfoWithBLOBs.getIntogroupusernamecheckflag())) {
             if (StringUtils.hasText(groupInfoWithBLOBs.getKeywords()) && groupInfoWithBLOBs.getKeywords().contains("&&intoGroupBan=")) {
                 List<KeywordsFormat> keywordsFormatList = Arrays.stream(groupInfoWithBLOBs.getKeywords().split("\\n{2,}"))
                         .map(String::trim)
@@ -116,11 +116,11 @@ public class NewMemberIntoGroup {
             }
         }
 
-        if (groupInfoWithBLOBs != null && "close".equalsIgnoreCase(groupInfoWithBLOBs.getIntogroupcheckflag()) && "close".equalsIgnoreCase(groupInfoWithBLOBs.getIntogroupwelcomeflag())) {
+        if (groupInfoWithBLOBs != null && "close".equals(groupInfoWithBLOBs.getIntogroupcheckflag()) && "close".equals(groupInfoWithBLOBs.getIntogroupwelcomeflag())) {
             botRecordService.addUserRecord(chatId.toString(),userId.toString(),joinedTime);
         }
 
-        if (groupInfoWithBLOBs != null && "close".equalsIgnoreCase(groupInfoWithBLOBs.getIntogroupcheckflag()) && "open".equalsIgnoreCase(groupInfoWithBLOBs.getIntogroupwelcomeflag())) {
+        if (groupInfoWithBLOBs != null && "close".equals(groupInfoWithBLOBs.getIntogroupcheckflag()) && "open".equals(groupInfoWithBLOBs.getIntogroupwelcomeflag())) {
             if (groupMessageIdCacheMap.getGroupMessageId(chatId.toString()) != null) {
                 timerDelete.deleteByMessageIdImmediately(sender, chatId.toString(), groupMessageIdCacheMap.getGroupMessageId(chatId.toString()));
             }
@@ -148,7 +148,7 @@ public class NewMemberIntoGroup {
             botRecordService.addUserRecord(chatId.toString(),userId.toString(),joinedTime);
         }
 
-        if (groupInfoWithBLOBs != null && "open".equalsIgnoreCase(groupInfoWithBLOBs.getIntogroupcheckflag())) {
+        if (groupInfoWithBLOBs != null && "open".equals(groupInfoWithBLOBs.getIntogroupcheckflag())) {
             if (groupMessageIdCacheMap.getGroupMessageId(chatId.toString()) != null) {
                 timerDelete.deleteByMessageIdImmediately(sender, chatId.toString(), groupMessageIdCacheMap.getGroupMessageId(chatId.toString()));
             }

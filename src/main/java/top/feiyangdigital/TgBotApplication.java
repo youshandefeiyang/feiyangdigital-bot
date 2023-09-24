@@ -50,14 +50,14 @@ public class TgBotApplication implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        if ("longPolling".equalsIgnoreCase(BaseInfo.getBotMode())) {
+        if ("longPolling".equals(BaseInfo.getBotMode())) {
             tgLongPollingBot.setBotName(BaseInfo.getBotName());
             tgLongPollingBot.setBotToken(BaseInfo.getBotToken());
             tgLongPollingBot.setGroupCommands();
             TelegramBotsApi botsApi = new TelegramBotsApi(DefaultBotSession.class);
             botsApi.registerBot(tgLongPollingBot);
             log.info("longPolling模式已启动");
-        } else if ("webhook".equalsIgnoreCase(BaseInfo.getBotMode())) {
+        } else if ("webhook".equals(BaseInfo.getBotMode())) {
             tgWebhookBot.setBotToken(BaseInfo.getBotToken());
             tgWebhookBot.setGroupCommands();
             TelegramBotsApi telegramBotsApi = new TelegramBotsApi(DefaultBotSession.class);

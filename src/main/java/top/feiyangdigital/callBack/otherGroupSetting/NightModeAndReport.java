@@ -59,7 +59,7 @@ public class NightModeAndReport {
         String reportFlag = "";
         String text = "";
         GroupInfoWithBLOBs groupInfoWithBLOBs1 = new GroupInfoWithBLOBs();
-        if ("close".equalsIgnoreCase(groupInfoWithBLOBs.getReportflag())) {
+        if ("close".equals(groupInfoWithBLOBs.getReportflag())) {
             groupInfoWithBLOBs1.setReportflag("open");
             if (groupInfoService.updateSelectiveByChatId(groupInfoWithBLOBs1, addRuleCacheMap.getGroupIdForUser(userId))) {
                 reportFlag = "open";
@@ -94,7 +94,7 @@ public class NightModeAndReport {
         String nightFlag = "";
         String text = "";
         GroupInfoWithBLOBs groupInfoWithBLOBs1 = new GroupInfoWithBLOBs();
-        if ("close".equalsIgnoreCase(groupInfoWithBLOBs.getNightmodeflag())) {
+        if ("close".equals(groupInfoWithBLOBs.getNightmodeflag())) {
             groupInfoWithBLOBs1.setNightmodeflag("open");
             if (groupInfoService.updateSelectiveByChatId(groupInfoWithBLOBs1, addRuleCacheMap.getGroupIdForUser(userId))) {
                 nightFlag = "open";

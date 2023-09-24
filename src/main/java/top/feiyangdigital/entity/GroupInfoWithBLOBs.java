@@ -42,22 +42,22 @@ public class GroupInfoWithBLOBs extends GroupInfo implements Serializable {
         }
         GroupInfoWithBLOBs other = (GroupInfoWithBLOBs) that;
         return (this.getId() == null ? other.getId() == null : this.getId().equals(other.getId()))
-            && (this.getGroupid() == null ? other.getGroupid() == null : this.getGroupid().equalsIgnoreCase(other.getGroupid()))
-            && (this.getOwnerandanonymousadmins() == null ? other.getOwnerandanonymousadmins() == null : this.getOwnerandanonymousadmins().equalsIgnoreCase(other.getOwnerandanonymousadmins()))
-            && (this.getGroupname() == null ? other.getGroupname() == null : this.getGroupname().equalsIgnoreCase(other.getGroupname()))
-            && (this.getKeywordsflag() == null ? other.getKeywordsflag() == null : this.getKeywordsflag().equalsIgnoreCase(other.getKeywordsflag()))
-            && (this.getDeletekeywordflag() == null ? other.getDeletekeywordflag() == null : this.getDeletekeywordflag().equalsIgnoreCase(other.getDeletekeywordflag()))
-            && (this.getSettingtimestamp() == null ? other.getSettingtimestamp() == null : this.getSettingtimestamp().equalsIgnoreCase(other.getSettingtimestamp()))
-            && (this.getIntogroupcheckflag() == null ? other.getIntogroupcheckflag() == null : this.getIntogroupcheckflag().equalsIgnoreCase(other.getIntogroupcheckflag()))
-            && (this.getIntogroupwelcomeflag() == null ? other.getIntogroupwelcomeflag() == null : this.getIntogroupwelcomeflag().equalsIgnoreCase(other.getIntogroupwelcomeflag()))
-            && (this.getIntogroupusernamecheckflag() == null ? other.getIntogroupusernamecheckflag() == null : this.getIntogroupusernamecheckflag().equalsIgnoreCase(other.getIntogroupusernamecheckflag()))
-            && (this.getAiflag() == null ? other.getAiflag() == null : this.getAiflag().equalsIgnoreCase(other.getAiflag()))
-            && (this.getCrontabflag() == null ? other.getCrontabflag() == null : this.getCrontabflag().equalsIgnoreCase(other.getCrontabflag()))
-            && (this.getNightmodeflag() == null ? other.getNightmodeflag() == null : this.getNightmodeflag().equalsIgnoreCase(other.getNightmodeflag()))
-            && (this.getCansendmediaflag() == null ? other.getCansendmediaflag() == null : this.getCansendmediaflag().equalsIgnoreCase(other.getCansendmediaflag()))
-            && (this.getReportflag() == null ? other.getReportflag() == null : this.getReportflag().equalsIgnoreCase(other.getReportflag()))
-            && (this.getKeywords() == null ? other.getKeywords() == null : this.getKeywords().equalsIgnoreCase(other.getKeywords()))
-            && (this.getChannelspammerswhitelist() == null ? other.getChannelspammerswhitelist() == null : this.getChannelspammerswhitelist().equalsIgnoreCase(other.getChannelspammerswhitelist()));
+            && (this.getGroupid() == null ? other.getGroupid() == null : this.getGroupid().equals(other.getGroupid()))
+            && (this.getOwnerandanonymousadmins() == null ? other.getOwnerandanonymousadmins() == null : this.getOwnerandanonymousadmins().equals(other.getOwnerandanonymousadmins()))
+            && (this.getGroupname() == null ? other.getGroupname() == null : this.getGroupname().equals(other.getGroupname()))
+            && (this.getKeywordsflag() == null ? other.getKeywordsflag() == null : this.getKeywordsflag().equals(other.getKeywordsflag()))
+            && (this.getDeletekeywordflag() == null ? other.getDeletekeywordflag() == null : this.getDeletekeywordflag().equals(other.getDeletekeywordflag()))
+            && (this.getSettingtimestamp() == null ? other.getSettingtimestamp() == null : this.getSettingtimestamp().equals(other.getSettingtimestamp()))
+            && (this.getIntogroupcheckflag() == null ? other.getIntogroupcheckflag() == null : this.getIntogroupcheckflag().equals(other.getIntogroupcheckflag()))
+            && (this.getIntogroupwelcomeflag() == null ? other.getIntogroupwelcomeflag() == null : this.getIntogroupwelcomeflag().equals(other.getIntogroupwelcomeflag()))
+            && (this.getIntogroupusernamecheckflag() == null ? other.getIntogroupusernamecheckflag() == null : this.getIntogroupusernamecheckflag().equals(other.getIntogroupusernamecheckflag()))
+            && (this.getAiflag() == null ? other.getAiflag() == null : this.getAiflag().equals(other.getAiflag()))
+            && (this.getCrontabflag() == null ? other.getCrontabflag() == null : this.getCrontabflag().equals(other.getCrontabflag()))
+            && (this.getNightmodeflag() == null ? other.getNightmodeflag() == null : this.getNightmodeflag().equals(other.getNightmodeflag()))
+            && (this.getCansendmediaflag() == null ? other.getCansendmediaflag() == null : this.getCansendmediaflag().equals(other.getCansendmediaflag()))
+            && (this.getReportflag() == null ? other.getReportflag() == null : this.getReportflag().equals(other.getReportflag()))
+            && (this.getKeywords() == null ? other.getKeywords() == null : this.getKeywords().equals(other.getKeywords()))
+            && (this.getChannelspammerswhitelist() == null ? other.getChannelspammerswhitelist() == null : this.getChannelspammerswhitelist().equals(other.getChannelspammerswhitelist()));
     }
 
     @Override

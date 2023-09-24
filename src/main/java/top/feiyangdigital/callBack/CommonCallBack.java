@@ -43,7 +43,7 @@ public class CommonCallBack {
         String crontabFlag = "";
         String text = "";
         GroupInfoWithBLOBs groupInfoWithBLOBs1 = new GroupInfoWithBLOBs();
-        if ("close".equalsIgnoreCase(groupInfoWithBLOBs.getCrontabflag())) {
+        if ("close".equals(groupInfoWithBLOBs.getCrontabflag())) {
             groupInfoWithBLOBs1.setCrontabflag("open");
             if (groupInfoService.updateSelectiveByChatId(groupInfoWithBLOBs1, addRuleCacheMap.getGroupIdForUser(userId))) {
                 crontabFlag = "open";
@@ -85,7 +85,7 @@ public class CommonCallBack {
         String aiFlag = "";
         String text = "";
         GroupInfoWithBLOBs groupInfoWithBLOBs1 = new GroupInfoWithBLOBs();
-        if ("close".equalsIgnoreCase(groupInfoWithBLOBs.getAiflag())) {
+        if ("close".equals(groupInfoWithBLOBs.getAiflag())) {
             groupInfoWithBLOBs1.setAiflag("open");
             if (groupInfoService.updateSelectiveByChatId(groupInfoWithBLOBs1, addRuleCacheMap.getGroupIdForUser(userId))) {
                 aiFlag = "open";

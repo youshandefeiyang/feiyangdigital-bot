@@ -49,7 +49,7 @@ public class SetGroupSettingView {
         String intoGroupUserNameCheck = "";
         String text = "";
         GroupInfoWithBLOBs groupInfoWithBLOBs1 = new GroupInfoWithBLOBs();
-        if ("close".equalsIgnoreCase(groupInfoWithBLOBs.getIntogroupusernamecheckflag())){
+        if ("close".equals(groupInfoWithBLOBs.getIntogroupusernamecheckflag())){
             groupInfoWithBLOBs1.setIntogroupusernamecheckflag("open");
             if (groupInfoService.updateSelectiveByChatId(groupInfoWithBLOBs1,addRuleCacheMap.getGroupIdForUser(userId))){
                 intoGroupUserNameCheck = "open";
@@ -82,7 +82,7 @@ public class SetGroupSettingView {
         String intoGroupWelcome = "";
         String text = "";
         GroupInfoWithBLOBs groupInfoWithBLOBs1 = new GroupInfoWithBLOBs();
-        if ("close".equalsIgnoreCase(groupInfoWithBLOBs.getIntogroupwelcomeflag())){
+        if ("close".equals(groupInfoWithBLOBs.getIntogroupwelcomeflag())){
             groupInfoWithBLOBs1.setIntogroupwelcomeflag("open");
             if (groupInfoService.updateSelectiveByChatId(groupInfoWithBLOBs1,addRuleCacheMap.getGroupIdForUser(userId))){
                 intoGroupWelcome = "open";
@@ -115,7 +115,7 @@ public class SetGroupSettingView {
         String intoGroupCheckFlag = "";
         String text = "";
         GroupInfoWithBLOBs groupInfoWithBLOBs1 = new GroupInfoWithBLOBs();
-        if ("close".equalsIgnoreCase(groupInfoWithBLOBs.getIntogroupcheckflag())){
+        if ("close".equals(groupInfoWithBLOBs.getIntogroupcheckflag())){
             groupInfoWithBLOBs1.setIntogroupcheckflag("open");
             if (groupInfoService.updateSelectiveByChatId(groupInfoWithBLOBs1,addRuleCacheMap.getGroupIdForUser(userId))){
                 intoGroupCheckFlag = "open";

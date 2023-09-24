@@ -62,7 +62,7 @@ public class AiCheckMessage {
             }
         }
         GroupInfoWithBLOBs groupInfoWithBLOBs = groupInfoService.selAllByGroupId(groupId);
-        if (groupInfoWithBLOBs != null && "open".equalsIgnoreCase(groupInfoWithBLOBs.getAiflag()) && StringUtils.hasText(content)) {
+        if (groupInfoWithBLOBs != null && "open".equals(groupInfoWithBLOBs.getAiflag()) && StringUtils.hasText(content)) {
             contentAiOption(sender, groupId, userId, firstName, messageId, content);
         }
     }

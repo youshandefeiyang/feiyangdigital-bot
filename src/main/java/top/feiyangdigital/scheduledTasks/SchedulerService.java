@@ -39,7 +39,7 @@ public class SchedulerService {
             if (oldTrigger != null && oldJobDetail != null) {
                 String oldCronExpression = oldTrigger.getCronExpression();
                 // 如果Cron表达式和Job类都没有变化，则无需执行任何操作
-                if (oldCronExpression.equalsIgnoreCase(newCronExpression) && oldJobDetail.getJobClass().equals(jobClass)) {
+                if (oldCronExpression.equals(newCronExpression) && oldJobDetail.getJobClass().equals(jobClass)) {
                     return;
                 }
                 // 删除旧任务

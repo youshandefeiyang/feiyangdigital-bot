@@ -41,7 +41,7 @@ public class AddAutoReplyRule {
             String userId = update.getMessage().getFrom().getId().toString();
             String newRule = update.getMessage().getText().trim();
             if (replyLegal.validateRule(newRule)) {
-                if ("allow".equalsIgnoreCase(addRuleCacheMap.getKeywordsFlagForUser(userId))) {
+                if ("allow".equals(addRuleCacheMap.getKeywordsFlagForUser(userId))) {
                     GroupInfoWithBLOBs groupInfoWithBLOBs = groupInfoService.selAllByGroupId(addRuleCacheMap.getGroupIdForUser(userId));
                     String settingTimestamp = groupInfoWithBLOBs.getSettingtimestamp();
                     if (settingTimestamp != null && !settingTimestamp.isEmpty()) {

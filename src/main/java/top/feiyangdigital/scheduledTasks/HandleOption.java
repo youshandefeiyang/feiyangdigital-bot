@@ -42,19 +42,19 @@ public class HandleOption {
                 map.put("text", content[1]);
                 map.put("delMessageTime", content[2]);
                 if (content.length == 3) {
-                    if ("AllowMedia".equalsIgnoreCase(content[0]) && "open".equalsIgnoreCase(groupInfoWithBLOBs.getNightmodeflag())) {
+                    if ("AllowMedia".equalsIgnoreCase(content[0]) && "open".equals(groupInfoWithBLOBs.getNightmodeflag())) {
                         schedulerService.updateTrigger(keywordsFormatList.get(i).getReplyText(), AllowMedia.class, content[0] + "job" + i, content[0] + "group" + i, map);
-                    } else if ("ForBidMedia".equalsIgnoreCase(content[0]) && "open".equalsIgnoreCase(groupInfoWithBLOBs.getNightmodeflag())) {
+                    } else if ("ForBidMedia".equalsIgnoreCase(content[0]) && "open".equals(groupInfoWithBLOBs.getNightmodeflag())) {
                         schedulerService.updateTrigger(keywordsFormatList.get(i).getReplyText(), ForBidMedia.class, content[0] + "job" + i, content[0] + "group" + i, map);
-                    } else if ("OnlySendMessage".equalsIgnoreCase(content[0]) && "open".equalsIgnoreCase(groupInfoWithBLOBs.getCrontabflag())) {
+                    } else if ("OnlySendMessage".equalsIgnoreCase(content[0]) && "open".equals(groupInfoWithBLOBs.getCrontabflag())) {
                         schedulerService.updateTrigger(keywordsFormatList.get(i).getReplyText(), OnlySendMessage.class, content[0] + "job" + i, content[0] + "group" + i, map);
                     }
                 } else if (content.length == 4) {
-                    if ("AllowMedia".equalsIgnoreCase(content[0]) && "open".equalsIgnoreCase(groupInfoWithBLOBs.getNightmodeflag())) {
+                    if ("AllowMedia".equalsIgnoreCase(content[0]) && "open".equals(groupInfoWithBLOBs.getNightmodeflag())) {
                         schedulerService.updateTrigger(keywordsFormatList.get(i).getReplyText(), AllowMedia.class, content[0] + "job" + i, content[0] + "group" + i, map, content[3]);
-                    } else if ("ForBidMedia".equalsIgnoreCase(content[0]) && "open".equalsIgnoreCase(groupInfoWithBLOBs.getNightmodeflag())) {
+                    } else if ("ForBidMedia".equalsIgnoreCase(content[0]) && "open".equals(groupInfoWithBLOBs.getNightmodeflag())) {
                         schedulerService.updateTrigger(keywordsFormatList.get(i).getReplyText(), ForBidMedia.class, content[0] + "job" + i, content[0] + "group" + i, map, content[3]);
-                    } else if ("OnlySendMessage".equalsIgnoreCase(content[0]) && "open".equalsIgnoreCase(groupInfoWithBLOBs.getCrontabflag())) {
+                    } else if ("OnlySendMessage".equalsIgnoreCase(content[0]) && "open".equals(groupInfoWithBLOBs.getCrontabflag())) {
                         schedulerService.updateTrigger(keywordsFormatList.get(i).getReplyText(), OnlySendMessage.class, content[0] + "job" + i, content[0] + "group" + i, map, content[3]);
                     }
                 }

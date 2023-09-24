@@ -12,7 +12,7 @@ public class NightMode {
 
     public boolean deleteMedia(AbsSender sender, Update update) {
         Message message = update.getMessage();
-        boolean hasLinkOrMedia = (message.hasEntities() && "url".equalsIgnoreCase(message.getEntities().get(message.getEntities().size() - 1).getType()))
+        boolean hasLinkOrMedia = (message.hasEntities() && "url".equals(message.getEntities().get(message.getEntities().size() - 1).getType()))
                 || message.hasPhoto() || message.hasVideo() || message.hasDocument() || message.hasSticker() || message.hasVideoNote() || message.hasVoice();
 
         if (hasLinkOrMedia) {

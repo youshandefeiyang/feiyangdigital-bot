@@ -51,8 +51,8 @@ public class ReplyLegal {
                 return false;
 
             // 如果只有操作和字符串（针对部分群组设置）
-            if ((operation.equalsIgnoreCase("welcome") || operation.equalsIgnoreCase("intoGroupBan") || operation.equalsIgnoreCase("crontab")) && botActionParts.length == 2) {
-                if (operation.equalsIgnoreCase("crontab")) {
+            if ((operation.equals("welcome") || operation.equals("intoGroupBan") || operation.equals("crontab")) && botActionParts.length == 2) {
+                if (operation.equals("crontab")) {
                     try {
                         new CronExpression(conditions[0]);
                     } catch (Exception e) {
