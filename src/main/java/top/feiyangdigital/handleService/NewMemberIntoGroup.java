@@ -156,7 +156,7 @@ public class NewMemberIntoGroup {
             restrictOrUnrestrictUser.restrictUser(sender, userId, chatId.toString());
             KeywordsFormat keywordsFormat = new KeywordsFormat();
             List<String> keywordsButtons = new ArrayList<>();
-            keywordsButtons.add("👥管理员解封##adminUnrestrict" + userId);
+            keywordsButtons.add("👥管理员解禁##adminUnrestrict" + userId);
             keywordsButtons.add("❗️点击验证$$" + url);
             keywordsFormat.setKeywordsButtons(keywordsButtons);
             String text = String.format("欢迎 <b><a href=\"tg://user?id=%d\">%s</a></b> 加入<b> %s </b>, 现在你需要在<b>90秒内</b>点击下面的验证按钮完成验证，超时将永久限制发言！", userId, firstName, groupTitle);
