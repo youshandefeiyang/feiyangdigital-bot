@@ -28,10 +28,7 @@ import top.feiyangdigital.sqlService.GroupInfoService;
 import top.feiyangdigital.utils.*;
 import top.feiyangdigital.utils.aiMessageCheck.AiCheckMedia;
 import top.feiyangdigital.utils.aiMessageCheck.AiCheckMessage;
-import top.feiyangdigital.utils.groupCaptch.BanOrUnBan;
-import top.feiyangdigital.utils.groupCaptch.CaptchaManager;
-import top.feiyangdigital.utils.groupCaptch.RestrictOrUnrestrictUser;
-import top.feiyangdigital.utils.groupCaptch.SetBot;
+import top.feiyangdigital.utils.groupCaptch.*;
 import top.feiyangdigital.utils.ruleCacheMap.AddRuleCacheMap;
 import top.feiyangdigital.utils.ruleCacheMap.DeleteRuleCacheMap;
 
@@ -96,17 +93,24 @@ public class CommonFunction {
     @Autowired
     private HandleOption handleOption;
 
+    @Autowired
+    private NightMode nightMode;
+
     public void mainFunc(AbsSender sender, Update update) {
 
-
         if (update.hasMessage() && (update.getMessage().getChat().isGroupChat() || update.getMessage().getChat().isSuperGroupChat())) {
+            GroupInfoWithBLOBs groupInfoWithBLOBs = groupInfoService.selAllByGroupId(update.getMessage().getChatId().toString());
             if (timeFlag) {
-                GroupInfoWithBLOBs groupInfoWithBLOBs = groupInfoService.selAllByGroupId(update.getMessage().getChatId().toString());
                 String keyWords = groupInfoWithBLOBs.getKeywords();
-                if (StringUtils.hasText(keyWords) && "open".equals(groupInfoWithBLOBs.getCrontabflag())) {
+                if (StringUtils.hasText(keyWords)) {
                     handleOption.ruleHandle(sender, update.getMessage().getChatId().toString(), keyWords);
                 }
                 timeFlag = false;
+            }
+            if ("open".equalsIgnoreCase(groupInfoWithBLOBs.getCansendmediaflag())){
+                if (nightMode.deleteMedia(sender,update)){
+                    return;
+                }
             }
             if (update.getMessage().hasText()) {
                 if (setBot.adminSetBot(sender, update)) {
@@ -143,7 +147,7 @@ public class CommonFunction {
                 String userId = idGroup[1];
                 String currentChatId = update.getMessage().getChatId().toString();
                 String firstName = update.getMessage().getChat().getFirstName();
-                if (update.getMessage().getFrom().getId().toString().equals(userId) && "open".equals(groupInfoService.selAllByGroupId(chatId).getIntogroupcheckflag())) {
+                if (update.getMessage().getFrom().getId().toString().equalsIgnoreCase(userId) && "open".equalsIgnoreCase(groupInfoService.selAllByGroupId(chatId).getIntogroupcheckflag())) {
 
                     captchaGenerator.sendCaptcha(sender, update.getMessage().getFrom().getId(), chatId, currentChatId, firstName);
                 } else {
@@ -153,7 +157,7 @@ public class CommonFunction {
                         e.printStackTrace();
                     }
                 }
-            } else if ("/start".equals(update.getMessage().getText())) {
+            } else if ("/start".equalsIgnoreCase(update.getMessage().getText())) {
                 String url = String.format("https://t.me/%s?startgroup=start", BaseInfo.getBotName());
                 List<String> keywordsButtons = new ArrayList<>();
                 KeywordsFormat keywordsFormat = new KeywordsFormat();
@@ -168,9 +172,9 @@ public class CommonFunction {
                 }
             } else {
                 String userId = update.getMessage().getFrom().getId().toString();
-                if ("allow".equals(addRuleCacheMap.getKeywordsFlagForUser(userId))) {
+                if ("allow".equalsIgnoreCase(addRuleCacheMap.getKeywordsFlagForUser(userId))) {
                     addAutoReplyRule.addNewRule(sender, update);
-                } else if ("candelete".equals(deleteRuleCacheMap.getDeleteKeywordFlagMap(userId))) {
+                } else if ("candelete".equalsIgnoreCase(deleteRuleCacheMap.getDeleteKeywordFlagMap(userId))) {
                     deleteSingleRuleByKeyWord.DeleteOption(sender, update);
                 } else if (StringUtils.hasText(captchaManager.getAnswerForUser(userId))) {
                     captchaGenerator.answerReplyhandle(sender, update);

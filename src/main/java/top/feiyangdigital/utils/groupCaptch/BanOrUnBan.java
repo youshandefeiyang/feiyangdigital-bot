@@ -52,9 +52,9 @@ public class BanOrUnBan {
 
     private void commonFunc(AbsSender sender, Update update, Long userId, String firstName, String chatId, String text, String biaoshi) {
         String banReason = "";
-        if (text.split(" ").length >= 3 && "noreply".equals(biaoshi)) {
+        if (text.split(" ").length >= 3 && "noreply".equalsIgnoreCase(biaoshi)) {
             banReason = text.split(" ")[2];
-        } else if (text.split(" ").length >= 2 && "reply".equals(biaoshi)) {
+        } else if (text.split(" ").length >= 2 && "reply".equalsIgnoreCase(biaoshi)) {
             banReason = text.split(" ")[1];
         }
         if (banUserById(sender, userId, chatId)) {
@@ -82,14 +82,14 @@ public class BanOrUnBan {
                     || text.startsWith("/ban") || text.startsWith("/ban@" + BaseInfo.getBotName())
             ) {
                 try {
-                    if (update.getMessage().hasEntities() && !"bot_command".equals(update.getMessage().getEntities().get(update.getMessage().getEntities().size() - 1).getType())) {
+                    if (update.getMessage().hasEntities() && !"bot_command".equalsIgnoreCase(update.getMessage().getEntities().get(update.getMessage().getEntities().size() - 1).getType())) {
                         MessageEntity messageEntity = update.getMessage().getEntities().get(update.getMessage().getEntities().size() - 1);
-                        if (text.split(" ").length >= 2 && text.split(" ")[1].contains("@") && "mention".equals(messageEntity.getType())) {
+                        if (text.split(" ").length >= 2 && text.split(" ")[1].contains("@") && "mention".equalsIgnoreCase(messageEntity.getType())) {
                             JSONObject jsonObject = obtainUserId.fetchUserWithOkHttp(messageEntity.getText());
                             Long userNameToId = jsonObject.getLong("id");
                             String userNameToFirstName = jsonObject.getString("first_name");
                             commonFunc(sender, update, userNameToId, userNameToFirstName, chatId, text, "noreply");
-                        } else if (text.split(" ").length >= 2 && "text_mention".equals(messageEntity.getType())) {
+                        } else if (text.split(" ").length >= 2 && "text_mention".equalsIgnoreCase(messageEntity.getType())) {
                             Long userId = messageEntity.getUser().getId();
                             String firstName = messageEntity.getUser().getFirstName();
                             commonFunc(sender, update, userId, firstName, chatId, text, "noreply");
@@ -178,14 +178,14 @@ public class BanOrUnBan {
                     || text.startsWith("/unban") || text.startsWith("/unban@" + BaseInfo.getBotName())
             ) {
                 try {
-                    if (update.getMessage().hasEntities() && !"bot_command".equals(update.getMessage().getEntities().get(update.getMessage().getEntities().size() - 1).getType())) {
+                    if (update.getMessage().hasEntities() && !"bot_command".equalsIgnoreCase(update.getMessage().getEntities().get(update.getMessage().getEntities().size() - 1).getType())) {
                         MessageEntity messageEntity = update.getMessage().getEntities().get(update.getMessage().getEntities().size() - 1);
-                        if (text.split(" ").length >= 2 && text.split(" ")[1].contains("@") && "mention".equals(messageEntity.getType())) {
+                        if (text.split(" ").length >= 2 && text.split(" ")[1].contains("@") && "mention".equalsIgnoreCase(messageEntity.getType())) {
                             JSONObject jsonObject = obtainUserId.fetchUserWithOkHttp(messageEntity.getText());
                             Long userNameToId = jsonObject.getLong("id");
                             String userNameToFirstName = jsonObject.getString("first_name");
                             unBanFunc(sender,update,userNameToId,userNameToFirstName,chatId);
-                        } else if (text.split(" ").length >= 2 && "text_mention".equals(messageEntity.getType())) {
+                        } else if (text.split(" ").length >= 2 && "text_mention".equalsIgnoreCase(messageEntity.getType())) {
                             Long userId = messageEntity.getUser().getId();
                             String firstName = messageEntity.getUser().getFirstName();
                             unBanFunc(sender, update, userId, firstName, chatId);

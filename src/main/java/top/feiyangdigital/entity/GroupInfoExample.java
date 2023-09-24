@@ -953,6 +953,216 @@ public class GroupInfoExample {
             addCriterion("crontabFlag not between", value1, value2, "crontabflag");
             return (Criteria) this;
         }
+
+        public Criteria andNightmodeflagIsNull() {
+            addCriterion("nightModeFlag is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andNightmodeflagIsNotNull() {
+            addCriterion("nightModeFlag is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andNightmodeflagEqualTo(String value) {
+            addCriterion("nightModeFlag =", value, "nightmodeflag");
+            return (Criteria) this;
+        }
+
+        public Criteria andNightmodeflagNotEqualTo(String value) {
+            addCriterion("nightModeFlag <>", value, "nightmodeflag");
+            return (Criteria) this;
+        }
+
+        public Criteria andNightmodeflagGreaterThan(String value) {
+            addCriterion("nightModeFlag >", value, "nightmodeflag");
+            return (Criteria) this;
+        }
+
+        public Criteria andNightmodeflagGreaterThanOrEqualTo(String value) {
+            addCriterion("nightModeFlag >=", value, "nightmodeflag");
+            return (Criteria) this;
+        }
+
+        public Criteria andNightmodeflagLessThan(String value) {
+            addCriterion("nightModeFlag <", value, "nightmodeflag");
+            return (Criteria) this;
+        }
+
+        public Criteria andNightmodeflagLessThanOrEqualTo(String value) {
+            addCriterion("nightModeFlag <=", value, "nightmodeflag");
+            return (Criteria) this;
+        }
+
+        public Criteria andNightmodeflagLike(String value) {
+            addCriterion("nightModeFlag like", value, "nightmodeflag");
+            return (Criteria) this;
+        }
+
+        public Criteria andNightmodeflagNotLike(String value) {
+            addCriterion("nightModeFlag not like", value, "nightmodeflag");
+            return (Criteria) this;
+        }
+
+        public Criteria andNightmodeflagIn(List<String> values) {
+            addCriterion("nightModeFlag in", values, "nightmodeflag");
+            return (Criteria) this;
+        }
+
+        public Criteria andNightmodeflagNotIn(List<String> values) {
+            addCriterion("nightModeFlag not in", values, "nightmodeflag");
+            return (Criteria) this;
+        }
+
+        public Criteria andNightmodeflagBetween(String value1, String value2) {
+            addCriterion("nightModeFlag between", value1, value2, "nightmodeflag");
+            return (Criteria) this;
+        }
+
+        public Criteria andNightmodeflagNotBetween(String value1, String value2) {
+            addCriterion("nightModeFlag not between", value1, value2, "nightmodeflag");
+            return (Criteria) this;
+        }
+
+        public Criteria andCansendmediaflagIsNull() {
+            addCriterion("canSendMediaFlag is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andCansendmediaflagIsNotNull() {
+            addCriterion("canSendMediaFlag is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andCansendmediaflagEqualTo(String value) {
+            addCriterion("canSendMediaFlag =", value, "cansendmediaflag");
+            return (Criteria) this;
+        }
+
+        public Criteria andCansendmediaflagNotEqualTo(String value) {
+            addCriterion("canSendMediaFlag <>", value, "cansendmediaflag");
+            return (Criteria) this;
+        }
+
+        public Criteria andCansendmediaflagGreaterThan(String value) {
+            addCriterion("canSendMediaFlag >", value, "cansendmediaflag");
+            return (Criteria) this;
+        }
+
+        public Criteria andCansendmediaflagGreaterThanOrEqualTo(String value) {
+            addCriterion("canSendMediaFlag >=", value, "cansendmediaflag");
+            return (Criteria) this;
+        }
+
+        public Criteria andCansendmediaflagLessThan(String value) {
+            addCriterion("canSendMediaFlag <", value, "cansendmediaflag");
+            return (Criteria) this;
+        }
+
+        public Criteria andCansendmediaflagLessThanOrEqualTo(String value) {
+            addCriterion("canSendMediaFlag <=", value, "cansendmediaflag");
+            return (Criteria) this;
+        }
+
+        public Criteria andCansendmediaflagLike(String value) {
+            addCriterion("canSendMediaFlag like", value, "cansendmediaflag");
+            return (Criteria) this;
+        }
+
+        public Criteria andCansendmediaflagNotLike(String value) {
+            addCriterion("canSendMediaFlag not like", value, "cansendmediaflag");
+            return (Criteria) this;
+        }
+
+        public Criteria andCansendmediaflagIn(List<String> values) {
+            addCriterion("canSendMediaFlag in", values, "cansendmediaflag");
+            return (Criteria) this;
+        }
+
+        public Criteria andCansendmediaflagNotIn(List<String> values) {
+            addCriterion("canSendMediaFlag not in", values, "cansendmediaflag");
+            return (Criteria) this;
+        }
+
+        public Criteria andCansendmediaflagBetween(String value1, String value2) {
+            addCriterion("canSendMediaFlag between", value1, value2, "cansendmediaflag");
+            return (Criteria) this;
+        }
+
+        public Criteria andCansendmediaflagNotBetween(String value1, String value2) {
+            addCriterion("canSendMediaFlag not between", value1, value2, "cansendmediaflag");
+            return (Criteria) this;
+        }
+
+        public Criteria andReportflagIsNull() {
+            addCriterion("reportFlag is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andReportflagIsNotNull() {
+            addCriterion("reportFlag is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andReportflagEqualTo(String value) {
+            addCriterion("reportFlag =", value, "reportflag");
+            return (Criteria) this;
+        }
+
+        public Criteria andReportflagNotEqualTo(String value) {
+            addCriterion("reportFlag <>", value, "reportflag");
+            return (Criteria) this;
+        }
+
+        public Criteria andReportflagGreaterThan(String value) {
+            addCriterion("reportFlag >", value, "reportflag");
+            return (Criteria) this;
+        }
+
+        public Criteria andReportflagGreaterThanOrEqualTo(String value) {
+            addCriterion("reportFlag >=", value, "reportflag");
+            return (Criteria) this;
+        }
+
+        public Criteria andReportflagLessThan(String value) {
+            addCriterion("reportFlag <", value, "reportflag");
+            return (Criteria) this;
+        }
+
+        public Criteria andReportflagLessThanOrEqualTo(String value) {
+            addCriterion("reportFlag <=", value, "reportflag");
+            return (Criteria) this;
+        }
+
+        public Criteria andReportflagLike(String value) {
+            addCriterion("reportFlag like", value, "reportflag");
+            return (Criteria) this;
+        }
+
+        public Criteria andReportflagNotLike(String value) {
+            addCriterion("reportFlag not like", value, "reportflag");
+            return (Criteria) this;
+        }
+
+        public Criteria andReportflagIn(List<String> values) {
+            addCriterion("reportFlag in", values, "reportflag");
+            return (Criteria) this;
+        }
+
+        public Criteria andReportflagNotIn(List<String> values) {
+            addCriterion("reportFlag not in", values, "reportflag");
+            return (Criteria) this;
+        }
+
+        public Criteria andReportflagBetween(String value1, String value2) {
+            addCriterion("reportFlag between", value1, value2, "reportflag");
+            return (Criteria) this;
+        }
+
+        public Criteria andReportflagNotBetween(String value1, String value2) {
+            addCriterion("reportFlag not between", value1, value2, "reportflag");
+            return (Criteria) this;
+        }
     }
 
     /**

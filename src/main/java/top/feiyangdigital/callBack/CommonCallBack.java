@@ -43,11 +43,11 @@ public class CommonCallBack {
         String crontabFlag = "";
         String text = "";
         GroupInfoWithBLOBs groupInfoWithBLOBs1 = new GroupInfoWithBLOBs();
-        if ("close".equals(groupInfoWithBLOBs.getCrontabflag())) {
+        if ("close".equalsIgnoreCase(groupInfoWithBLOBs.getCrontabflag())) {
             groupInfoWithBLOBs1.setCrontabflag("open");
             if (groupInfoService.updateSelectiveByChatId(groupInfoWithBLOBs1, addRuleCacheMap.getGroupIdForUser(userId))) {
                 crontabFlag = "open";
-                text = "✅定时任务已打开";
+                text = "✅定时发送消息已打开";
                 if (StringUtils.hasText(keyWords)){
                     handleOption.ruleHandle(sender, addRuleCacheMap.getGroupIdForUser(userId),keyWords);
                 }
@@ -56,17 +56,18 @@ public class CommonCallBack {
             groupInfoWithBLOBs1.setCrontabflag("close");
             if (groupInfoService.updateSelectiveByChatId(groupInfoWithBLOBs1, addRuleCacheMap.getGroupIdForUser(userId))) {
                 crontabFlag = "close";
-                text = "❗定时任务已关闭";
-                schedulerService.clearAllJobs();
+                text = "❗定时发送消息已关闭";
+                schedulerService.clearJobsWithGroupPrefix("OnlySendMessage");
             }
         }
         List<String> keywordsButtons = new ArrayList<>();
         KeywordsFormat keywordsFormat = new KeywordsFormat();
         keywordsButtons.add("📝规则设置##autoReply%%⚙️群组设置##groupSetting");
-        keywordsButtons.add("🕐打开/关闭定时任务##cronOption%%🔮打开/关闭AI##aiOption");
+        keywordsButtons.add("🕐打开/关闭定时发送消息##cronOption%%🔮打开/关闭AI##aiOption");
         keywordsButtons.add("👨🏻‍💻仓库地址$$https://github.com/youshandefeiyang/feiyangdigital-bot%%👥官方群组$$https://t.me/feiyangdigital");
+        keywordsButtons.add("💎其他群组设置##otherGroupSetting");
         keywordsButtons.add("❌关闭菜单##closeMenu");
-        keywordsFormat.setReplyText(text + "\n当前群组：<b>" + addRuleCacheMap.getGroupNameForUser(userId) + "</b>\n当前群组ID：<b>" + addRuleCacheMap.getGroupIdForUser(userId) + "</b>\n当前可输入状态：<b>" + addRuleCacheMap.getKeywordsFlagForUser(userId) + "</b>\n当前定时任务状态：<b>" + crontabFlag + "</b>\n当前AI状态：<b>" + addRuleCacheMap.getAiFlagForUser(userId) + "</b>\n⚡️请选择一个操作!⚡️");
+        keywordsFormat.setReplyText(text + "\n当前群组：<b>" + addRuleCacheMap.getGroupNameForUser(userId) + "</b>\n当前群组ID：<b>" + addRuleCacheMap.getGroupIdForUser(userId) + "</b>\n当前可输入状态：<b>" + addRuleCacheMap.getKeywordsFlagForUser(userId) + "</b>\n当前定时发送消息状态：<b>" + crontabFlag + "</b>\n当前AI状态：<b>" + addRuleCacheMap.getAiFlagForUser(userId) + "</b>\n⚡️请选择一个操作!⚡️");
         keywordsFormat.setKeywordsButtons(keywordsButtons);
         addRuleCacheMap.updateUserMapping(userId,addRuleCacheMap.getGroupIdForUser(userId),addRuleCacheMap.getGroupNameForUser(userId),addRuleCacheMap.getKeywordsFlagForUser(userId),addRuleCacheMap.getAiFlagForUser(userId),crontabFlag);
         try {
@@ -84,7 +85,7 @@ public class CommonCallBack {
         String aiFlag = "";
         String text = "";
         GroupInfoWithBLOBs groupInfoWithBLOBs1 = new GroupInfoWithBLOBs();
-        if ("close".equals(groupInfoWithBLOBs.getAiflag())) {
+        if ("close".equalsIgnoreCase(groupInfoWithBLOBs.getAiflag())) {
             groupInfoWithBLOBs1.setAiflag("open");
             if (groupInfoService.updateSelectiveByChatId(groupInfoWithBLOBs1, addRuleCacheMap.getGroupIdForUser(userId))) {
                 aiFlag = "open";
@@ -100,10 +101,11 @@ public class CommonCallBack {
         List<String> keywordsButtons = new ArrayList<>();
         KeywordsFormat keywordsFormat = new KeywordsFormat();
         keywordsButtons.add("📝规则设置##autoReply%%⚙️群组设置##groupSetting");
-        keywordsButtons.add("🕐打开/关闭定时任务##cronOption%%🔮打开/关闭AI##aiOption");
+        keywordsButtons.add("🕐打开/关闭定时发送消息##cronOption%%🔮打开/关闭AI##aiOption");
         keywordsButtons.add("👨🏻‍💻仓库地址$$https://github.com/youshandefeiyang/feiyangdigital-bot%%👥官方群组$$https://t.me/feiyangdigital");
+        keywordsButtons.add("💎其他群组设置##otherGroupSetting");
         keywordsButtons.add("❌关闭菜单##closeMenu");
-        keywordsFormat.setReplyText(text + "\n当前群组：<b>" + addRuleCacheMap.getGroupNameForUser(userId) + "</b>\n当前群组ID：<b>" + addRuleCacheMap.getGroupIdForUser(userId) + "</b>\n当前可输入状态：<b>" + addRuleCacheMap.getKeywordsFlagForUser(userId) + "</b>\n当前定时任务状态：<b>" + addRuleCacheMap.getCrontabFlagForUser(userId)  + "</b>\n当前AI状态：<b>" + aiFlag + "</b>\n⚡️请选择一个操作!⚡️");
+        keywordsFormat.setReplyText(text + "\n当前群组：<b>" + addRuleCacheMap.getGroupNameForUser(userId) + "</b>\n当前群组ID：<b>" + addRuleCacheMap.getGroupIdForUser(userId) + "</b>\n当前可输入状态：<b>" + addRuleCacheMap.getKeywordsFlagForUser(userId) + "</b>\n当前定时发送消息状态：<b>" + addRuleCacheMap.getCrontabFlagForUser(userId)  + "</b>\n当前AI状态：<b>" + aiFlag + "</b>\n⚡️请选择一个操作!⚡️");
         keywordsFormat.setKeywordsButtons(keywordsButtons);
         addRuleCacheMap.updateUserMapping(userId,addRuleCacheMap.getGroupIdForUser(userId),addRuleCacheMap.getGroupNameForUser(userId),addRuleCacheMap.getKeywordsFlagForUser(userId),aiFlag,addRuleCacheMap.getCrontabFlagForUser(userId));
         try {
@@ -119,10 +121,11 @@ public class CommonCallBack {
         List<String> keywordsButtons = new ArrayList<>();
         KeywordsFormat keywordsFormat = new KeywordsFormat();
         keywordsButtons.add("📝规则设置##autoReply%%⚙️群组设置##groupSetting");
-        keywordsButtons.add("🕐打开/关闭定时任务##cronOption%%🔮打开/关闭AI##aiOption");
+        keywordsButtons.add("🕐打开/关闭定时发送消息##cronOption%%🔮打开/关闭AI##aiOption");
         keywordsButtons.add("👨🏻‍💻仓库地址$$https://github.com/youshandefeiyang/feiyangdigital-bot%%👥官方群组$$https://t.me/feiyangdigital");
+        keywordsButtons.add("💎其他群组设置##otherGroupSetting");
         keywordsButtons.add("❌关闭菜单##closeMenu");
-        keywordsFormat.setReplyText("当前群组：<b>" + addRuleCacheMap.getGroupNameForUser(userId) + "</b>\n当前群组ID：<b>" + addRuleCacheMap.getGroupIdForUser(userId) + "</b>\n当前可输入状态：<b>" + addRuleCacheMap.getKeywordsFlagForUser(userId) + "</b>\n当前定时任务状态：<b>" + addRuleCacheMap.getCrontabFlagForUser(userId) + "</b>\n当前AI状态：<b>" + addRuleCacheMap.getAiFlagForUser(userId) + "</b>\n⚡️请选择一个操作!⚡️");
+        keywordsFormat.setReplyText("当前群组：<b>" + addRuleCacheMap.getGroupNameForUser(userId) + "</b>\n当前群组ID：<b>" + addRuleCacheMap.getGroupIdForUser(userId) + "</b>\n当前可输入状态：<b>" + addRuleCacheMap.getKeywordsFlagForUser(userId) + "</b>\n当前定时发送消息状态：<b>" + addRuleCacheMap.getCrontabFlagForUser(userId) + "</b>\n当前AI状态：<b>" + addRuleCacheMap.getAiFlagForUser(userId) + "</b>\n⚡️请选择一个操作!⚡️");
         keywordsFormat.setKeywordsButtons(keywordsButtons);
         try {
             sender.execute(sendContent.editResponseMessage(update, keywordsFormat, "html"));

@@ -31,6 +31,12 @@ public class GroupInfo implements Serializable {
 
     private String crontabflag;
 
+    private String nightmodeflag;
+
+    private String cansendmediaflag;
+
+    private String reportflag;
+
     private static final long serialVersionUID = 1L;
 
     public Integer getId() {
@@ -129,6 +135,30 @@ public class GroupInfo implements Serializable {
         this.crontabflag = crontabflag;
     }
 
+    public String getNightmodeflag() {
+        return nightmodeflag;
+    }
+
+    public void setNightmodeflag(String nightmodeflag) {
+        this.nightmodeflag = nightmodeflag;
+    }
+
+    public String getCansendmediaflag() {
+        return cansendmediaflag;
+    }
+
+    public void setCansendmediaflag(String cansendmediaflag) {
+        this.cansendmediaflag = cansendmediaflag;
+    }
+
+    public String getReportflag() {
+        return reportflag;
+    }
+
+    public void setReportflag(String reportflag) {
+        this.reportflag = reportflag;
+    }
+
     @Override
     public boolean equals(Object that) {
         if (this == that) {
@@ -142,17 +172,20 @@ public class GroupInfo implements Serializable {
         }
         GroupInfo other = (GroupInfo) that;
         return (this.getId() == null ? other.getId() == null : this.getId().equals(other.getId()))
-            && (this.getGroupid() == null ? other.getGroupid() == null : this.getGroupid().equals(other.getGroupid()))
-            && (this.getOwnerandanonymousadmins() == null ? other.getOwnerandanonymousadmins() == null : this.getOwnerandanonymousadmins().equals(other.getOwnerandanonymousadmins()))
-            && (this.getGroupname() == null ? other.getGroupname() == null : this.getGroupname().equals(other.getGroupname()))
-            && (this.getKeywordsflag() == null ? other.getKeywordsflag() == null : this.getKeywordsflag().equals(other.getKeywordsflag()))
-            && (this.getDeletekeywordflag() == null ? other.getDeletekeywordflag() == null : this.getDeletekeywordflag().equals(other.getDeletekeywordflag()))
-            && (this.getSettingtimestamp() == null ? other.getSettingtimestamp() == null : this.getSettingtimestamp().equals(other.getSettingtimestamp()))
-            && (this.getIntogroupcheckflag() == null ? other.getIntogroupcheckflag() == null : this.getIntogroupcheckflag().equals(other.getIntogroupcheckflag()))
-            && (this.getIntogroupwelcomeflag() == null ? other.getIntogroupwelcomeflag() == null : this.getIntogroupwelcomeflag().equals(other.getIntogroupwelcomeflag()))
-            && (this.getIntogroupusernamecheckflag() == null ? other.getIntogroupusernamecheckflag() == null : this.getIntogroupusernamecheckflag().equals(other.getIntogroupusernamecheckflag()))
-            && (this.getAiflag() == null ? other.getAiflag() == null : this.getAiflag().equals(other.getAiflag()))
-            && (this.getCrontabflag() == null ? other.getCrontabflag() == null : this.getCrontabflag().equals(other.getCrontabflag()));
+            && (this.getGroupid() == null ? other.getGroupid() == null : this.getGroupid().equalsIgnoreCase(other.getGroupid()))
+            && (this.getOwnerandanonymousadmins() == null ? other.getOwnerandanonymousadmins() == null : this.getOwnerandanonymousadmins().equalsIgnoreCase(other.getOwnerandanonymousadmins()))
+            && (this.getGroupname() == null ? other.getGroupname() == null : this.getGroupname().equalsIgnoreCase(other.getGroupname()))
+            && (this.getKeywordsflag() == null ? other.getKeywordsflag() == null : this.getKeywordsflag().equalsIgnoreCase(other.getKeywordsflag()))
+            && (this.getDeletekeywordflag() == null ? other.getDeletekeywordflag() == null : this.getDeletekeywordflag().equalsIgnoreCase(other.getDeletekeywordflag()))
+            && (this.getSettingtimestamp() == null ? other.getSettingtimestamp() == null : this.getSettingtimestamp().equalsIgnoreCase(other.getSettingtimestamp()))
+            && (this.getIntogroupcheckflag() == null ? other.getIntogroupcheckflag() == null : this.getIntogroupcheckflag().equalsIgnoreCase(other.getIntogroupcheckflag()))
+            && (this.getIntogroupwelcomeflag() == null ? other.getIntogroupwelcomeflag() == null : this.getIntogroupwelcomeflag().equalsIgnoreCase(other.getIntogroupwelcomeflag()))
+            && (this.getIntogroupusernamecheckflag() == null ? other.getIntogroupusernamecheckflag() == null : this.getIntogroupusernamecheckflag().equalsIgnoreCase(other.getIntogroupusernamecheckflag()))
+            && (this.getAiflag() == null ? other.getAiflag() == null : this.getAiflag().equalsIgnoreCase(other.getAiflag()))
+            && (this.getCrontabflag() == null ? other.getCrontabflag() == null : this.getCrontabflag().equalsIgnoreCase(other.getCrontabflag()))
+            && (this.getNightmodeflag() == null ? other.getNightmodeflag() == null : this.getNightmodeflag().equalsIgnoreCase(other.getNightmodeflag()))
+            && (this.getCansendmediaflag() == null ? other.getCansendmediaflag() == null : this.getCansendmediaflag().equalsIgnoreCase(other.getCansendmediaflag()))
+            && (this.getReportflag() == null ? other.getReportflag() == null : this.getReportflag().equalsIgnoreCase(other.getReportflag()));
     }
 
     @Override
@@ -171,6 +204,9 @@ public class GroupInfo implements Serializable {
         result = prime * result + ((getIntogroupusernamecheckflag() == null) ? 0 : getIntogroupusernamecheckflag().hashCode());
         result = prime * result + ((getAiflag() == null) ? 0 : getAiflag().hashCode());
         result = prime * result + ((getCrontabflag() == null) ? 0 : getCrontabflag().hashCode());
+        result = prime * result + ((getNightmodeflag() == null) ? 0 : getNightmodeflag().hashCode());
+        result = prime * result + ((getCansendmediaflag() == null) ? 0 : getCansendmediaflag().hashCode());
+        result = prime * result + ((getReportflag() == null) ? 0 : getReportflag().hashCode());
         return result;
     }
 
@@ -192,6 +228,9 @@ public class GroupInfo implements Serializable {
         sb.append(", intogroupusernamecheckflag=").append(intogroupusernamecheckflag);
         sb.append(", aiflag=").append(aiflag);
         sb.append(", crontabflag=").append(crontabflag);
+        sb.append(", nightmodeflag=").append(nightmodeflag);
+        sb.append(", cansendmediaflag=").append(cansendmediaflag);
+        sb.append(", reportflag=").append(reportflag);
         sb.append(", serialVersionUID=").append(serialVersionUID);
         sb.append("]");
         return sb.toString();

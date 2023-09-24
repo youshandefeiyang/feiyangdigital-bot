@@ -41,7 +41,7 @@ public class AddAutoReplyRule {
             String userId = update.getMessage().getFrom().getId().toString();
             String newRule = update.getMessage().getText().trim();
             if (replyLegal.validateRule(newRule)) {
-                if ("allow".equals(addRuleCacheMap.getKeywordsFlagForUser(userId))) {
+                if ("allow".equalsIgnoreCase(addRuleCacheMap.getKeywordsFlagForUser(userId))) {
                     GroupInfoWithBLOBs groupInfoWithBLOBs = groupInfoService.selAllByGroupId(addRuleCacheMap.getGroupIdForUser(userId));
                     String settingTimestamp = groupInfoWithBLOBs.getSettingtimestamp();
                     if (settingTimestamp != null && !settingTimestamp.isEmpty()) {
@@ -75,7 +75,7 @@ public class AddAutoReplyRule {
                                 try {
                                     GroupInfoWithBLOBs groupInfoWithBLOBs2 = groupInfoService.selAllByGroupId(addRuleCacheMap.getGroupIdForUser(userId));
                                     String keyWords = groupInfoWithBLOBs2.getKeywords();
-                                    if (StringUtils.hasText(keyWords) && "open".equals(groupInfoWithBLOBs2.getCrontabflag())){
+                                    if (StringUtils.hasText(keyWords)){
                                         handleOption.ruleHandle(sender, addRuleCacheMap.getGroupIdForUser(userId),keyWords);
                                     }
                                     sender.execute(sendContent.createResponseMessage(update, new KeywordsFormat(waitRule), "html"));

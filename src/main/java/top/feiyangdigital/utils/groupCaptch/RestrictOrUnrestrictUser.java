@@ -53,9 +53,9 @@ public class RestrictOrUnrestrictUser {
 
     private void commonFunc(AbsSender sender, Update update, Long userId, String firstName, String chatId, String text, String biaoshi) {
         String muteReason = "";
-        if (text.split(" ").length >= 3 && "noreply".equals(biaoshi)) {
+        if (text.split(" ").length >= 3 && "noreply".equalsIgnoreCase(biaoshi)) {
             muteReason = text.split(" ")[2];
-        } else if (text.split(" ").length >= 2 && "reply".equals(biaoshi)) {
+        } else if (text.split(" ").length >= 2 && "reply".equalsIgnoreCase(biaoshi)) {
             muteReason = text.split(" ")[1];
         }
         if (restrictUser(sender, userId, chatId)) {
@@ -83,14 +83,14 @@ public class RestrictOrUnrestrictUser {
                     || text.startsWith("/mute") || text.startsWith("/mute@" + BaseInfo.getBotName())
             ) {
                 try {
-                    if (update.getMessage().hasEntities() && !"bot_command".equals(update.getMessage().getEntities().get(update.getMessage().getEntities().size() - 1).getType())) {
+                    if (update.getMessage().hasEntities() && !"bot_command".equalsIgnoreCase(update.getMessage().getEntities().get(update.getMessage().getEntities().size() - 1).getType())) {
                         MessageEntity messageEntity = update.getMessage().getEntities().get(update.getMessage().getEntities().size() - 1);
-                        if (text.split(" ").length >= 2 && text.split(" ")[1].contains("@") && "mention".equals(messageEntity.getType())) {
+                        if (text.split(" ").length >= 2 && text.split(" ")[1].contains("@") && "mention".equalsIgnoreCase(messageEntity.getType())) {
                             JSONObject jsonObject = obtainUserId.fetchUserWithOkHttp(messageEntity.getText());
                             Long userNameToId = jsonObject.getLong("id");
                             String userNameToFirstName = jsonObject.getString("first_name");
                             commonFunc(sender, update, userNameToId, userNameToFirstName, chatId, text, "noreply");
-                        } else if (text.split(" ").length >= 2 && "text_mention".equals(messageEntity.getType())) {
+                        } else if (text.split(" ").length >= 2 && "text_mention".equalsIgnoreCase(messageEntity.getType())) {
                             Long userId = messageEntity.getUser().getId();
                             String firstName = messageEntity.getUser().getFirstName();
                             commonFunc(sender, update, userId, firstName, chatId, text, "noreply");
@@ -140,14 +140,14 @@ public class RestrictOrUnrestrictUser {
                     || text.startsWith("/unmute") || text.startsWith("/unmute@" + BaseInfo.getBotName())
             ) {
                 try {
-                    if (update.getMessage().hasEntities() && !"bot_command".equals(update.getMessage().getEntities().get(update.getMessage().getEntities().size() - 1).getType())) {
+                    if (update.getMessage().hasEntities() && !"bot_command".equalsIgnoreCase(update.getMessage().getEntities().get(update.getMessage().getEntities().size() - 1).getType())) {
                         MessageEntity messageEntity = update.getMessage().getEntities().get(update.getMessage().getEntities().size() - 1);
-                        if (text.split(" ").length >= 2 && text.split(" ")[1].contains("@") && "mention".equals(messageEntity.getType())) {
+                        if (text.split(" ").length >= 2 && text.split(" ")[1].contains("@") && "mention".equalsIgnoreCase(messageEntity.getType())) {
                             JSONObject jsonObject = obtainUserId.fetchUserWithOkHttp(messageEntity.getText());
                             Long userNameToId = jsonObject.getLong("id");
                             String userNameToFirstName = jsonObject.getString("first_name");
                             unMuteFunc(sender, update, userNameToId, userNameToFirstName, chatId);
-                        } else if (text.split(" ").length >= 2 && "text_mention".equals(messageEntity.getType())) {
+                        } else if (text.split(" ").length >= 2 && "text_mention".equalsIgnoreCase(messageEntity.getType())) {
                             Long userId = messageEntity.getUser().getId();
                             String firstName = messageEntity.getUser().getFirstName();
                             unMuteFunc(sender, update, userId, firstName, chatId);

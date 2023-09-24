@@ -12,6 +12,7 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import top.feiyangdigital.callBack.CommonCallBack;
 import top.feiyangdigital.callBack.deleteRuleCallBack.SetDeleteView;
 import top.feiyangdigital.callBack.groupSetting.SetGroupSettingView;
+import top.feiyangdigital.callBack.otherGroupSetting.NightModeAndReport;
 import top.feiyangdigital.callBack.replyRuleCallBack.SetAutoReplyMenu;
 import top.feiyangdigital.entity.BaseInfo;
 import top.feiyangdigital.entity.DeleteGropuRuleMapEntity;
@@ -76,6 +77,9 @@ public class BotHelper {
     @Autowired
     private HandleOption handleOption;
 
+    @Autowired
+    private NightModeAndReport nightModeAndReport;
+
     public void sendAdminButton(AbsSender sender, Update update) {
         String url = String.format("https://t.me/%s?start=_groupId%s", BaseInfo.getBotName(), update.getMessage().getChatId().toString());
         List<String> keywordsButtons = new ArrayList<>();
@@ -93,10 +97,11 @@ public class BotHelper {
         List<String> keywordsButtons = new ArrayList<>();
         KeywordsFormat keywordsFormat = new KeywordsFormat();
         keywordsButtons.add("📝规则设置##autoReply%%⚙️群组设置##groupSetting");
-        keywordsButtons.add("🕐打开/关闭定时任务##cronOption%%🔮打开/关闭AI##aiOption");
+        keywordsButtons.add("🕐打开/关闭定时发送消息##cronOption%%🔮打开/关闭AI##aiOption");
         keywordsButtons.add("👨🏻‍💻仓库地址$$https://github.com/youshandefeiyang/feiyangdigital-bot%%👥官方群组$$https://t.me/feiyangdigital");
+        keywordsButtons.add("💎其他群组设置##otherGroupSetting");
         keywordsButtons.add("❌关闭菜单##closeMenu");
-        keywordsFormat.setReplyText("当前群组：<b>" + addRuleCacheMap.getGroupNameForUser(userId) + "</b>\n当前群组ID：<b>" + addRuleCacheMap.getGroupIdForUser(userId) + "</b>\n当前可输入状态：<b>" + addRuleCacheMap.getKeywordsFlagForUser(userId) + "</b>\n当前定时任务状态：<b>" + addRuleCacheMap.getCrontabFlagForUser(userId) + "</b>\n当前AI状态：<b>" + addRuleCacheMap.getAiFlagForUser(userId) + "</b>\n⚡️请选择一个操作!⚡️");
+        keywordsFormat.setReplyText("当前群组：<b>" + addRuleCacheMap.getGroupNameForUser(userId) + "</b>\n当前群组ID：<b>" + addRuleCacheMap.getGroupIdForUser(userId) + "</b>\n当前可输入状态：<b>" + addRuleCacheMap.getKeywordsFlagForUser(userId) + "</b>\n当前定时发送消息状态：<b>" + addRuleCacheMap.getCrontabFlagForUser(userId) + "</b>\n当前AI状态：<b>" + addRuleCacheMap.getAiFlagForUser(userId) + "</b>\n⚡️请选择一个操作!⚡️");
         keywordsFormat.setKeywordsButtons(keywordsButtons);
         try {
             sender.execute(sendContent.createResponseMessage(update, keywordsFormat, "html"));
@@ -155,6 +160,15 @@ public class BotHelper {
             case "cronOption":
                 commonCallBack.cronOption(sender,update);
                 return;
+            case "otherGroupSetting":
+                nightModeAndReport.hadleCallBack(sender,update);
+                return;
+            case "changeNightModeFlag":
+                nightModeAndReport.changeNightModeFlag(sender,update);
+                return;
+            case "reportToAdmin":
+                nightModeAndReport.reportToAdmin(sender,update);
+                return;
             case "close":
                 timerDelete.deletePrivateUsualMessageImmediately(sender, update);
                 return;
@@ -164,7 +178,7 @@ public class BotHelper {
         if (callbackData.startsWith("adminUnrestrict")) {
 
             for (ChatMember admin : adminList.getAdmins(sender, callbackQuery.getMessage().getChatId().toString())) {
-                if ("GroupAnonymousBot".equals(callbackQuery.getFrom().getUserName()) || admin.getUser().getId().equals(callbackQuery.getFrom().getId())) {
+                if ("GroupAnonymousBot".equalsIgnoreCase(callbackQuery.getFrom().getUserName()) || admin.getUser().getId().equals(callbackQuery.getFrom().getId())) {
                     adminAllow.allow(sender, Long.valueOf(callbackData.substring(15)), callbackQuery.getMessage().getChatId().toString(), captchaManagerCacheMap.getMessageIdForUser(callbackData.substring(15), callbackQuery.getMessage().getChatId().toString()), answer,true);
                     return;
                 }
@@ -180,7 +194,7 @@ public class BotHelper {
 
         if (callbackData.startsWith("adminUnBan")){
             for (ChatMember admin : adminList.getAdmins(sender, callbackQuery.getMessage().getChatId().toString())) {
-                if ("GroupAnonymousBot".equals(callbackQuery.getFrom().getUserName()) || admin.getUser().getId().equals(callbackQuery.getFrom().getId())) {
+                if ("GroupAnonymousBot".equalsIgnoreCase(callbackQuery.getFrom().getUserName()) || admin.getUser().getId().equals(callbackQuery.getFrom().getId())) {
                     adminAllow.allowUnBan(sender, Long.valueOf(callbackData.substring(10)), callbackQuery.getMessage().getChatId().toString(),captchaManagerCacheMap.getMessageIdForUser(callbackData.substring(10), callbackQuery.getMessage().getChatId().toString()), answer);
                     return;
                 }
@@ -196,7 +210,7 @@ public class BotHelper {
 
         if (callbackData.startsWith("adminUnmute")){
             for (ChatMember admin : adminList.getAdmins(sender, callbackQuery.getMessage().getChatId().toString())) {
-                if ("GroupAnonymousBot".equals(callbackQuery.getFrom().getUserName()) || admin.getUser().getId().equals(callbackQuery.getFrom().getId())) {
+                if ("GroupAnonymousBot".equalsIgnoreCase(callbackQuery.getFrom().getUserName()) || admin.getUser().getId().equals(callbackQuery.getFrom().getId())) {
                     adminAllow.allow(sender, Long.valueOf(callbackData.substring(11)), callbackQuery.getMessage().getChatId().toString(),captchaManagerCacheMap.getMessageIdForUser(callbackData.substring(11), callbackQuery.getMessage().getChatId().toString()), answer,false);
                     return;
                 }
@@ -213,14 +227,14 @@ public class BotHelper {
         if (deleteGropuRuleMap.getGroupRuleMapSize() > 0) {
             String chatId = deleteRuleCacheMap.getGroupIdForUser(update.getCallbackQuery().getFrom().getId().toString());
             String longUuid = deleteGropuRuleMap.getAllRulesFromGroupId(chatId).getShortUuidToFullUuidMap().get(callbackData);
-            if (longUuid != null && callbackData.equals(longUuid.substring(0, 5))) {
+            if (longUuid != null && callbackData.equalsIgnoreCase(longUuid.substring(0, 5))) {
                 DeleteGropuRuleMapEntity deleteGropuRuleMapEntity = new DeleteGropuRuleMapEntity(deleteGropuRuleMap);
                 GroupInfoWithBLOBs groupInfoWithBLOBs = new GroupInfoWithBLOBs();
                 groupInfoWithBLOBs.setKeywords(deleteGropuRuleMapEntity.removeRuleAndAssembleString(chatId, longUuid).trim());
                 if (groupInfoService.updateSelectiveByChatId(groupInfoWithBLOBs, chatId)) {
                     GroupInfoWithBLOBs groupInfoWithBLOBs2 = groupInfoService.selAllByGroupId(addRuleCacheMap.getGroupIdForUser(update.getCallbackQuery().getFrom().getId().toString()));
                     String keyWords = groupInfoWithBLOBs2.getKeywords();
-                    if (StringUtils.hasText(keyWords) && "open".equals(groupInfoWithBLOBs2.getCrontabflag())){
+                    if (StringUtils.hasText(keyWords)){
                         handleOption.ruleHandle(sender, addRuleCacheMap.getGroupIdForUser(update.getCallbackQuery().getFrom().getId().toString()),keyWords);
                     }
                     setDeleteView.deleteRuleSuccessCallBack(sender, update);

@@ -47,14 +47,19 @@ public class ReplyLegal {
 
             // 确保操作有效
             String operation = botActionParts[0];
-            if (!Arrays.asList("del", "kick", "ban", "intoGroupBan","crontab", "welcome").contains(operation)) return false;
+            if (!Arrays.asList("del", "kick", "ban", "intoGroupBan", "crontab", "welcome").contains(operation))
+                return false;
 
             // 如果只有操作和字符串（针对部分群组设置）
-            if ((operation.equals("welcome") || operation.equals("intoGroupBan") || operation.equals("crontab")) && botActionParts.length == 2) {
-                if (operation.equals("crontab")){
+            if ((operation.equalsIgnoreCase("welcome") || operation.equalsIgnoreCase("intoGroupBan") || operation.equalsIgnoreCase("crontab")) && botActionParts.length == 2) {
+                if (operation.equalsIgnoreCase("crontab")) {
                     try {
                         new CronExpression(conditions[0]);
                     } catch (Exception e) {
+                        return false;
+                    }
+                    String[] timeLegal = botActionParts[1].split("、");
+                    if (timeLegal.length < 3 || timeLegal.length > 4) {
                         return false;
                     }
                 }

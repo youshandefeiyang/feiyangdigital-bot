@@ -14,6 +14,9 @@
     <result column="intoGroupUserNameCheckFlag" jdbcType="VARCHAR" property="intogroupusernamecheckflag" />
     <result column="aiFlag" jdbcType="VARCHAR" property="aiflag" />
     <result column="crontabFlag" jdbcType="VARCHAR" property="crontabflag" />
+    <result column="nightModeFlag" jdbcType="VARCHAR" property="nightmodeflag" />
+    <result column="canSendMediaFlag" jdbcType="VARCHAR" property="cansendmediaflag" />
+    <result column="reportFlag" jdbcType="VARCHAR" property="reportflag" />
   </resultMap>
   <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="top.feiyangdigital.entity.GroupInfoWithBLOBs">
     <result column="keyWords" jdbcType="LONGVARCHAR" property="keywords" />
@@ -80,7 +83,7 @@
   <sql id="Base_Column_List">
     id, groupId, ownerAndAnonymousAdmins, groupName, keyWordsFlag, deleteKeywordFlag, 
     settingTimeStamp, intoGroupCheckFlag, intoGroupWelcomeFlag, intoGroupUserNameCheckFlag, 
-    aiFlag, crontabFlag
+    aiFlag, crontabFlag, nightModeFlag, canSendMediaFlag, reportFlag
   </sql>
   <sql id="Blob_Column_List">
     keyWords, ChannelSpammersWhiteList
@@ -154,12 +157,14 @@
       groupName, keyWordsFlag, deleteKeywordFlag, 
       settingTimeStamp, intoGroupCheckFlag, intoGroupWelcomeFlag, 
       intoGroupUserNameCheckFlag, aiFlag, crontabFlag, 
+      nightModeFlag, canSendMediaFlag, reportFlag, 
       keyWords, ChannelSpammersWhiteList
       )
     values (#{groupid,jdbcType=VARCHAR}, #{ownerandanonymousadmins,jdbcType=VARCHAR}, 
       #{groupname,jdbcType=VARCHAR}, #{keywordsflag,jdbcType=VARCHAR}, #{deletekeywordflag,jdbcType=VARCHAR}, 
       #{settingtimestamp,jdbcType=VARCHAR}, #{intogroupcheckflag,jdbcType=VARCHAR}, #{intogroupwelcomeflag,jdbcType=VARCHAR}, 
       #{intogroupusernamecheckflag,jdbcType=VARCHAR}, #{aiflag,jdbcType=VARCHAR}, #{crontabflag,jdbcType=VARCHAR}, 
+      #{nightmodeflag,jdbcType=VARCHAR}, #{cansendmediaflag,jdbcType=VARCHAR}, #{reportflag,jdbcType=VARCHAR}, 
       #{keywords,jdbcType=LONGVARCHAR}, #{channelspammerswhitelist,jdbcType=LONGVARCHAR}
       )
   </insert>
@@ -198,6 +203,15 @@
       </if>
       <if test="crontabflag != null">
         crontabFlag,
+      </if>
+      <if test="nightmodeflag != null">
+        nightModeFlag,
+      </if>
+      <if test="cansendmediaflag != null">
+        canSendMediaFlag,
+      </if>
+      <if test="reportflag != null">
+        reportFlag,
       </if>
       <if test="keywords != null">
         keyWords,
@@ -239,6 +253,15 @@
       </if>
       <if test="crontabflag != null">
         #{crontabflag,jdbcType=VARCHAR},
+      </if>
+      <if test="nightmodeflag != null">
+        #{nightmodeflag,jdbcType=VARCHAR},
+      </if>
+      <if test="cansendmediaflag != null">
+        #{cansendmediaflag,jdbcType=VARCHAR},
+      </if>
+      <if test="reportflag != null">
+        #{reportflag,jdbcType=VARCHAR},
       </if>
       <if test="keywords != null">
         #{keywords,jdbcType=LONGVARCHAR},
@@ -293,6 +316,15 @@
       <if test="record.crontabflag != null">
         crontabFlag = #{record.crontabflag,jdbcType=VARCHAR},
       </if>
+      <if test="record.nightmodeflag != null">
+        nightModeFlag = #{record.nightmodeflag,jdbcType=VARCHAR},
+      </if>
+      <if test="record.cansendmediaflag != null">
+        canSendMediaFlag = #{record.cansendmediaflag,jdbcType=VARCHAR},
+      </if>
+      <if test="record.reportflag != null">
+        reportFlag = #{record.reportflag,jdbcType=VARCHAR},
+      </if>
       <if test="record.keywords != null">
         keyWords = #{record.keywords,jdbcType=LONGVARCHAR},
       </if>
@@ -318,6 +350,9 @@
       intoGroupUserNameCheckFlag = #{record.intogroupusernamecheckflag,jdbcType=VARCHAR},
       aiFlag = #{record.aiflag,jdbcType=VARCHAR},
       crontabFlag = #{record.crontabflag,jdbcType=VARCHAR},
+      nightModeFlag = #{record.nightmodeflag,jdbcType=VARCHAR},
+      canSendMediaFlag = #{record.cansendmediaflag,jdbcType=VARCHAR},
+      reportFlag = #{record.reportflag,jdbcType=VARCHAR},
       keyWords = #{record.keywords,jdbcType=LONGVARCHAR},
       ChannelSpammersWhiteList = #{record.channelspammerswhitelist,jdbcType=LONGVARCHAR}
     <if test="_parameter != null">
@@ -337,7 +372,10 @@
       intoGroupWelcomeFlag = #{record.intogroupwelcomeflag,jdbcType=VARCHAR},
       intoGroupUserNameCheckFlag = #{record.intogroupusernamecheckflag,jdbcType=VARCHAR},
       aiFlag = #{record.aiflag,jdbcType=VARCHAR},
-      crontabFlag = #{record.crontabflag,jdbcType=VARCHAR}
+      crontabFlag = #{record.crontabflag,jdbcType=VARCHAR},
+      nightModeFlag = #{record.nightmodeflag,jdbcType=VARCHAR},
+      canSendMediaFlag = #{record.cansendmediaflag,jdbcType=VARCHAR},
+      reportFlag = #{record.reportflag,jdbcType=VARCHAR}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -378,6 +416,15 @@
       <if test="crontabflag != null">
         crontabFlag = #{crontabflag,jdbcType=VARCHAR},
       </if>
+      <if test="nightmodeflag != null">
+        nightModeFlag = #{nightmodeflag,jdbcType=VARCHAR},
+      </if>
+      <if test="cansendmediaflag != null">
+        canSendMediaFlag = #{cansendmediaflag,jdbcType=VARCHAR},
+      </if>
+      <if test="reportflag != null">
+        reportFlag = #{reportflag,jdbcType=VARCHAR},
+      </if>
       <if test="keywords != null">
         keyWords = #{keywords,jdbcType=LONGVARCHAR},
       </if>
@@ -400,6 +447,9 @@
       intoGroupUserNameCheckFlag = #{intogroupusernamecheckflag,jdbcType=VARCHAR},
       aiFlag = #{aiflag,jdbcType=VARCHAR},
       crontabFlag = #{crontabflag,jdbcType=VARCHAR},
+      nightModeFlag = #{nightmodeflag,jdbcType=VARCHAR},
+      canSendMediaFlag = #{cansendmediaflag,jdbcType=VARCHAR},
+      reportFlag = #{reportflag,jdbcType=VARCHAR},
       keyWords = #{keywords,jdbcType=LONGVARCHAR},
       ChannelSpammersWhiteList = #{channelspammerswhitelist,jdbcType=LONGVARCHAR}
     where id = #{id,jdbcType=INTEGER}
@@ -416,7 +466,10 @@
       intoGroupWelcomeFlag = #{intogroupwelcomeflag,jdbcType=VARCHAR},
       intoGroupUserNameCheckFlag = #{intogroupusernamecheckflag,jdbcType=VARCHAR},
       aiFlag = #{aiflag,jdbcType=VARCHAR},
-      crontabFlag = #{crontabflag,jdbcType=VARCHAR}
+      crontabFlag = #{crontabflag,jdbcType=VARCHAR},
+      nightModeFlag = #{nightmodeflag,jdbcType=VARCHAR},
+      canSendMediaFlag = #{cansendmediaflag,jdbcType=VARCHAR},
+      reportFlag = #{reportflag,jdbcType=VARCHAR}
     where id = #{id,jdbcType=INTEGER}
   </update>
 </mapper>

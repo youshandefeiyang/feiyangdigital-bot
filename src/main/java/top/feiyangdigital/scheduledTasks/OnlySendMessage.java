@@ -26,13 +26,14 @@ public class OnlySendMessage implements Job {
 
     @Override
     public void execute(JobExecutionContext jobExecutionContext) {
-        log.info("仅仅只发送消息，不执行操作11111");
+        log.info("仅仅只发送消息，不执行操作");
         JobDataMap dataMap = jobExecutionContext.getMergedJobDataMap();
         AbsSender sender = (AbsSender) dataMap.get("sender");
         String groupId = dataMap.getString("groupId");
+        int delMessageTime = dataMap.getInt("delMessageTime");
         KeywordsFormat keywordsFormat = new KeywordsFormat();
         keywordsFormat.setKeywordsButtons((List<String>) dataMap.get("keyButtons"));
-        keywordsFormat.setReplyText("定时任务测试中：该任务每10分钟执行一次");
-        timerDelete.sendTimedMessage(sender,sendContent.createGroupMessage(groupId,keywordsFormat,"html"),60);
+        keywordsFormat.setReplyText(dataMap.getString("text"));
+        timerDelete.sendTimedMessage(sender,sendContent.createGroupMessage(groupId,keywordsFormat,"html"),delMessageTime);
     }
 }

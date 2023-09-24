@@ -92,12 +92,12 @@ public class BotRecord implements Serializable {
         }
         BotRecord other = (BotRecord) that;
         return (this.getRid() == null ? other.getRid() == null : this.getRid().equals(other.getRid()))
-            && (this.getGroupid() == null ? other.getGroupid() == null : this.getGroupid().equals(other.getGroupid()))
-            && (this.getUserid() == null ? other.getUserid() == null : this.getUserid().equals(other.getUserid()))
-            && (this.getJointimestamp() == null ? other.getJointimestamp() == null : this.getJointimestamp().equals(other.getJointimestamp()))
+            && (this.getGroupid() == null ? other.getGroupid() == null : this.getGroupid().equalsIgnoreCase(other.getGroupid()))
+            && (this.getUserid() == null ? other.getUserid() == null : this.getUserid().equalsIgnoreCase(other.getUserid()))
+            && (this.getJointimestamp() == null ? other.getJointimestamp() == null : this.getJointimestamp().equalsIgnoreCase(other.getJointimestamp()))
             && (this.getViolationcount() == null ? other.getViolationcount() == null : this.getViolationcount().equals(other.getViolationcount()))
             && (this.getNormalcount() == null ? other.getNormalcount() == null : this.getNormalcount().equals(other.getNormalcount()))
-            && (this.getLastmessage() == null ? other.getLastmessage() == null : this.getLastmessage().equals(other.getLastmessage()));
+            && (this.getLastmessage() == null ? other.getLastmessage() == null : this.getLastmessage().equalsIgnoreCase(other.getLastmessage()));
     }
 
     @Override

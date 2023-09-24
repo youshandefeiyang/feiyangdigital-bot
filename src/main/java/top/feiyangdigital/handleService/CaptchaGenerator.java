@@ -97,7 +97,7 @@ public class CaptchaGenerator {
         String correctAnswer = captchaManager.getAnswerForUser(userId);
         GroupInfoWithBLOBs groupInfoWithBLOBs = groupInfoService.selAllByGroupId(groupId);
         if (StringUtils.hasText(userAnswer) && !correctAnswer.isEmpty()) {
-            if (userAnswer.equalsIgnoreCase(correctAnswer)) {
+            if (userAnswer.equals(correctAnswer)) {
                 SendMessage message = sendContent.messageText(update, "验证通过，现在你可以在群里自由发言了");
                 try {
                     sender.execute(message);
@@ -106,7 +106,7 @@ public class CaptchaGenerator {
                 }
                 restrictOrUnrestrictUser.unrestrictUser(sender, update.getMessage().getFrom().getId(), groupId);
                 botRecordService.addUserRecord(groupId,userId,update.getMessage().getDate().toString());
-                if (groupInfoWithBLOBs != null && "open".equals(groupInfoWithBLOBs.getIntogroupwelcomeflag())) {
+                if (groupInfoWithBLOBs != null && "open".equalsIgnoreCase(groupInfoWithBLOBs.getIntogroupwelcomeflag())) {
                     if (groupMessageIdCacheMap.getGroupMessageId(groupId) != null) {
                         timerDelete.deleteByMessageIdImmediately(sender, groupId, groupMessageIdCacheMap.getGroupMessageId(groupId));
                     }

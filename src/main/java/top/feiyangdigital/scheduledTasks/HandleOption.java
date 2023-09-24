@@ -19,13 +19,14 @@ import java.util.stream.Collectors;
 public class HandleOption {
 
     @Autowired
-    private GroupInfoService groupInfoService;
+    private SchedulerService schedulerService;
 
     @Autowired
-    private SchedulerService schedulerService;
+    private GroupInfoService groupInfoService;
 
     public void ruleHandle(AbsSender sender, String groupId, String keyWords) {
         schedulerService.clearAllJobs();
+        GroupInfoWithBLOBs groupInfoWithBLOBs = groupInfoService.selAllByGroupId(groupId);
         Map<String, Object> map = new ConcurrentHashMap<>();
         map.put("sender", sender);
         map.put("groupId", groupId);
@@ -36,11 +37,26 @@ public class HandleOption {
         for (int i = 0; i < keywordsFormatList.size(); i++) {
             Map<String, String> currentMap = keywordsFormatList.get(i).getRuleMap();
             if (currentMap.containsKey("crontabOption")) {
-                map.put("keyButtons",keywordsFormatList.get(i).getKeywordsButtons());
-                if (currentMap.get("crontabOption").contains("test1")) {
-                    schedulerService.updateTrigger(keywordsFormatList.get(i).getReplyText(), OnlySendMessage.class, "job" + i, "group" + i, map);
-                } else if (currentMap.get("crontabOption").contains("test2")) {
-                    schedulerService.updateTrigger(keywordsFormatList.get(i).getReplyText(), OnlySendMessage2.class, "job" + i, "group" + i, map);
+                map.put("keyButtons", keywordsFormatList.get(i).getKeywordsButtons());
+                String[] content = currentMap.get("crontabOption").split("、");
+                map.put("text", content[1]);
+                map.put("delMessageTime", content[2]);
+                if (content.length == 3) {
+                    if ("AllowMedia".equalsIgnoreCase(content[0]) && "open".equalsIgnoreCase(groupInfoWithBLOBs.getNightmodeflag())) {
+                        schedulerService.updateTrigger(keywordsFormatList.get(i).getReplyText(), AllowMedia.class, content[0] + "job" + i, content[0] + "group" + i, map);
+                    } else if ("ForBidMedia".equalsIgnoreCase(content[0]) && "open".equalsIgnoreCase(groupInfoWithBLOBs.getNightmodeflag())) {
+                        schedulerService.updateTrigger(keywordsFormatList.get(i).getReplyText(), ForBidMedia.class, content[0] + "job" + i, content[0] + "group" + i, map);
+                    } else if ("OnlySendMessage".equalsIgnoreCase(content[0]) && "open".equalsIgnoreCase(groupInfoWithBLOBs.getCrontabflag())) {
+                        schedulerService.updateTrigger(keywordsFormatList.get(i).getReplyText(), OnlySendMessage.class, content[0] + "job" + i, content[0] + "group" + i, map);
+                    }
+                } else if (content.length == 4) {
+                    if ("AllowMedia".equalsIgnoreCase(content[0]) && "open".equalsIgnoreCase(groupInfoWithBLOBs.getNightmodeflag())) {
+                        schedulerService.updateTrigger(keywordsFormatList.get(i).getReplyText(), AllowMedia.class, content[0] + "job" + i, content[0] + "group" + i, map, content[3]);
+                    } else if ("ForBidMedia".equalsIgnoreCase(content[0]) && "open".equalsIgnoreCase(groupInfoWithBLOBs.getNightmodeflag())) {
+                        schedulerService.updateTrigger(keywordsFormatList.get(i).getReplyText(), ForBidMedia.class, content[0] + "job" + i, content[0] + "group" + i, map, content[3]);
+                    } else if ("OnlySendMessage".equalsIgnoreCase(content[0]) && "open".equalsIgnoreCase(groupInfoWithBLOBs.getCrontabflag())) {
+                        schedulerService.updateTrigger(keywordsFormatList.get(i).getReplyText(), OnlySendMessage.class, content[0] + "job" + i, content[0] + "group" + i, map, content[3]);
+                    }
                 }
             }
         }

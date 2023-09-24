@@ -11,7 +11,6 @@ public class AddRuleCacheMap {
     private final Map<String, String> userToGroupMap = new ConcurrentHashMap<>();
     private final Map<String, String> userToGroupNameMap = new ConcurrentHashMap<>();
     private final Map<String, String> userToKeywordsFlagMap = new ConcurrentHashMap<>();
-
     private final Map<String,String> userToAiFlagMap = new ConcurrentHashMap<>();
     private final Map<String,String> userToCrontabFlagMap = new ConcurrentHashMap<>();
 

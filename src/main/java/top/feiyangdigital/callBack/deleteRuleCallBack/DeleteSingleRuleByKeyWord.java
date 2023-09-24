@@ -33,7 +33,7 @@ public class DeleteSingleRuleByKeyWord {
         if (update.getMessage().getText() != null && !update.getMessage().getText().trim().isEmpty()) {
             String userId = update.getMessage().getFrom().getId().toString();
             String userMessage = update.getMessage().getText().trim();
-            if ("candelete".equals(deleteRuleCacheMap.getDeleteKeywordFlagMap(userId))) {
+            if ("candelete".equalsIgnoreCase(deleteRuleCacheMap.getDeleteKeywordFlagMap(userId))) {
                 GroupInfoWithBLOBs groupInfoWithBLOBs = groupInfoService.selAllByGroupId(deleteRuleCacheMap.getGroupIdForUser(userId));
                 String settingTimestamp = groupInfoWithBLOBs.getSettingtimestamp();
                 String content = groupInfoWithBLOBs.getKeywords();

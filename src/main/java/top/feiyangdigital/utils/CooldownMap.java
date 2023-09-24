@@ -39,7 +39,7 @@ public class CooldownMap {
             if (this == o) return true;
             if (o == null || getClass() != o.getClass()) return false;
             UserIdGroupIdKey that = (UserIdGroupIdKey) o;
-            return userId.equals(that.userId) && groupId.equals(that.groupId);
+            return userId.equalsIgnoreCase(that.userId) && groupId.equalsIgnoreCase(that.groupId);
         }
 
         @Override
