@@ -153,7 +153,9 @@ public class TimerDelete {
     public Integer deleteMessageImmediatelyAndNotifyAfterDelay(AbsSender sender,SendMessage sendMessage, String chatId, Integer messageId, Long userId,int notifyDelay) {
            Integer msgId = 0;
             try {
-                sender.execute(new DeleteMessage(chatId,messageId));
+                if (messageId!=null){
+                    sender.execute(new DeleteMessage(chatId,messageId));
+                }
                 captchaManager.clearMappingsForUser(userId.toString());
                 captchaManagerCacheMap.clearMappingsForUser(userId.toString(), chatId);
                 // 在此发送提示消息
