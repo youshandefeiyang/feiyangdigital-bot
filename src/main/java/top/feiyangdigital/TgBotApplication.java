@@ -41,7 +41,6 @@ public class TgBotApplication implements CommandLineRunner {
     @PostConstruct
     public void init() {
         tgLongPollingBot.getOptions().setAllowedUpdates(allowed_Update);
-        tgWebhookBot.getOptions().setAllowedUpdates(allowed_Update);
         log.info("AllowedUpdates属性设置完毕");
     }
 
@@ -57,8 +56,7 @@ public class TgBotApplication implements CommandLineRunner {
         } else if ("webhook".equals(BaseInfo.getBotMode())) {
             tgWebhookBot.setBotToken(BaseInfo.getBotToken());
             tgWebhookBot.setGroupCommands();
-            SetWebhook setWebhook = new SetWebhook(BaseInfo.getBotPath());
-            setWebhook.setAllowedUpdates(allowed_Update);  // 添加这行来设置 allowed_updates
+            SetWebhook setWebhook = SetWebhook.builder().allowedUpdates(allowed_Update).url(BaseInfo.getBotPath()).build();
             TelegramBotsApi telegramBotsApi = new TelegramBotsApi(DefaultBotSession.class);
             telegramBotsApi.registerBot(tgWebhookBot, setWebhook);
             log.info("webhook模式已启动");
