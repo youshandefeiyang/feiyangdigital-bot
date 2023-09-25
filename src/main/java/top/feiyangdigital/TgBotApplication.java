@@ -57,8 +57,9 @@ public class TgBotApplication implements CommandLineRunner {
         } else if ("webhook".equals(BaseInfo.getBotMode())) {
             tgWebhookBot.setBotToken(BaseInfo.getBotToken());
             tgWebhookBot.setGroupCommands();
+            SetWebhook setWebhook = SetWebhook.builder().allowedUpdates(allowed_Update).url(BaseInfo.getBotPath()).build();
             TelegramBotsApi telegramBotsApi = new TelegramBotsApi(DefaultBotSession.class);
-            telegramBotsApi.registerBot(tgWebhookBot, new SetWebhook());
+            telegramBotsApi.registerBot(tgWebhookBot, setWebhook);
             if (InitWebhook.diySetWebhook(BaseInfo.getBotToken(),BaseInfo.getBotPath(),allowed_Update)){
                 log.info("webhook模式已启动");
             }
