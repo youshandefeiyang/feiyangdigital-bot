@@ -14,6 +14,7 @@ import org.telegram.telegrambots.updatesreceivers.DefaultBotSession;
 import top.feiyangdigital.bot.TgLongPollingBot;
 import top.feiyangdigital.bot.TgWebhookBot;
 import top.feiyangdigital.entity.BaseInfo;
+import top.feiyangdigital.entity.InitWebhook;
 
 import javax.annotation.PostConstruct;
 import java.util.Arrays;
@@ -56,10 +57,11 @@ public class TgBotApplication implements CommandLineRunner {
         } else if ("webhook".equals(BaseInfo.getBotMode())) {
             tgWebhookBot.setBotToken(BaseInfo.getBotToken());
             tgWebhookBot.setGroupCommands();
-            SetWebhook setWebhook = SetWebhook.builder().allowedUpdates(allowed_Update).url(BaseInfo.getBotPath()).build();
             TelegramBotsApi telegramBotsApi = new TelegramBotsApi(DefaultBotSession.class);
-            telegramBotsApi.registerBot(tgWebhookBot, setWebhook);
-            log.info("webhook模式已启动");
+            telegramBotsApi.registerBot(tgWebhookBot, new SetWebhook());
+            if (InitWebhook.diySetWebhook(BaseInfo.getBotToken(),BaseInfo.getBotPath(),allowed_Update)){
+                log.info("webhook模式已启动");
+            }
         } else {
             throw new Exception("请将配置填写完整");
         }
