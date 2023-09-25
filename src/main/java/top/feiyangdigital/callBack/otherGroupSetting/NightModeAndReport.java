@@ -42,9 +42,9 @@ public class NightModeAndReport {
         List<String> keywordsButtons = new ArrayList<>();
         KeywordsFormat keywordsFormat = new KeywordsFormat();
         keywordsButtons.add("🌙打开/关闭夜间值守##changeNightModeFlag%%🔔打开/关闭通知Admin##reportToAdmin");
-        keywordsButtons.add("◀️返回主菜单##backMainMenu");
+        keywordsButtons.add("🧹清理无用指令/通知##clearCommand%%◀️返回主菜单##backMainMenu");
         keywordsButtons.add("❌关闭菜单##closeMenu");
-        keywordsFormat.setReplyText("当前群组：<b>"+ addRuleCacheMap.getGroupNameForUser(userId)+"</b>\n当前群组ID：<b>"+ addRuleCacheMap.getGroupIdForUser(userId)+"</b>\n当前夜间模式状态：<b>"+ groupInfoWithBLOBs.getNightmodeflag() +"</b>\n当前通知Admin状态：<b>"+ groupInfoWithBLOBs.getReportflag() +"</b>\n⚡️请选择一个操作!⚡️");
+        keywordsFormat.setReplyText("当前群组：<b>" + addRuleCacheMap.getGroupNameForUser(userId) + "</b>\n当前群组ID：<b>" + addRuleCacheMap.getGroupIdForUser(userId) + "</b>\n当前夜间模式状态：<b>" + groupInfoWithBLOBs.getNightmodeflag() + "</b>\n当前通知Admin状态：<b>" + groupInfoWithBLOBs.getReportflag()+ "</b>\n当前清理指令/通知状态：<b>" + groupInfoWithBLOBs.getClearinfoflag() + "</b>\n⚡️请选择一个操作!⚡️");
         keywordsFormat.setKeywordsButtons(keywordsButtons);
         try {
             sender.execute(sendContent.editResponseMessage(update, keywordsFormat, "html"));
@@ -75,9 +75,43 @@ public class NightModeAndReport {
         List<String> keywordsButtons = new ArrayList<>();
         KeywordsFormat keywordsFormat = new KeywordsFormat();
         keywordsButtons.add("🌙打开/关闭夜间值守##changeNightModeFlag%%🔔打开/关闭通知Admin##reportToAdmin");
-        keywordsButtons.add("◀️返回主菜单##backMainMenu");
+        keywordsButtons.add("🧹清理无用指令/通知##clearCommand%%◀️返回主菜单##backMainMenu");
         keywordsButtons.add("❌关闭菜单##closeMenu");
-        keywordsFormat.setReplyText(text+"\n当前群组：<b>"+ addRuleCacheMap.getGroupNameForUser(userId)+"</b>\n当前群组ID：<b>"+ addRuleCacheMap.getGroupIdForUser(userId)+"</b>\n当前夜间模式状态：<b>"+ groupInfoWithBLOBs.getNightmodeflag() +"</b>\n当前通知Admin状态：<b>"+ reportFlag +"</b>\n⚡️请选择一个操作!⚡️");
+        keywordsFormat.setReplyText(text + "\n当前群组：<b>" + addRuleCacheMap.getGroupNameForUser(userId) + "</b>\n当前群组ID：<b>" + addRuleCacheMap.getGroupIdForUser(userId) + "</b>\n当前夜间模式状态：<b>" + groupInfoWithBLOBs.getNightmodeflag() + "</b>\n当前通知Admin状态：<b>" + reportFlag + "</b>\n当前清理指令/通知状态：<b>" + groupInfoWithBLOBs.getClearinfoflag() + "</b>\n⚡️请选择一个操作!⚡️");
+        keywordsFormat.setKeywordsButtons(keywordsButtons);
+        try {
+            sender.execute(sendContent.editResponseMessage(update, keywordsFormat, "html"));
+        } catch (TelegramApiException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    public void clearCommand(AbsSender sender, Update update) {
+        String userId = update.getCallbackQuery().getFrom().getId().toString();
+        GroupInfoWithBLOBs groupInfoWithBLOBs = groupInfoService.selAllByGroupId(addRuleCacheMap.getGroupIdForUser(userId));
+        String clearFlag = "";
+        String text = "";
+        GroupInfoWithBLOBs groupInfoWithBLOBs1 = new GroupInfoWithBLOBs();
+        if ("close".equals(groupInfoWithBLOBs.getClearinfoflag())) {
+            groupInfoWithBLOBs1.setClearinfoflag("open");
+            if (groupInfoService.updateSelectiveByChatId(groupInfoWithBLOBs1, addRuleCacheMap.getGroupIdForUser(userId))) {
+                clearFlag = "open";
+                text = "✅清理指令模式已打开";
+            }
+        } else {
+            groupInfoWithBLOBs1.setClearinfoflag("close");
+            if (groupInfoService.updateSelectiveByChatId(groupInfoWithBLOBs1, addRuleCacheMap.getGroupIdForUser(userId))) {
+                clearFlag = "close";
+                text = "❗清理指令模式已关闭";
+            }
+        }
+        List<String> keywordsButtons = new ArrayList<>();
+        KeywordsFormat keywordsFormat = new KeywordsFormat();
+        keywordsButtons.add("🌙打开/关闭夜间值守##changeNightModeFlag%%🔔打开/关闭通知Admin##reportToAdmin");
+        keywordsButtons.add("🧹清理无用指令/通知##clearCommand%%◀️返回主菜单##backMainMenu");
+        keywordsButtons.add("❌关闭菜单##closeMenu");
+        keywordsFormat.setReplyText(text + "\n当前群组：<b>" + addRuleCacheMap.getGroupNameForUser(userId) + "</b>\n当前群组ID：<b>" + addRuleCacheMap.getGroupIdForUser(userId) + "</b>\n当前夜间模式状态：<b>" + groupInfoWithBLOBs.getNightmodeflag() + "</b>\n当前通知Admin状态：<b>" + groupInfoWithBLOBs.getReportflag() + "</b>\n当前清理指令/通知状态：<b>" + clearFlag + "</b>\n⚡️请选择一个操作!⚡️");
         keywordsFormat.setKeywordsButtons(keywordsButtons);
         try {
             sender.execute(sendContent.editResponseMessage(update, keywordsFormat, "html"));
@@ -99,8 +133,8 @@ public class NightModeAndReport {
             if (groupInfoService.updateSelectiveByChatId(groupInfoWithBLOBs1, addRuleCacheMap.getGroupIdForUser(userId))) {
                 nightFlag = "open";
                 text = "✅夜间值守模式已打开";
-                if (StringUtils.hasText(keyWords)){
-                    handleOption.ruleHandle(sender, addRuleCacheMap.getGroupIdForUser(userId),keyWords);
+                if (StringUtils.hasText(keyWords)) {
+                    handleOption.ruleHandle(sender, addRuleCacheMap.getGroupIdForUser(userId), keyWords);
                 }
             }
         } else {
@@ -114,9 +148,9 @@ public class NightModeAndReport {
         List<String> keywordsButtons = new ArrayList<>();
         KeywordsFormat keywordsFormat = new KeywordsFormat();
         keywordsButtons.add("🌙打开/关闭夜间值守##changeNightModeFlag%%🔔打开/关闭通知Admin##reportToAdmin");
-        keywordsButtons.add("◀️返回主菜单##backMainMenu");
+        keywordsButtons.add("🧹清理无用指令/通知##clearCommand%%◀️返回主菜单##backMainMenu");
         keywordsButtons.add("❌关闭菜单##closeMenu");
-        keywordsFormat.setReplyText(text+"\n当前群组：<b>"+ addRuleCacheMap.getGroupNameForUser(userId)+"</b>\n当前群组ID：<b>"+ addRuleCacheMap.getGroupIdForUser(userId)+"</b>\n当前夜间模式状态：<b>"+ nightFlag +"</b>\n当前通知Admin状态：<b>"+ groupInfoWithBLOBs.getReportflag() +"</b>\n⚡️请选择一个操作!⚡️");
+        keywordsFormat.setReplyText(text + "\n当前群组：<b>" + addRuleCacheMap.getGroupNameForUser(userId) + "</b>\n当前群组ID：<b>" + addRuleCacheMap.getGroupIdForUser(userId) + "</b>\n当前夜间模式状态：<b>" + nightFlag + "</b>\n当前通知Admin状态：<b>" + groupInfoWithBLOBs.getReportflag() + "</b>\n当前清理指令/通知状态：<b>" + groupInfoWithBLOBs.getClearinfoflag() + "</b>\n⚡️请选择一个操作!⚡️");
         keywordsFormat.setKeywordsButtons(keywordsButtons);
         try {
             sender.execute(sendContent.editResponseMessage(update, keywordsFormat, "html"));

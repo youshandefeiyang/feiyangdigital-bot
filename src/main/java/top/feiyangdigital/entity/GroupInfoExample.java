@@ -1094,6 +1094,76 @@ public class GroupInfoExample {
             return (Criteria) this;
         }
 
+        public Criteria andClearinfoflagIsNull() {
+            addCriterion("clearInfoFlag is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andClearinfoflagIsNotNull() {
+            addCriterion("clearInfoFlag is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andClearinfoflagEqualTo(String value) {
+            addCriterion("clearInfoFlag =", value, "clearinfoflag");
+            return (Criteria) this;
+        }
+
+        public Criteria andClearinfoflagNotEqualTo(String value) {
+            addCriterion("clearInfoFlag <>", value, "clearinfoflag");
+            return (Criteria) this;
+        }
+
+        public Criteria andClearinfoflagGreaterThan(String value) {
+            addCriterion("clearInfoFlag >", value, "clearinfoflag");
+            return (Criteria) this;
+        }
+
+        public Criteria andClearinfoflagGreaterThanOrEqualTo(String value) {
+            addCriterion("clearInfoFlag >=", value, "clearinfoflag");
+            return (Criteria) this;
+        }
+
+        public Criteria andClearinfoflagLessThan(String value) {
+            addCriterion("clearInfoFlag <", value, "clearinfoflag");
+            return (Criteria) this;
+        }
+
+        public Criteria andClearinfoflagLessThanOrEqualTo(String value) {
+            addCriterion("clearInfoFlag <=", value, "clearinfoflag");
+            return (Criteria) this;
+        }
+
+        public Criteria andClearinfoflagLike(String value) {
+            addCriterion("clearInfoFlag like", value, "clearinfoflag");
+            return (Criteria) this;
+        }
+
+        public Criteria andClearinfoflagNotLike(String value) {
+            addCriterion("clearInfoFlag not like", value, "clearinfoflag");
+            return (Criteria) this;
+        }
+
+        public Criteria andClearinfoflagIn(List<String> values) {
+            addCriterion("clearInfoFlag in", values, "clearinfoflag");
+            return (Criteria) this;
+        }
+
+        public Criteria andClearinfoflagNotIn(List<String> values) {
+            addCriterion("clearInfoFlag not in", values, "clearinfoflag");
+            return (Criteria) this;
+        }
+
+        public Criteria andClearinfoflagBetween(String value1, String value2) {
+            addCriterion("clearInfoFlag between", value1, value2, "clearinfoflag");
+            return (Criteria) this;
+        }
+
+        public Criteria andClearinfoflagNotBetween(String value1, String value2) {
+            addCriterion("clearInfoFlag not between", value1, value2, "clearinfoflag");
+            return (Criteria) this;
+        }
+
         public Criteria andReportflagIsNull() {
             addCriterion("reportFlag is null");
             return (Criteria) this;

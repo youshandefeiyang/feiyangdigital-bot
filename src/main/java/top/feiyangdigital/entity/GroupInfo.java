@@ -35,6 +35,8 @@ public class GroupInfo implements Serializable {
 
     private String cansendmediaflag;
 
+    private String clearinfoflag;
+
     private String reportflag;
 
     private static final long serialVersionUID = 1L;
@@ -151,6 +153,14 @@ public class GroupInfo implements Serializable {
         this.cansendmediaflag = cansendmediaflag;
     }
 
+    public String getClearinfoflag() {
+        return clearinfoflag;
+    }
+
+    public void setClearinfoflag(String clearinfoflag) {
+        this.clearinfoflag = clearinfoflag;
+    }
+
     public String getReportflag() {
         return reportflag;
     }
@@ -185,6 +195,7 @@ public class GroupInfo implements Serializable {
             && (this.getCrontabflag() == null ? other.getCrontabflag() == null : this.getCrontabflag().equals(other.getCrontabflag()))
             && (this.getNightmodeflag() == null ? other.getNightmodeflag() == null : this.getNightmodeflag().equals(other.getNightmodeflag()))
             && (this.getCansendmediaflag() == null ? other.getCansendmediaflag() == null : this.getCansendmediaflag().equals(other.getCansendmediaflag()))
+            && (this.getClearinfoflag() == null ? other.getClearinfoflag() == null : this.getClearinfoflag().equals(other.getClearinfoflag()))
             && (this.getReportflag() == null ? other.getReportflag() == null : this.getReportflag().equals(other.getReportflag()));
     }
 
@@ -206,6 +217,7 @@ public class GroupInfo implements Serializable {
         result = prime * result + ((getCrontabflag() == null) ? 0 : getCrontabflag().hashCode());
         result = prime * result + ((getNightmodeflag() == null) ? 0 : getNightmodeflag().hashCode());
         result = prime * result + ((getCansendmediaflag() == null) ? 0 : getCansendmediaflag().hashCode());
+        result = prime * result + ((getClearinfoflag() == null) ? 0 : getClearinfoflag().hashCode());
         result = prime * result + ((getReportflag() == null) ? 0 : getReportflag().hashCode());
         return result;
     }
@@ -230,6 +242,7 @@ public class GroupInfo implements Serializable {
         sb.append(", crontabflag=").append(crontabflag);
         sb.append(", nightmodeflag=").append(nightmodeflag);
         sb.append(", cansendmediaflag=").append(cansendmediaflag);
+        sb.append(", clearinfoflag=").append(clearinfoflag);
         sb.append(", reportflag=").append(reportflag);
         sb.append(", serialVersionUID=").append(serialVersionUID);
         sb.append("]");

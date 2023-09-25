@@ -26,10 +26,10 @@ public class BotFirstIntoGroup {
         Message message = update.getMessage();
         if (message.getNewChatMembers() != null) {
             for (User user : message.getNewChatMembers()) {
-                if (user.getIsBot()){
+                if (user.getIsBot()) {
                     if (BaseInfo.getBotName().equals(user.getUserName())) {
                         String chatId = message.getChat().getId().toString();
-                        if ("open".equals(BaseInfo.getBotLimitStatus()) && BaseInfo.getGroupWhiteList().contains(chatId)) {
+                        if ("close".equals(BaseInfo.getBotLimitStatus()) || ("open".equals(BaseInfo.getBotLimitStatus()) && BaseInfo.getGroupWhiteList().contains(chatId))) {
                             String groupName = message.getChat().getTitle();
                             GroupInfoWithBLOBs groupInfo = new GroupInfoWithBLOBs();
                             groupInfo.setGroupid(chatId);

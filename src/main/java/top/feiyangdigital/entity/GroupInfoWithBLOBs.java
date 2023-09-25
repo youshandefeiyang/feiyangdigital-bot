@@ -55,6 +55,7 @@ public class GroupInfoWithBLOBs extends GroupInfo implements Serializable {
             && (this.getCrontabflag() == null ? other.getCrontabflag() == null : this.getCrontabflag().equals(other.getCrontabflag()))
             && (this.getNightmodeflag() == null ? other.getNightmodeflag() == null : this.getNightmodeflag().equals(other.getNightmodeflag()))
             && (this.getCansendmediaflag() == null ? other.getCansendmediaflag() == null : this.getCansendmediaflag().equals(other.getCansendmediaflag()))
+            && (this.getClearinfoflag() == null ? other.getClearinfoflag() == null : this.getClearinfoflag().equals(other.getClearinfoflag()))
             && (this.getReportflag() == null ? other.getReportflag() == null : this.getReportflag().equals(other.getReportflag()))
             && (this.getKeywords() == null ? other.getKeywords() == null : this.getKeywords().equals(other.getKeywords()))
             && (this.getChannelspammerswhitelist() == null ? other.getChannelspammerswhitelist() == null : this.getChannelspammerswhitelist().equals(other.getChannelspammerswhitelist()));
@@ -78,6 +79,7 @@ public class GroupInfoWithBLOBs extends GroupInfo implements Serializable {
         result = prime * result + ((getCrontabflag() == null) ? 0 : getCrontabflag().hashCode());
         result = prime * result + ((getNightmodeflag() == null) ? 0 : getNightmodeflag().hashCode());
         result = prime * result + ((getCansendmediaflag() == null) ? 0 : getCansendmediaflag().hashCode());
+        result = prime * result + ((getClearinfoflag() == null) ? 0 : getClearinfoflag().hashCode());
         result = prime * result + ((getReportflag() == null) ? 0 : getReportflag().hashCode());
         result = prime * result + ((getKeywords() == null) ? 0 : getKeywords().hashCode());
         result = prime * result + ((getChannelspammerswhitelist() == null) ? 0 : getChannelspammerswhitelist().hashCode());

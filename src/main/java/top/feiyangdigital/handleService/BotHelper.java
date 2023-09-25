@@ -169,6 +169,9 @@ public class BotHelper {
             case "reportToAdmin":
                 nightModeAndReport.reportToAdmin(sender,update);
                 return;
+            case "clearCommand":
+                nightModeAndReport.clearCommand(sender,update);
+                return;
             case "close":
                 timerDelete.deletePrivateUsualMessageImmediately(sender, update);
                 return;

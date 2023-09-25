@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- 主机： localhost
--- 生成日期： 2023-09-24 11:31:18
+-- 生成日期： 2023-09-25 07:42:10
 -- 服务器版本： 8.0.24
 -- PHP 版本： 8.1.12
 
@@ -61,6 +61,7 @@ CREATE TABLE `groupinfo`
     `crontabFlag`                varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci          DEFAULT 'close',
     `nightModeFlag`              varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'close',
     `canSendMediaFlag`           varchar(50) COLLATE utf8mb4_general_ci                       NOT NULL DEFAULT 'close',
+    `clearInfoFlag`              varchar(50) COLLATE utf8mb4_general_ci                       NOT NULL DEFAULT 'close',
     `reportFlag`                 varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'close',
     `ChannelSpammersWhiteList`   longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -99,7 +100,8 @@ ALTER TABLE `groupinfo`
   ADD KEY `crontabFlag` (`crontabFlag`),
   ADD KEY `nightModeFlag` (`nightModeFlag`),
   ADD KEY `reportFlag` (`reportFlag`),
-  ADD KEY `canSendMediaFlag` (`canSendMediaFlag`);
+  ADD KEY `canSendMediaFlag` (`canSendMediaFlag`),
+  ADD KEY `clearInfoFlag` (`clearInfoFlag`);
 ALTER TABLE `groupinfo`
     ADD FULLTEXT KEY `ownerAndAnonymousAdmins` (`ownerAndAnonymousAdmins`);
 ALTER TABLE `groupinfo`
