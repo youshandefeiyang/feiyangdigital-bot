@@ -9,19 +9,16 @@ import org.telegram.telegrambots.meta.api.methods.ParseMode;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.bots.AbsSender;
-import top.feiyangdigital.callBack.deleteRuleCallBack.DeleteSingleRuleByKeyWord;
-import top.feiyangdigital.callBack.replyRuleCallBack.AddAutoReplyRule;
 import top.feiyangdigital.entity.BotRecord;
 import top.feiyangdigital.entity.GroupInfoWithBLOBs;
 import top.feiyangdigital.entity.KeywordsFormat;
-import top.feiyangdigital.handleService.*;
+import top.feiyangdigital.handleService.MessageHandle;
+import top.feiyangdigital.handleService.OpenAiApiService;
 import top.feiyangdigital.sqlService.BotRecordService;
 import top.feiyangdigital.sqlService.GroupInfoService;
-import top.feiyangdigital.utils.*;
-import top.feiyangdigital.utils.groupCaptch.CaptchaManager;
+import top.feiyangdigital.utils.MatchList;
+import top.feiyangdigital.utils.TimerDelete;
 import top.feiyangdigital.utils.groupCaptch.RestrictOrUnrestrictUser;
-import top.feiyangdigital.utils.ruleCacheMap.AddRuleCacheMap;
-import top.feiyangdigital.utils.ruleCacheMap.DeleteRuleCacheMap;
 
 import java.util.List;
 

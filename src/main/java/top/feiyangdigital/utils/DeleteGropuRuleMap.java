@@ -2,7 +2,6 @@ package top.feiyangdigital.utils;
 
 import org.springframework.stereotype.Component;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 

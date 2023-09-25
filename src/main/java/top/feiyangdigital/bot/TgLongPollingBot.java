@@ -3,12 +3,8 @@ package top.feiyangdigital.bot;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
-import org.telegram.telegrambots.meta.api.methods.updatingmessages.DeleteMessage;
-import org.telegram.telegrambots.meta.api.objects.MessageEntity;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
-import top.feiyangdigital.utils.CheckUser;
-import top.feiyangdigital.utils.TimerDelete;
 
 @Component
 public class TgLongPollingBot extends TelegramLongPollingBot {
@@ -21,9 +17,6 @@ public class TgLongPollingBot extends TelegramLongPollingBot {
 
     @Autowired
     private GroupCommands groupCommands;
-
-    @Autowired
-    private TimerDelete timerDelete;
 
     @Override
     public void onUpdateReceived(Update update) {

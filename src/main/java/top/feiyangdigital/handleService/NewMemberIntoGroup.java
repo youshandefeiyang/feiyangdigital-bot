@@ -23,7 +23,6 @@ import top.feiyangdigital.utils.groupCaptch.RestrictOrUnrestrictUser;
 
 import java.util.*;
 import java.util.regex.Pattern;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 @Service

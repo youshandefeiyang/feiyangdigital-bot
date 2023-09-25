@@ -6,7 +6,6 @@ import org.quartz.JobDataMap;
 import org.quartz.JobExecutionContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.bots.AbsSender;
 import top.feiyangdigital.entity.KeywordsFormat;
 import top.feiyangdigital.utils.SendContent;
