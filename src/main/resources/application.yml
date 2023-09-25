@@ -10,7 +10,7 @@ spring:
 
 logging:
   level:
-    root: error
+    root: info
 
 mybatis:
   type-aliases-package: top.feiyangdigital.entity
