@@ -23,7 +23,7 @@ public class ClearOtherInfo {
         String chatId = update.getMessage().getChatId().toString();
         Integer messageId = update.getMessage().getMessageId();
         GroupInfoWithBLOBs groupInfoWithBLOBs = groupInfoService.selAllByGroupId(chatId);
-        if (groupInfoWithBLOBs!=null && "open".equals(groupInfoWithBLOBs.getClearinfoflag()) && (update.getMessage().getLeftChatMember() != null || update.getMessage().getNewChatMembers() != null || update.getMessage().getPinnedMessage() != null)) {
+        if (groupInfoWithBLOBs!=null && "open".equals(groupInfoWithBLOBs.getClearinfoflag()) && (update.getMessage().getLeftChatMember() != null || !update.getMessage().getNewChatMembers().isEmpty() || update.getMessage().getPinnedMessage() != null)) {
             try {
                 sender.execute(new DeleteMessage(chatId,messageId));
             } catch (TelegramApiException e) {
