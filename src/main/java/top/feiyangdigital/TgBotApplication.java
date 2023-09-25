@@ -36,7 +36,6 @@ public class TgBotApplication implements CommandLineRunner {
 
     private final List<String> allowed_Update = Arrays.asList("update_id", "message", "edited_message", "channel_post", "edited_channel_post", "inline_query", "chosen_inline_result", "callback_query", "shipping_query", "pre_checkout_query", "poll", "poll_answer", "my_chat_member", "chat_member", "chat_join_request");
 
-
     public static void main(String[] args) {
         SpringApplication.run(TgBotApplication.class, args);
     }
@@ -44,7 +43,6 @@ public class TgBotApplication implements CommandLineRunner {
     @PostConstruct
     public void init() {
         tgLongPollingBot.getOptions().setAllowedUpdates(allowed_Update);
-        tgWebhookBot.getOptions().setAllowedUpdates(allowed_Update);
         log.info("AllowedUpdates属性设置完毕");
     }
 
@@ -61,7 +59,9 @@ public class TgBotApplication implements CommandLineRunner {
             tgWebhookBot.setBotToken(BaseInfo.getBotToken());
             tgWebhookBot.setGroupCommands();
             TelegramBotsApi telegramBotsApi = new TelegramBotsApi(DefaultBotSession.class);
-            telegramBotsApi.registerBot(tgWebhookBot, new SetWebhook(BaseInfo.getBotPath()));
+            SetWebhook setWebhook = new SetWebhook(BaseInfo.getBotPath());  // 创建 SetWebhook 对象
+            setWebhook.setAllowedUpdates(allowed_Update);  // 设置 allowed_updates 属性
+            telegramBotsApi.registerBot(tgWebhookBot, setWebhook);  // 注册机器人并设置 webhook 属性
             log.info("webhook模式已启动");
         } else {
             throw new Exception("请将配置填写完整");
