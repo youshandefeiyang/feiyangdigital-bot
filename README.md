@@ -6,7 +6,7 @@
 
 1️⃣ 开始之前
 ----------------
-
+##强烈推荐观看保姆级部署视频教程：https://www.youtube.com/watch?v=QgrPRgR5tek
 - **创建你的 Telegram 机器人:**
   1. 前往 [@BotFather](https://t.me/botfather) 以创建机器人。
   2. 记录下机器人的 `token` 和用户名。
