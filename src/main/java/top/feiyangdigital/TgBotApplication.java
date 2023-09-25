@@ -16,10 +16,8 @@ import top.feiyangdigital.bot.TgWebhookBot;
 import top.feiyangdigital.entity.BaseInfo;
 
 import javax.annotation.PostConstruct;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
 
 @SpringBootApplication
 @EnableCaching
@@ -43,6 +41,7 @@ public class TgBotApplication implements CommandLineRunner {
     @PostConstruct
     public void init() {
         tgLongPollingBot.getOptions().setAllowedUpdates(allowed_Update);
+        tgWebhookBot.getOptions().setAllowedUpdates(allowed_Update);
         log.info("AllowedUpdates属性设置完毕");
     }
 
@@ -58,10 +57,10 @@ public class TgBotApplication implements CommandLineRunner {
         } else if ("webhook".equals(BaseInfo.getBotMode())) {
             tgWebhookBot.setBotToken(BaseInfo.getBotToken());
             tgWebhookBot.setGroupCommands();
+            SetWebhook setWebhook = new SetWebhook(BaseInfo.getBotPath());
+            setWebhook.setAllowedUpdates(allowed_Update);  // 添加这行来设置 allowed_updates
             TelegramBotsApi telegramBotsApi = new TelegramBotsApi(DefaultBotSession.class);
-            SetWebhook setWebhook = new SetWebhook(BaseInfo.getBotPath());  // 创建 SetWebhook 对象
-            setWebhook.setAllowedUpdates(allowed_Update);  // 设置 allowed_updates 属性
-            telegramBotsApi.registerBot(tgWebhookBot, setWebhook);  // 注册机器人并设置 webhook 属性
+            telegramBotsApi.registerBot(tgWebhookBot, setWebhook);
             log.info("webhook模式已启动");
         } else {
             throw new Exception("请将配置填写完整");
