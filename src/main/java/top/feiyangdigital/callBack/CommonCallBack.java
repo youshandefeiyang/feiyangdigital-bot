@@ -64,8 +64,8 @@ public class CommonCallBack {
         KeywordsFormat keywordsFormat = new KeywordsFormat();
         keywordsButtons.add("📝规则设置##autoReply%%⚙️群组设置##groupSetting");
         keywordsButtons.add("🕐打开/关闭定时发送消息##cronOption%%🔮打开/关闭AI##aiOption");
+        keywordsButtons.add("🌊防刷屏模式##antiFlood%%💎其他群组设置##otherGroupSetting");
         keywordsButtons.add("👨🏻‍💻仓库地址$$https://github.com/youshandefeiyang/feiyangdigital-bot%%👥官方群组$$https://t.me/feiyangdigital");
-        keywordsButtons.add("💎其他群组设置##otherGroupSetting");
         keywordsButtons.add("❌关闭菜单##closeMenu");
         keywordsFormat.setReplyText(text + "\n当前群组：<b>" + addRuleCacheMap.getGroupNameForUser(userId) + "</b>\n当前群组ID：<b>" + addRuleCacheMap.getGroupIdForUser(userId) + "</b>\n当前可输入状态：<b>" + addRuleCacheMap.getKeywordsFlagForUser(userId) + "</b>\n当前定时发送消息状态：<b>" + crontabFlag + "</b>\n当前AI状态：<b>" + addRuleCacheMap.getAiFlagForUser(userId) + "</b>\n⚡️请选择一个操作!⚡️");
         keywordsFormat.setKeywordsButtons(keywordsButtons);
@@ -102,8 +102,8 @@ public class CommonCallBack {
         KeywordsFormat keywordsFormat = new KeywordsFormat();
         keywordsButtons.add("📝规则设置##autoReply%%⚙️群组设置##groupSetting");
         keywordsButtons.add("🕐打开/关闭定时发送消息##cronOption%%🔮打开/关闭AI##aiOption");
+        keywordsButtons.add("🌊防刷屏模式##antiFlood%%💎其他群组设置##otherGroupSetting");
         keywordsButtons.add("👨🏻‍💻仓库地址$$https://github.com/youshandefeiyang/feiyangdigital-bot%%👥官方群组$$https://t.me/feiyangdigital");
-        keywordsButtons.add("💎其他群组设置##otherGroupSetting");
         keywordsButtons.add("❌关闭菜单##closeMenu");
         keywordsFormat.setReplyText(text + "\n当前群组：<b>" + addRuleCacheMap.getGroupNameForUser(userId) + "</b>\n当前群组ID：<b>" + addRuleCacheMap.getGroupIdForUser(userId) + "</b>\n当前可输入状态：<b>" + addRuleCacheMap.getKeywordsFlagForUser(userId) + "</b>\n当前定时发送消息状态：<b>" + addRuleCacheMap.getCrontabFlagForUser(userId)  + "</b>\n当前AI状态：<b>" + aiFlag + "</b>\n⚡️请选择一个操作!⚡️");
         keywordsFormat.setKeywordsButtons(keywordsButtons);
@@ -122,8 +122,8 @@ public class CommonCallBack {
         KeywordsFormat keywordsFormat = new KeywordsFormat();
         keywordsButtons.add("📝规则设置##autoReply%%⚙️群组设置##groupSetting");
         keywordsButtons.add("🕐打开/关闭定时发送消息##cronOption%%🔮打开/关闭AI##aiOption");
+        keywordsButtons.add("🌊防刷屏模式##antiFlood%%💎其他群组设置##otherGroupSetting");
         keywordsButtons.add("👨🏻‍💻仓库地址$$https://github.com/youshandefeiyang/feiyangdigital-bot%%👥官方群组$$https://t.me/feiyangdigital");
-        keywordsButtons.add("💎其他群组设置##otherGroupSetting");
         keywordsButtons.add("❌关闭菜单##closeMenu");
         keywordsFormat.setReplyText("当前群组：<b>" + addRuleCacheMap.getGroupNameForUser(userId) + "</b>\n当前群组ID：<b>" + addRuleCacheMap.getGroupIdForUser(userId) + "</b>\n当前可输入状态：<b>" + addRuleCacheMap.getKeywordsFlagForUser(userId) + "</b>\n当前定时发送消息状态：<b>" + addRuleCacheMap.getCrontabFlagForUser(userId) + "</b>\n当前AI状态：<b>" + addRuleCacheMap.getAiFlagForUser(userId) + "</b>\n⚡️请选择一个操作!⚡️");
         keywordsFormat.setKeywordsButtons(keywordsButtons);

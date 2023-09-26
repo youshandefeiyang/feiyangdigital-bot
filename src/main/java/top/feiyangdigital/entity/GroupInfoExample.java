@@ -394,6 +394,76 @@ public class GroupInfoExample {
             return (Criteria) this;
         }
 
+        public Criteria andAntifloodsettingIsNull() {
+            addCriterion("antiFloodSetting is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andAntifloodsettingIsNotNull() {
+            addCriterion("antiFloodSetting is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andAntifloodsettingEqualTo(String value) {
+            addCriterion("antiFloodSetting =", value, "antifloodsetting");
+            return (Criteria) this;
+        }
+
+        public Criteria andAntifloodsettingNotEqualTo(String value) {
+            addCriterion("antiFloodSetting <>", value, "antifloodsetting");
+            return (Criteria) this;
+        }
+
+        public Criteria andAntifloodsettingGreaterThan(String value) {
+            addCriterion("antiFloodSetting >", value, "antifloodsetting");
+            return (Criteria) this;
+        }
+
+        public Criteria andAntifloodsettingGreaterThanOrEqualTo(String value) {
+            addCriterion("antiFloodSetting >=", value, "antifloodsetting");
+            return (Criteria) this;
+        }
+
+        public Criteria andAntifloodsettingLessThan(String value) {
+            addCriterion("antiFloodSetting <", value, "antifloodsetting");
+            return (Criteria) this;
+        }
+
+        public Criteria andAntifloodsettingLessThanOrEqualTo(String value) {
+            addCriterion("antiFloodSetting <=", value, "antifloodsetting");
+            return (Criteria) this;
+        }
+
+        public Criteria andAntifloodsettingLike(String value) {
+            addCriterion("antiFloodSetting like", value, "antifloodsetting");
+            return (Criteria) this;
+        }
+
+        public Criteria andAntifloodsettingNotLike(String value) {
+            addCriterion("antiFloodSetting not like", value, "antifloodsetting");
+            return (Criteria) this;
+        }
+
+        public Criteria andAntifloodsettingIn(List<String> values) {
+            addCriterion("antiFloodSetting in", values, "antifloodsetting");
+            return (Criteria) this;
+        }
+
+        public Criteria andAntifloodsettingNotIn(List<String> values) {
+            addCriterion("antiFloodSetting not in", values, "antifloodsetting");
+            return (Criteria) this;
+        }
+
+        public Criteria andAntifloodsettingBetween(String value1, String value2) {
+            addCriterion("antiFloodSetting between", value1, value2, "antifloodsetting");
+            return (Criteria) this;
+        }
+
+        public Criteria andAntifloodsettingNotBetween(String value1, String value2) {
+            addCriterion("antiFloodSetting not between", value1, value2, "antifloodsetting");
+            return (Criteria) this;
+        }
+
         public Criteria andKeywordsflagIsNull() {
             addCriterion("keyWordsFlag is null");
             return (Criteria) this;
@@ -1231,6 +1301,76 @@ public class GroupInfoExample {
 
         public Criteria andReportflagNotBetween(String value1, String value2) {
             addCriterion("reportFlag not between", value1, value2, "reportflag");
+            return (Criteria) this;
+        }
+
+        public Criteria andAntifloodflagIsNull() {
+            addCriterion("antiFloodFlag is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andAntifloodflagIsNotNull() {
+            addCriterion("antiFloodFlag is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andAntifloodflagEqualTo(String value) {
+            addCriterion("antiFloodFlag =", value, "antifloodflag");
+            return (Criteria) this;
+        }
+
+        public Criteria andAntifloodflagNotEqualTo(String value) {
+            addCriterion("antiFloodFlag <>", value, "antifloodflag");
+            return (Criteria) this;
+        }
+
+        public Criteria andAntifloodflagGreaterThan(String value) {
+            addCriterion("antiFloodFlag >", value, "antifloodflag");
+            return (Criteria) this;
+        }
+
+        public Criteria andAntifloodflagGreaterThanOrEqualTo(String value) {
+            addCriterion("antiFloodFlag >=", value, "antifloodflag");
+            return (Criteria) this;
+        }
+
+        public Criteria andAntifloodflagLessThan(String value) {
+            addCriterion("antiFloodFlag <", value, "antifloodflag");
+            return (Criteria) this;
+        }
+
+        public Criteria andAntifloodflagLessThanOrEqualTo(String value) {
+            addCriterion("antiFloodFlag <=", value, "antifloodflag");
+            return (Criteria) this;
+        }
+
+        public Criteria andAntifloodflagLike(String value) {
+            addCriterion("antiFloodFlag like", value, "antifloodflag");
+            return (Criteria) this;
+        }
+
+        public Criteria andAntifloodflagNotLike(String value) {
+            addCriterion("antiFloodFlag not like", value, "antifloodflag");
+            return (Criteria) this;
+        }
+
+        public Criteria andAntifloodflagIn(List<String> values) {
+            addCriterion("antiFloodFlag in", values, "antifloodflag");
+            return (Criteria) this;
+        }
+
+        public Criteria andAntifloodflagNotIn(List<String> values) {
+            addCriterion("antiFloodFlag not in", values, "antifloodflag");
+            return (Criteria) this;
+        }
+
+        public Criteria andAntifloodflagBetween(String value1, String value2) {
+            addCriterion("antiFloodFlag between", value1, value2, "antifloodflag");
+            return (Criteria) this;
+        }
+
+        public Criteria andAntifloodflagNotBetween(String value1, String value2) {
+            addCriterion("antiFloodFlag not between", value1, value2, "antifloodflag");
             return (Criteria) this;
         }
     }

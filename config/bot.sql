@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- 主机： localhost
--- 生成日期： 2023-09-25 07:42:10
+-- 生成日期： 2023-09-26 09:22:33
 -- 服务器版本： 8.0.24
 -- PHP 版本： 8.1.12
 
@@ -31,12 +31,12 @@ time_zone = "+00:00";
 
 CREATE TABLE `botrecord`
 (
-    `rid`            int                                    NOT NULL,
-    `groupId`        varchar(50) COLLATE utf8mb4_general_ci NOT NULL,
-    `userId`         varchar(50) COLLATE utf8mb4_general_ci NOT NULL,
-    `joinTimestamp`  varchar(50) COLLATE utf8mb4_general_ci NOT NULL,
-    `violationCount` int                                    NOT NULL DEFAULT '0',
-    `normalCount`    int                                    NOT NULL DEFAULT '0',
+    `rid`            int                                                          NOT NULL,
+    `groupId`        varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+    `userId`         varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+    `joinTimestamp`  varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+    `violationCount` int                                                          NOT NULL DEFAULT '0',
+    `normalCount`    int                                                          NOT NULL DEFAULT '0',
     `lastMessage`    text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -51,6 +51,7 @@ CREATE TABLE `groupinfo`
     `ownerAndAnonymousAdmins`    varchar(1000) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci        DEFAULT NULL,
     `groupName`                  varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci          DEFAULT NULL,
     `keyWords`                   longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci,
+    `antiFloodSetting`           varchar(50) COLLATE utf8mb4_general_ci                       NOT NULL DEFAULT '3,5',
     `keyWordsFlag`               varchar(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'notallow',
     `deleteKeywordFlag`          varchar(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'notdelete',
     `settingTimeStamp`           varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci          DEFAULT NULL,
@@ -58,11 +59,12 @@ CREATE TABLE `groupinfo`
     `intoGroupWelcomeFlag`       varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'close',
     `intoGroupUserNameCheckFlag` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'close',
     `aiFlag`                     varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'close',
-    `crontabFlag`                varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci          DEFAULT 'close',
+    `crontabFlag`                varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'close',
     `nightModeFlag`              varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'close',
-    `canSendMediaFlag`           varchar(50) COLLATE utf8mb4_general_ci                       NOT NULL DEFAULT 'close',
-    `clearInfoFlag`              varchar(50) COLLATE utf8mb4_general_ci                       NOT NULL DEFAULT 'close',
+    `canSendMediaFlag`           varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'close',
+    `clearInfoFlag`              varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'close',
     `reportFlag`                 varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'close',
+    `antiFloodFlag`              varchar(50) COLLATE utf8mb4_general_ci                       NOT NULL DEFAULT 'close',
     `ChannelSpammersWhiteList`   longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -101,7 +103,9 @@ ALTER TABLE `groupinfo`
   ADD KEY `nightModeFlag` (`nightModeFlag`),
   ADD KEY `reportFlag` (`reportFlag`),
   ADD KEY `canSendMediaFlag` (`canSendMediaFlag`),
-  ADD KEY `clearInfoFlag` (`clearInfoFlag`);
+  ADD KEY `clearInfoFlag` (`clearInfoFlag`),
+  ADD KEY `antiFloodFlag` (`antiFloodFlag`),
+  ADD KEY `antiFloodSetting` (`antiFloodSetting`);
 ALTER TABLE `groupinfo`
     ADD FULLTEXT KEY `ownerAndAnonymousAdmins` (`ownerAndAnonymousAdmins`);
 ALTER TABLE `groupinfo`

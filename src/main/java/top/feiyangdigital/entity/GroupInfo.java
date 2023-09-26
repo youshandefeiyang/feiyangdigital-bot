@@ -15,6 +15,8 @@ public class GroupInfo implements Serializable {
 
     private String groupname;
 
+    private String antifloodsetting;
+
     private String keywordsflag;
 
     private String deletekeywordflag;
@@ -38,6 +40,8 @@ public class GroupInfo implements Serializable {
     private String clearinfoflag;
 
     private String reportflag;
+
+    private String antifloodflag;
 
     private static final long serialVersionUID = 1L;
 
@@ -71,6 +75,14 @@ public class GroupInfo implements Serializable {
 
     public void setGroupname(String groupname) {
         this.groupname = groupname;
+    }
+
+    public String getAntifloodsetting() {
+        return antifloodsetting;
+    }
+
+    public void setAntifloodsetting(String antifloodsetting) {
+        this.antifloodsetting = antifloodsetting;
     }
 
     public String getKeywordsflag() {
@@ -169,6 +181,14 @@ public class GroupInfo implements Serializable {
         this.reportflag = reportflag;
     }
 
+    public String getAntifloodflag() {
+        return antifloodflag;
+    }
+
+    public void setAntifloodflag(String antifloodflag) {
+        this.antifloodflag = antifloodflag;
+    }
+
     @Override
     public boolean equals(Object that) {
         if (this == that) {
@@ -185,6 +205,7 @@ public class GroupInfo implements Serializable {
             && (this.getGroupid() == null ? other.getGroupid() == null : this.getGroupid().equals(other.getGroupid()))
             && (this.getOwnerandanonymousadmins() == null ? other.getOwnerandanonymousadmins() == null : this.getOwnerandanonymousadmins().equals(other.getOwnerandanonymousadmins()))
             && (this.getGroupname() == null ? other.getGroupname() == null : this.getGroupname().equals(other.getGroupname()))
+            && (this.getAntifloodsetting() == null ? other.getAntifloodsetting() == null : this.getAntifloodsetting().equals(other.getAntifloodsetting()))
             && (this.getKeywordsflag() == null ? other.getKeywordsflag() == null : this.getKeywordsflag().equals(other.getKeywordsflag()))
             && (this.getDeletekeywordflag() == null ? other.getDeletekeywordflag() == null : this.getDeletekeywordflag().equals(other.getDeletekeywordflag()))
             && (this.getSettingtimestamp() == null ? other.getSettingtimestamp() == null : this.getSettingtimestamp().equals(other.getSettingtimestamp()))
@@ -196,7 +217,8 @@ public class GroupInfo implements Serializable {
             && (this.getNightmodeflag() == null ? other.getNightmodeflag() == null : this.getNightmodeflag().equals(other.getNightmodeflag()))
             && (this.getCansendmediaflag() == null ? other.getCansendmediaflag() == null : this.getCansendmediaflag().equals(other.getCansendmediaflag()))
             && (this.getClearinfoflag() == null ? other.getClearinfoflag() == null : this.getClearinfoflag().equals(other.getClearinfoflag()))
-            && (this.getReportflag() == null ? other.getReportflag() == null : this.getReportflag().equals(other.getReportflag()));
+            && (this.getReportflag() == null ? other.getReportflag() == null : this.getReportflag().equals(other.getReportflag()))
+            && (this.getAntifloodflag() == null ? other.getAntifloodflag() == null : this.getAntifloodflag().equals(other.getAntifloodflag()));
     }
 
     @Override
@@ -207,6 +229,7 @@ public class GroupInfo implements Serializable {
         result = prime * result + ((getGroupid() == null) ? 0 : getGroupid().hashCode());
         result = prime * result + ((getOwnerandanonymousadmins() == null) ? 0 : getOwnerandanonymousadmins().hashCode());
         result = prime * result + ((getGroupname() == null) ? 0 : getGroupname().hashCode());
+        result = prime * result + ((getAntifloodsetting() == null) ? 0 : getAntifloodsetting().hashCode());
         result = prime * result + ((getKeywordsflag() == null) ? 0 : getKeywordsflag().hashCode());
         result = prime * result + ((getDeletekeywordflag() == null) ? 0 : getDeletekeywordflag().hashCode());
         result = prime * result + ((getSettingtimestamp() == null) ? 0 : getSettingtimestamp().hashCode());
@@ -219,6 +242,7 @@ public class GroupInfo implements Serializable {
         result = prime * result + ((getCansendmediaflag() == null) ? 0 : getCansendmediaflag().hashCode());
         result = prime * result + ((getClearinfoflag() == null) ? 0 : getClearinfoflag().hashCode());
         result = prime * result + ((getReportflag() == null) ? 0 : getReportflag().hashCode());
+        result = prime * result + ((getAntifloodflag() == null) ? 0 : getAntifloodflag().hashCode());
         return result;
     }
 
@@ -232,6 +256,7 @@ public class GroupInfo implements Serializable {
         sb.append(", groupid=").append(groupid);
         sb.append(", ownerandanonymousadmins=").append(ownerandanonymousadmins);
         sb.append(", groupname=").append(groupname);
+        sb.append(", antifloodsetting=").append(antifloodsetting);
         sb.append(", keywordsflag=").append(keywordsflag);
         sb.append(", deletekeywordflag=").append(deletekeywordflag);
         sb.append(", settingtimestamp=").append(settingtimestamp);
@@ -244,6 +269,7 @@ public class GroupInfo implements Serializable {
         sb.append(", cansendmediaflag=").append(cansendmediaflag);
         sb.append(", clearinfoflag=").append(clearinfoflag);
         sb.append(", reportflag=").append(reportflag);
+        sb.append(", antifloodflag=").append(antifloodflag);
         sb.append(", serialVersionUID=").append(serialVersionUID);
         sb.append("]");
         return sb.toString();

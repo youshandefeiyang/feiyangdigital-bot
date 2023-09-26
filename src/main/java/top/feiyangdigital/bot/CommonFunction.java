@@ -11,10 +11,7 @@ import top.feiyangdigital.callBack.replyRuleCallBack.AddAutoReplyRule;
 import top.feiyangdigital.entity.BaseInfo;
 import top.feiyangdigital.entity.GroupInfoWithBLOBs;
 import top.feiyangdigital.entity.KeywordsFormat;
-import top.feiyangdigital.handleService.BotFirstIntoGroup;
-import top.feiyangdigital.handleService.BotHelper;
-import top.feiyangdigital.handleService.CaptchaGenerator;
-import top.feiyangdigital.handleService.NewMemberIntoGroup;
+import top.feiyangdigital.handleService.*;
 import top.feiyangdigital.scheduledTasks.HandleOption;
 import top.feiyangdigital.sqlService.GroupInfoService;
 import top.feiyangdigital.utils.SendContent;
@@ -93,6 +90,9 @@ public class CommonFunction {
     @Autowired
     private ReportToOwner reportToOwner;
 
+    @Autowired
+    private AntiFloodService antiFloodService;
+
     public void mainFunc(AbsSender sender, Update update) {
 
         if (update.hasMessage() && (update.getMessage().getChat().isGroupChat() || update.getMessage().getChat().isSuperGroupChat())) {
@@ -132,6 +132,7 @@ public class CommonFunction {
                 }
                 aiCheckMessage.checkMessage(sender, update);
                 clearOtherInfo.clearBotCommand(sender,update);
+                antiFloodService.checkFlood(sender,update);
                 return;
             }
             aiCheckMedia.checkMedia(sender, update);
