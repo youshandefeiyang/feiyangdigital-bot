@@ -130,6 +130,9 @@ public class BotHelper {
         AnswerCallbackQuery answer = new AnswerCallbackQuery();
         answer.setCallbackQueryId(callbackQuery.getId());
         switch (callbackData) {
+            case "spamChannelBot":
+                nightModeAndReport.spamChannelBot(sender,update);
+                return;
             case "setFloodTime":
                 setFloodTime.haddle(sender,update,false);
                 return;
