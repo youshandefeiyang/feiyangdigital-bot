@@ -34,7 +34,7 @@ public class ClearOtherInfo {
 
     public void clearBotCommand(AbsSender sender,Update update){
         GroupInfoWithBLOBs groupInfoWithBLOBs = groupInfoService.selAllByGroupId(update.getMessage().getChatId().toString());
-        if ("open".equals(groupInfoWithBLOBs.getClearinfoflag()) && update.getMessage().hasEntities()){
+        if (groupInfoWithBLOBs!=null && "open".equals(groupInfoWithBLOBs.getClearinfoflag()) && update.getMessage().hasEntities()){
             update.getMessage().getEntities().forEach(i->{
                 if ("bot_command".equals(i.getType())){
                     timerDelete.deleteMessageAfterDelay(sender,update,10);

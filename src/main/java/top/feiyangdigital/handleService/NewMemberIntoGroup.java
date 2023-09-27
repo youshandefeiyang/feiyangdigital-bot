@@ -120,8 +120,8 @@ public class NewMemberIntoGroup {
         }
 
         if (groupInfoWithBLOBs != null && "close".equals(groupInfoWithBLOBs.getIntogroupcheckflag()) && "open".equals(groupInfoWithBLOBs.getIntogroupwelcomeflag())) {
-            if (groupMessageIdCacheMap.getGroupMessageId(chatId.toString()) != null) {
-                timerDelete.deleteByMessageIdImmediately(sender, chatId.toString(), groupMessageIdCacheMap.getGroupMessageId(chatId.toString()));
+            if (groupMessageIdCacheMap.getMapSize()>0) {
+                groupMessageIdCacheMap.deleteAllMessage(sender,chatId.toString());
             }
             if (StringUtils.hasText(groupInfoWithBLOBs.getKeywords()) && groupInfoWithBLOBs.getKeywords().contains("&&welcome=")) {
                 List<KeywordsFormat> keywordsFormatList = Arrays.stream(groupInfoWithBLOBs.getKeywords().split("\\n{2,}"))
@@ -148,8 +148,8 @@ public class NewMemberIntoGroup {
         }
 
         if (groupInfoWithBLOBs != null && "open".equals(groupInfoWithBLOBs.getIntogroupcheckflag())) {
-            if (groupMessageIdCacheMap.getGroupMessageId(chatId.toString()) != null) {
-                timerDelete.deleteByMessageIdImmediately(sender, chatId.toString(), groupMessageIdCacheMap.getGroupMessageId(chatId.toString()));
+            if (groupMessageIdCacheMap.getMapSize()>0) {
+                groupMessageIdCacheMap.deleteAllMessage(sender,chatId.toString());
             }
             String url = String.format("https://t.me/%s?start=_intoGroupInfo%sand%s", BaseInfo.getBotName(), chatId.toString(), userId.toString());
             restrictOrUnrestrictUser.restrictUser(sender, userId, chatId.toString());

@@ -106,8 +106,8 @@ public class CaptchaGenerator {
                 restrictOrUnrestrictUser.unrestrictUser(sender, update.getMessage().getFrom().getId(), groupId);
                 botRecordService.addUserRecord(groupId,userId,update.getMessage().getDate().toString());
                 if (groupInfoWithBLOBs != null && "open".equals(groupInfoWithBLOBs.getIntogroupwelcomeflag())) {
-                    if (groupMessageIdCacheMap.getGroupMessageId(groupId) != null) {
-                        timerDelete.deleteByMessageIdImmediately(sender, groupId, groupMessageIdCacheMap.getGroupMessageId(groupId));
+                    if (groupMessageIdCacheMap.getMapSize()>0) {
+                        groupMessageIdCacheMap.deleteAllMessage(sender,groupId);
                     }
                     if (StringUtils.hasText(groupInfoWithBLOBs.getKeywords()) && groupInfoWithBLOBs.getKeywords().contains("&&welcome=")) {
                         List<KeywordsFormat> keywordsFormatList = Arrays.stream(groupInfoWithBLOBs.getKeywords().split("\\n{2,}"))

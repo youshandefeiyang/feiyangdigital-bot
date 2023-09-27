@@ -8,27 +8,38 @@ import java.util.concurrent.ConcurrentHashMap;
 
 @Component
 public class CaptchaManager {
-    private final Map<String, String> userToGroupMap = new ConcurrentHashMap<>();
-    private final Map<String, String> userToAnswer = new ConcurrentHashMap<>();
+    private final Map<String, String> userToGroupForAnswer = new ConcurrentHashMap<>();
 
     public void updateUserMapping(String userId, String groupId, String answer) {
-        // 每次都覆盖旧的数据，因为在任何时候，一个userId只与一个群组关联
-        userToGroupMap.put(userId, groupId);
-        userToAnswer.put(userId, answer);
+        userToGroupForAnswer.put(userId+"|"+groupId,answer);
     }
 
     public String getGroupIdForUser(String userId) {
-        return userToGroupMap.get(userId);
+
+        for (Map.Entry<String, String> entry : userToGroupForAnswer.entrySet()) {
+            if (userId.equals(entry.getKey().split("\\|")[0])){
+                return entry.getKey().split("\\|")[1];
+            }
+        }
+        return null;
     }
 
     public String getAnswerForUser(String userId) {
-        return userToAnswer.get(userId);
+        for (Map.Entry<String, String> entry : userToGroupForAnswer.entrySet()) {
+            if (userId.equals(entry.getKey().split("\\|")[0])){
+                return entry.getValue();
+            }
+        }
+        return null;
     }
 
 
     public void clearMappingsForUser(String userId) {
-        userToGroupMap.remove(userId);
-        userToAnswer.remove(userId);
+        for (Map.Entry<String, String> entry : userToGroupForAnswer.entrySet()) {
+            if (userId.equals(entry.getKey().split("\\|")[0])){
+                userToGroupForAnswer.remove(entry.getKey());
+            }
+        }
     }
 
 }
