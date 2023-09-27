@@ -116,6 +116,10 @@ public class AiCheckMedia {
                         botRecord1.setViolationcount(violationCount + 1);
                     } else if (StringUtils.hasText(realUpdateText)) {
                         aiCheckMessage.contentAiOption(sender, groupId, userId, firstName, messageId, realUpdateText);
+                        if (file != null) {
+                            file.delete();
+                        }
+                        return;
                     } else {
                         botRecord1.setNormalcount(normalCount + 1);
                     }

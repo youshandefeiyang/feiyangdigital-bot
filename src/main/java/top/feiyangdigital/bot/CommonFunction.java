@@ -98,9 +98,14 @@ public class CommonFunction {
 
     public void mainFunc(AbsSender sender, Update update) {
 
-        if (update.hasMessage() && (update.getMessage().getChat().isGroupChat() || update.getMessage().getChat().isSuperGroupChat())) {
+        if ((update.hasMessage() && (update.getMessage().getChat().isGroupChat() || update.getMessage().getChat().isSuperGroupChat()))
+                || (update.hasEditedMessage() && (update.getEditedMessage().getChat().isGroupChat() || update.getEditedMessage().getChat().isSuperGroupChat()))
+        ) {
+            if (!update.hasMessage() && update.hasEditedMessage()) {
+                update.setMessage(update.getEditedMessage());
+            }
             GroupInfoWithBLOBs groupInfoWithBLOBs = groupInfoService.selAllByGroupId(update.getMessage().getChatId().toString());
-            if (groupInfoWithBLOBs!=null){
+            if (groupInfoWithBLOBs != null) {
                 Long chatId = update.getMessage().getChatId();
                 groupFlags.putIfAbsent(chatId, true);
                 Boolean flag = groupFlags.get(chatId);
@@ -117,7 +122,7 @@ public class CommonFunction {
                     }
                 }
             }
-            if (spamChannelBotService.checkChannelOption(sender,update)){
+            if (spamChannelBotService.checkChannelOption(sender, update)) {
                 return;
             }
             if (update.getMessage().hasText()) {
@@ -137,12 +142,12 @@ public class CommonFunction {
                     return;
                 }
                 aiCheckMessage.checkMessage(sender, update);
-                clearOtherInfo.clearBotCommand(sender,update);
-                antiFloodService.checkFlood(sender,update);
+                clearOtherInfo.clearBotCommand(sender, update);
+                antiFloodService.checkFlood(sender, update);
                 return;
             }
             aiCheckMedia.checkMedia(sender, update);
-            clearOtherInfo.clearAdviceInfo(sender,update);
+            clearOtherInfo.clearAdviceInfo(sender, update);
         }
 
         if (update.hasMessage() && update.getMessage().getText() != null && update.getMessage().getChat().isUserChat()) {
