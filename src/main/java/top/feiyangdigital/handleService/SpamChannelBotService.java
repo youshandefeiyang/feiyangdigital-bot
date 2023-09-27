@@ -24,16 +24,6 @@ public class SpamChannelBotService {
     @Autowired
     private GroupInfoService groupInfoService;
 
-    public boolean isGroupChannel(AbsSender sender,Update update){
-        Chat senderChat = update.getMessage().getSenderChat();
-        String chatId = update.getMessage().getChatId().toString();
-        if (senderChat !=null && "channel".equals(senderChat.getType())){
-            Chat checkChat = getLinkedChat(sender,chatId);
-            return checkChat.getLinkedChatId() != null && senderChat.getId().equals(checkChat.getLinkedChatId());
-        }
-        return false;
-    }
-
     public boolean checkChannelOption(AbsSender sender, Update update){
         Chat senderChat = update.getMessage().getSenderChat();
         String chatId = update.getMessage().getChatId().toString();

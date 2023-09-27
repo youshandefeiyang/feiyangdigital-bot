@@ -2,6 +2,8 @@ package top.feiyangdigital.utils;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.telegram.telegrambots.meta.api.methods.groupadministration.GetChat;
+import org.telegram.telegrambots.meta.api.objects.Chat;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.chatmember.ChatMember;
 import org.telegram.telegrambots.meta.api.objects.chatmember.ChatMemberOwner;
@@ -17,13 +19,26 @@ public class CheckUser {
     @Autowired
     private AdminList adminList;
 
-    @Autowired
-    private SpamChannelBotService spamChannelBotService;
+    public boolean isGroupChannel(AbsSender sender,Update update){
+        Chat senderChat = update.getMessage().getSenderChat();
+        String chatId = update.getMessage().getChatId().toString();
+        if (senderChat !=null && "channel".equals(senderChat.getType())){
+            Chat checkChat = new Chat();
+            try {
+                GetChat getChat = GetChat.builder().chatId(chatId).build();
+                checkChat = sender.execute(getChat);
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+            return checkChat.getLinkedChatId() != null && senderChat.getId().equals(checkChat.getLinkedChatId());
+        }
+        return false;
+    }
 
 
     public boolean isGroupAdmin(AbsSender sender, Update update) {
         for (ChatMember admin : adminList.getAdmins(sender, update.getMessage().getChatId().toString())) {
-            if ("GroupAnonymousBot".equals(update.getMessage().getFrom().getUserName()) || admin.getUser().getId().equals(update.getMessage().getFrom().getId()) || spamChannelBotService.isGroupChannel(sender,update)) {
+            if ("GroupAnonymousBot".equals(update.getMessage().getFrom().getUserName()) || admin.getUser().getId().equals(update.getMessage().getFrom().getId()) || isGroupChannel(sender,update)) {
                 return true;
             }
         }
