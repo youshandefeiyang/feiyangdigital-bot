@@ -184,13 +184,15 @@ public class TimerDelete {
         }, delayInSeconds * 1000);
     }
 
-    public void deleteByMessageIdImmediately(AbsSender sender, String chatId, Integer messageId) {
+    public boolean deleteByMessageIdImmediately(AbsSender sender, String chatId, Integer messageId) {
         try {
             if (messageId!=null){
                 DeleteMessage deleteMessage = new DeleteMessage(chatId, messageId);
                 sender.execute(deleteMessage);
             }
+            return true;
         } catch (TelegramApiException e) {
+            return false;
             // 这里可以捕获异常，但是我们可以选择不执行任何操作，因为我们不关心消息是否确实已经被删除
         }
     }

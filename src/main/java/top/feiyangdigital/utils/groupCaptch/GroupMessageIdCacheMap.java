@@ -26,8 +26,9 @@ public class GroupMessageIdCacheMap {
 
     public void deleteAllMessage(AbsSender sender,String chatId){
         for (Map.Entry<String, Integer> entry : groupMessageIdManager.entrySet()) {
-            timerDelete.deleteByMessageIdImmediately(sender, chatId, entry.getValue());
-            groupMessageIdManager.remove(entry.getKey());
+           if (timerDelete.deleteByMessageIdImmediately(sender, chatId, entry.getValue())){
+               groupMessageIdManager.remove(entry.getKey());
+           }
         }
     }
 
