@@ -154,7 +154,7 @@ public class NightModeAndReport {
         keywordsButtons.add("🧹清理无用指令/通知##clearCommand%%🚫反频道马甲模式##spamChannelBot");
         keywordsButtons.add("◀️返回主菜单##backMainMenu");
         keywordsButtons.add("❌关闭菜单##closeMenu");
-        keywordsFormat.setReplyText(text+"\n当前群组：<b>" + addRuleCacheMap.getGroupNameForUser(userId) + "</b>\n当前群组ID：<b>" + addRuleCacheMap.getGroupIdForUser(userId) + "</b>\n当前夜间模式状态：<b>" + nightFlag + "</b>\n当前通知Admin状态：<b>" + groupInfoWithBLOBs.getReportflag()+ "</b>\n当前清理指令/通知状态：<b>" + groupInfoWithBLOBs.getClearinfoflag()+ "</b>\n当前反频道马甲模式状态：<b>" + groupInfoWithBLOBs.getChannelspamflag() + "</b>\n⚡️请选择一个操作!⚡️");
+        keywordsFormat.setReplyText(text + "\n当前群组：<b>" + addRuleCacheMap.getGroupNameForUser(userId) + "</b>\n当前群组ID：<b>" + addRuleCacheMap.getGroupIdForUser(userId) + "</b>\n当前夜间模式状态：<b>" + nightFlag + "</b>\n当前通知Admin状态：<b>" + groupInfoWithBLOBs.getReportflag() + "</b>\n当前清理指令/通知状态：<b>" + groupInfoWithBLOBs.getClearinfoflag() + "</b>\n当前反频道马甲模式状态：<b>" + groupInfoWithBLOBs.getChannelspamflag() + "</b>\n⚡️请选择一个操作!⚡️");
         keywordsFormat.setKeywordsButtons(keywordsButtons);
         try {
             sender.execute(sendContent.editResponseMessage(update, keywordsFormat, "html"));
