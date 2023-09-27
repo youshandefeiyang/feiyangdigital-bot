@@ -20,10 +20,11 @@
     <result column="clearInfoFlag" jdbcType="VARCHAR" property="clearinfoflag" />
     <result column="reportFlag" jdbcType="VARCHAR" property="reportflag" />
     <result column="antiFloodFlag" jdbcType="VARCHAR" property="antifloodflag" />
+    <result column="channelSpamFlag" jdbcType="VARCHAR" property="channelspamflag" />
   </resultMap>
   <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="top.feiyangdigital.entity.GroupInfoWithBLOBs">
     <result column="keyWords" jdbcType="LONGVARCHAR" property="keywords" />
-    <result column="ChannelSpammersWhiteList" jdbcType="LONGVARCHAR" property="channelspammerswhitelist" />
+    <result column="backup" jdbcType="LONGVARCHAR" property="backup" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <where>
@@ -87,10 +88,10 @@
     id, groupId, ownerAndAnonymousAdmins, groupName, antiFloodSetting, keyWordsFlag, 
     deleteKeywordFlag, settingTimeStamp, intoGroupCheckFlag, intoGroupWelcomeFlag, intoGroupUserNameCheckFlag, 
     aiFlag, crontabFlag, nightModeFlag, canSendMediaFlag, clearInfoFlag, reportFlag, 
-    antiFloodFlag
+    antiFloodFlag, channelSpamFlag
   </sql>
   <sql id="Blob_Column_List">
-    keyWords, ChannelSpammersWhiteList
+    keyWords, `backup`
   </sql>
   <select id="selectByExampleWithBLOBs" parameterType="top.feiyangdigital.entity.GroupInfoExample" resultMap="ResultMapWithBLOBs">
     select
@@ -163,16 +164,16 @@
       intoGroupWelcomeFlag, intoGroupUserNameCheckFlag, 
       aiFlag, crontabFlag, nightModeFlag, 
       canSendMediaFlag, clearInfoFlag, reportFlag, 
-      antiFloodFlag, keyWords, ChannelSpammersWhiteList
-      )
+      antiFloodFlag, channelSpamFlag, keyWords, 
+      `backup`)
     values (#{groupid,jdbcType=VARCHAR}, #{ownerandanonymousadmins,jdbcType=VARCHAR}, 
       #{groupname,jdbcType=VARCHAR}, #{antifloodsetting,jdbcType=VARCHAR}, #{keywordsflag,jdbcType=VARCHAR}, 
       #{deletekeywordflag,jdbcType=VARCHAR}, #{settingtimestamp,jdbcType=VARCHAR}, #{intogroupcheckflag,jdbcType=VARCHAR}, 
       #{intogroupwelcomeflag,jdbcType=VARCHAR}, #{intogroupusernamecheckflag,jdbcType=VARCHAR}, 
       #{aiflag,jdbcType=VARCHAR}, #{crontabflag,jdbcType=VARCHAR}, #{nightmodeflag,jdbcType=VARCHAR}, 
       #{cansendmediaflag,jdbcType=VARCHAR}, #{clearinfoflag,jdbcType=VARCHAR}, #{reportflag,jdbcType=VARCHAR}, 
-      #{antifloodflag,jdbcType=VARCHAR}, #{keywords,jdbcType=LONGVARCHAR}, #{channelspammerswhitelist,jdbcType=LONGVARCHAR}
-      )
+      #{antifloodflag,jdbcType=VARCHAR}, #{channelspamflag,jdbcType=VARCHAR}, #{keywords,jdbcType=LONGVARCHAR}, 
+      #{backup,jdbcType=LONGVARCHAR})
   </insert>
   <insert id="insertSelective" keyColumn="id" keyProperty="id" parameterType="top.feiyangdigital.entity.GroupInfoWithBLOBs" useGeneratedKeys="true">
     insert into groupinfo
@@ -228,11 +229,14 @@
       <if test="antifloodflag != null">
         antiFloodFlag,
       </if>
+      <if test="channelspamflag != null">
+        channelSpamFlag,
+      </if>
       <if test="keywords != null">
         keyWords,
       </if>
-      <if test="channelspammerswhitelist != null">
-        ChannelSpammersWhiteList,
+      <if test="backup != null">
+        `backup`,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
@@ -287,11 +291,14 @@
       <if test="antifloodflag != null">
         #{antifloodflag,jdbcType=VARCHAR},
       </if>
+      <if test="channelspamflag != null">
+        #{channelspamflag,jdbcType=VARCHAR},
+      </if>
       <if test="keywords != null">
         #{keywords,jdbcType=LONGVARCHAR},
       </if>
-      <if test="channelspammerswhitelist != null">
-        #{channelspammerswhitelist,jdbcType=LONGVARCHAR},
+      <if test="backup != null">
+        #{backup,jdbcType=LONGVARCHAR},
       </if>
     </trim>
   </insert>
@@ -358,11 +365,14 @@
       <if test="record.antifloodflag != null">
         antiFloodFlag = #{record.antifloodflag,jdbcType=VARCHAR},
       </if>
+      <if test="record.channelspamflag != null">
+        channelSpamFlag = #{record.channelspamflag,jdbcType=VARCHAR},
+      </if>
       <if test="record.keywords != null">
         keyWords = #{record.keywords,jdbcType=LONGVARCHAR},
       </if>
-      <if test="record.channelspammerswhitelist != null">
-        ChannelSpammersWhiteList = #{record.channelspammerswhitelist,jdbcType=LONGVARCHAR},
+      <if test="record.backup != null">
+        `backup` = #{record.backup,jdbcType=LONGVARCHAR},
       </if>
     </set>
     <if test="_parameter != null">
@@ -389,8 +399,9 @@
       clearInfoFlag = #{record.clearinfoflag,jdbcType=VARCHAR},
       reportFlag = #{record.reportflag,jdbcType=VARCHAR},
       antiFloodFlag = #{record.antifloodflag,jdbcType=VARCHAR},
+      channelSpamFlag = #{record.channelspamflag,jdbcType=VARCHAR},
       keyWords = #{record.keywords,jdbcType=LONGVARCHAR},
-      ChannelSpammersWhiteList = #{record.channelspammerswhitelist,jdbcType=LONGVARCHAR}
+      `backup` = #{record.backup,jdbcType=LONGVARCHAR}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -414,7 +425,8 @@
       canSendMediaFlag = #{record.cansendmediaflag,jdbcType=VARCHAR},
       clearInfoFlag = #{record.clearinfoflag,jdbcType=VARCHAR},
       reportFlag = #{record.reportflag,jdbcType=VARCHAR},
-      antiFloodFlag = #{record.antifloodflag,jdbcType=VARCHAR}
+      antiFloodFlag = #{record.antifloodflag,jdbcType=VARCHAR},
+      channelSpamFlag = #{record.channelspamflag,jdbcType=VARCHAR}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -473,11 +485,14 @@
       <if test="antifloodflag != null">
         antiFloodFlag = #{antifloodflag,jdbcType=VARCHAR},
       </if>
+      <if test="channelspamflag != null">
+        channelSpamFlag = #{channelspamflag,jdbcType=VARCHAR},
+      </if>
       <if test="keywords != null">
         keyWords = #{keywords,jdbcType=LONGVARCHAR},
       </if>
-      <if test="channelspammerswhitelist != null">
-        ChannelSpammersWhiteList = #{channelspammerswhitelist,jdbcType=LONGVARCHAR},
+      <if test="backup != null">
+        `backup` = #{backup,jdbcType=LONGVARCHAR},
       </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
@@ -501,8 +516,9 @@
       clearInfoFlag = #{clearinfoflag,jdbcType=VARCHAR},
       reportFlag = #{reportflag,jdbcType=VARCHAR},
       antiFloodFlag = #{antifloodflag,jdbcType=VARCHAR},
+      channelSpamFlag = #{channelspamflag,jdbcType=VARCHAR},
       keyWords = #{keywords,jdbcType=LONGVARCHAR},
-      ChannelSpammersWhiteList = #{channelspammerswhitelist,jdbcType=LONGVARCHAR}
+      `backup` = #{backup,jdbcType=LONGVARCHAR}
     where id = #{id,jdbcType=INTEGER}
   </update>
   <update id="updateByPrimaryKey" parameterType="top.feiyangdigital.entity.GroupInfo">
@@ -523,7 +539,8 @@
       canSendMediaFlag = #{cansendmediaflag,jdbcType=VARCHAR},
       clearInfoFlag = #{clearinfoflag,jdbcType=VARCHAR},
       reportFlag = #{reportflag,jdbcType=VARCHAR},
-      antiFloodFlag = #{antifloodflag,jdbcType=VARCHAR}
+      antiFloodFlag = #{antifloodflag,jdbcType=VARCHAR},
+      channelSpamFlag = #{channelspamflag,jdbcType=VARCHAR}
     where id = #{id,jdbcType=INTEGER}
   </update>
 </mapper>

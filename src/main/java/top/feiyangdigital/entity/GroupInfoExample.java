@@ -1373,6 +1373,76 @@ public class GroupInfoExample {
             addCriterion("antiFloodFlag not between", value1, value2, "antifloodflag");
             return (Criteria) this;
         }
+
+        public Criteria andChannelspamflagIsNull() {
+            addCriterion("channelSpamFlag is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andChannelspamflagIsNotNull() {
+            addCriterion("channelSpamFlag is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andChannelspamflagEqualTo(String value) {
+            addCriterion("channelSpamFlag =", value, "channelspamflag");
+            return (Criteria) this;
+        }
+
+        public Criteria andChannelspamflagNotEqualTo(String value) {
+            addCriterion("channelSpamFlag <>", value, "channelspamflag");
+            return (Criteria) this;
+        }
+
+        public Criteria andChannelspamflagGreaterThan(String value) {
+            addCriterion("channelSpamFlag >", value, "channelspamflag");
+            return (Criteria) this;
+        }
+
+        public Criteria andChannelspamflagGreaterThanOrEqualTo(String value) {
+            addCriterion("channelSpamFlag >=", value, "channelspamflag");
+            return (Criteria) this;
+        }
+
+        public Criteria andChannelspamflagLessThan(String value) {
+            addCriterion("channelSpamFlag <", value, "channelspamflag");
+            return (Criteria) this;
+        }
+
+        public Criteria andChannelspamflagLessThanOrEqualTo(String value) {
+            addCriterion("channelSpamFlag <=", value, "channelspamflag");
+            return (Criteria) this;
+        }
+
+        public Criteria andChannelspamflagLike(String value) {
+            addCriterion("channelSpamFlag like", value, "channelspamflag");
+            return (Criteria) this;
+        }
+
+        public Criteria andChannelspamflagNotLike(String value) {
+            addCriterion("channelSpamFlag not like", value, "channelspamflag");
+            return (Criteria) this;
+        }
+
+        public Criteria andChannelspamflagIn(List<String> values) {
+            addCriterion("channelSpamFlag in", values, "channelspamflag");
+            return (Criteria) this;
+        }
+
+        public Criteria andChannelspamflagNotIn(List<String> values) {
+            addCriterion("channelSpamFlag not in", values, "channelspamflag");
+            return (Criteria) this;
+        }
+
+        public Criteria andChannelspamflagBetween(String value1, String value2) {
+            addCriterion("channelSpamFlag between", value1, value2, "channelspamflag");
+            return (Criteria) this;
+        }
+
+        public Criteria andChannelspamflagNotBetween(String value1, String value2) {
+            addCriterion("channelSpamFlag not between", value1, value2, "channelspamflag");
+            return (Criteria) this;
+        }
     }
 
     /**

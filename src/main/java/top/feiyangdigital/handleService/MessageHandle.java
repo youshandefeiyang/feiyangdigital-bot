@@ -2,6 +2,7 @@ package top.feiyangdigital.handleService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.bots.AbsSender;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
@@ -26,11 +27,10 @@ public class MessageHandle {
         String messageText = update.getMessage().getText();
 
         // 如果消息文本为null，直接返回，不做处理
-        if (messageText == null) {
+        if (!StringUtils.hasText(messageText)) {
             return true;
         }
-        //这代表的是从群组绑定频道发过来的消息，直接返回，不做处理
-        //ToDo 反频道马甲机器人
+
         if ("Telegram".equals(update.getMessage().getFrom().getFirstName()) && update.getMessage().getSenderChat().isChannelChat()) {
             return true;
         }

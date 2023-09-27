@@ -93,6 +93,9 @@ public class CommonFunction {
     @Autowired
     private AntiFloodService antiFloodService;
 
+    @Autowired
+    private SpamChannelBotService spamChannelBotService;
+
     public void mainFunc(AbsSender sender, Update update) {
 
         if (update.hasMessage() && (update.getMessage().getChat().isGroupChat() || update.getMessage().getChat().isSuperGroupChat())) {
@@ -113,6 +116,9 @@ public class CommonFunction {
                         return;
                     }
                 }
+            }
+            if (spamChannelBotService.checkChannelOption(sender,update)){
+                return;
             }
             if (update.getMessage().hasText()) {
                 if (setBot.adminSetBot(sender, update)) {

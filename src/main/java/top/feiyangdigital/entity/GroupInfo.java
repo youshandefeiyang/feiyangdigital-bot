@@ -43,6 +43,8 @@ public class GroupInfo implements Serializable {
 
     private String antifloodflag;
 
+    private String channelspamflag;
+
     private static final long serialVersionUID = 1L;
 
     public Integer getId() {
@@ -189,6 +191,14 @@ public class GroupInfo implements Serializable {
         this.antifloodflag = antifloodflag;
     }
 
+    public String getChannelspamflag() {
+        return channelspamflag;
+    }
+
+    public void setChannelspamflag(String channelspamflag) {
+        this.channelspamflag = channelspamflag;
+    }
+
     @Override
     public boolean equals(Object that) {
         if (this == that) {
@@ -218,7 +228,8 @@ public class GroupInfo implements Serializable {
             && (this.getCansendmediaflag() == null ? other.getCansendmediaflag() == null : this.getCansendmediaflag().equals(other.getCansendmediaflag()))
             && (this.getClearinfoflag() == null ? other.getClearinfoflag() == null : this.getClearinfoflag().equals(other.getClearinfoflag()))
             && (this.getReportflag() == null ? other.getReportflag() == null : this.getReportflag().equals(other.getReportflag()))
-            && (this.getAntifloodflag() == null ? other.getAntifloodflag() == null : this.getAntifloodflag().equals(other.getAntifloodflag()));
+            && (this.getAntifloodflag() == null ? other.getAntifloodflag() == null : this.getAntifloodflag().equals(other.getAntifloodflag()))
+            && (this.getChannelspamflag() == null ? other.getChannelspamflag() == null : this.getChannelspamflag().equals(other.getChannelspamflag()));
     }
 
     @Override
@@ -243,6 +254,7 @@ public class GroupInfo implements Serializable {
         result = prime * result + ((getClearinfoflag() == null) ? 0 : getClearinfoflag().hashCode());
         result = prime * result + ((getReportflag() == null) ? 0 : getReportflag().hashCode());
         result = prime * result + ((getAntifloodflag() == null) ? 0 : getAntifloodflag().hashCode());
+        result = prime * result + ((getChannelspamflag() == null) ? 0 : getChannelspamflag().hashCode());
         return result;
     }
 
@@ -270,6 +282,7 @@ public class GroupInfo implements Serializable {
         sb.append(", clearinfoflag=").append(clearinfoflag);
         sb.append(", reportflag=").append(reportflag);
         sb.append(", antifloodflag=").append(antifloodflag);
+        sb.append(", channelspamflag=").append(channelspamflag);
         sb.append(", serialVersionUID=").append(serialVersionUID);
         sb.append("]");
         return sb.toString();

@@ -9,7 +9,7 @@ import java.io.Serializable;
 public class GroupInfoWithBLOBs extends GroupInfo implements Serializable {
     private String keywords;
 
-    private String channelspammerswhitelist;
+    private String backup;
 
     private static final long serialVersionUID = 1L;
 
@@ -21,12 +21,12 @@ public class GroupInfoWithBLOBs extends GroupInfo implements Serializable {
         this.keywords = keywords;
     }
 
-    public String getChannelspammerswhitelist() {
-        return channelspammerswhitelist;
+    public String getBackup() {
+        return backup;
     }
 
-    public void setChannelspammerswhitelist(String channelspammerswhitelist) {
-        this.channelspammerswhitelist = channelspammerswhitelist;
+    public void setBackup(String backup) {
+        this.backup = backup;
     }
 
     @Override
@@ -59,8 +59,9 @@ public class GroupInfoWithBLOBs extends GroupInfo implements Serializable {
             && (this.getClearinfoflag() == null ? other.getClearinfoflag() == null : this.getClearinfoflag().equals(other.getClearinfoflag()))
             && (this.getReportflag() == null ? other.getReportflag() == null : this.getReportflag().equals(other.getReportflag()))
             && (this.getAntifloodflag() == null ? other.getAntifloodflag() == null : this.getAntifloodflag().equals(other.getAntifloodflag()))
+            && (this.getChannelspamflag() == null ? other.getChannelspamflag() == null : this.getChannelspamflag().equals(other.getChannelspamflag()))
             && (this.getKeywords() == null ? other.getKeywords() == null : this.getKeywords().equals(other.getKeywords()))
-            && (this.getChannelspammerswhitelist() == null ? other.getChannelspammerswhitelist() == null : this.getChannelspammerswhitelist().equals(other.getChannelspammerswhitelist()));
+            && (this.getBackup() == null ? other.getBackup() == null : this.getBackup().equals(other.getBackup()));
     }
 
     @Override
@@ -85,8 +86,9 @@ public class GroupInfoWithBLOBs extends GroupInfo implements Serializable {
         result = prime * result + ((getClearinfoflag() == null) ? 0 : getClearinfoflag().hashCode());
         result = prime * result + ((getReportflag() == null) ? 0 : getReportflag().hashCode());
         result = prime * result + ((getAntifloodflag() == null) ? 0 : getAntifloodflag().hashCode());
+        result = prime * result + ((getChannelspamflag() == null) ? 0 : getChannelspamflag().hashCode());
         result = prime * result + ((getKeywords() == null) ? 0 : getKeywords().hashCode());
-        result = prime * result + ((getChannelspammerswhitelist() == null) ? 0 : getChannelspammerswhitelist().hashCode());
+        result = prime * result + ((getBackup() == null) ? 0 : getBackup().hashCode());
         return result;
     }
 
@@ -97,7 +99,7 @@ public class GroupInfoWithBLOBs extends GroupInfo implements Serializable {
         sb.append(" [");
         sb.append("Hash = ").append(hashCode());
         sb.append(", keywords=").append(keywords);
-        sb.append(", channelspammerswhitelist=").append(channelspammerswhitelist);
+        sb.append(", backup=").append(backup);
         sb.append(", serialVersionUID=").append(serialVersionUID);
         sb.append("]");
         return sb.toString();

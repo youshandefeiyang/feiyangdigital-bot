@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- 主机： localhost
--- 生成日期： 2023-09-26 09:22:33
+-- 生成日期： 2023-09-27 13:16:53
 -- 服务器版本： 8.0.24
 -- PHP 版本： 8.1.12
 
@@ -65,7 +65,8 @@ CREATE TABLE `groupinfo`
     `clearInfoFlag`              varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'close',
     `reportFlag`                 varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'close',
     `antiFloodFlag`              varchar(50) COLLATE utf8mb4_general_ci                       NOT NULL DEFAULT 'close',
-    `ChannelSpammersWhiteList`   longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci
+    `channelSpamFlag`            varchar(50) COLLATE utf8mb4_general_ci                       NOT NULL DEFAULT 'close',
+    `backup`                     longtext COLLATE utf8mb4_general_ci
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -105,13 +106,14 @@ ALTER TABLE `groupinfo`
   ADD KEY `canSendMediaFlag` (`canSendMediaFlag`),
   ADD KEY `clearInfoFlag` (`clearInfoFlag`),
   ADD KEY `antiFloodFlag` (`antiFloodFlag`),
-  ADD KEY `antiFloodSetting` (`antiFloodSetting`);
+  ADD KEY `antiFloodSetting` (`antiFloodSetting`),
+  ADD KEY `channelSpamFlag` (`channelSpamFlag`);
 ALTER TABLE `groupinfo`
     ADD FULLTEXT KEY `ownerAndAnonymousAdmins` (`ownerAndAnonymousAdmins`);
 ALTER TABLE `groupinfo`
     ADD FULLTEXT KEY `keyWords` (`keyWords`);
 ALTER TABLE `groupinfo`
-    ADD FULLTEXT KEY `ChannelSpammersWhiteList` (`ChannelSpammersWhiteList`);
+    ADD FULLTEXT KEY `backup` (`backup`);
 
 --
 -- 在导出的表使用AUTO_INCREMENT
