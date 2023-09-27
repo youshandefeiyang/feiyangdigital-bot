@@ -31,10 +31,6 @@ public class MessageHandle {
             return true;
         }
 
-        if ("Telegram".equals(update.getMessage().getFrom().getFirstName()) && update.getMessage().getSenderChat().isChannelChat()) {
-            return true;
-        }
-
         for (KeywordsFormat keywordFormat : keywordsList) {
             Map<String, String> currentMap = keywordFormat.getRuleMap();
             String regex = keywordFormat.getRegex();

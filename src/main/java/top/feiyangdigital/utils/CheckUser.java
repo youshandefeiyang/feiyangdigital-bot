@@ -6,6 +6,7 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.chatmember.ChatMember;
 import org.telegram.telegrambots.meta.api.objects.chatmember.ChatMemberOwner;
 import org.telegram.telegrambots.meta.bots.AbsSender;
+import top.feiyangdigital.handleService.SpamChannelBotService;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -16,10 +17,13 @@ public class CheckUser {
     @Autowired
     private AdminList adminList;
 
+    @Autowired
+    private SpamChannelBotService spamChannelBotService;
+
 
     public boolean isGroupAdmin(AbsSender sender, Update update) {
         for (ChatMember admin : adminList.getAdmins(sender, update.getMessage().getChatId().toString())) {
-            if ("GroupAnonymousBot".equals(update.getMessage().getFrom().getUserName()) || admin.getUser().getId().equals(update.getMessage().getFrom().getId())) {
+            if ("GroupAnonymousBot".equals(update.getMessage().getFrom().getUserName()) || admin.getUser().getId().equals(update.getMessage().getFrom().getId()) || spamChannelBotService.isGroupChannel(sender,update)) {
                 return true;
             }
         }
