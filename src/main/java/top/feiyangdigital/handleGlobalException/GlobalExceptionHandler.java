@@ -10,7 +10,7 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(TelegramApiException.class)
-    public void handleTelegramApiException(RuntimeException e) {
+    public void handleTelegramApiException(TelegramApiException e) {
         log.error("TelegramApi exception: ", e);
     }
 
