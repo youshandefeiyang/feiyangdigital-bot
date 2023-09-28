@@ -15,7 +15,6 @@ import top.feiyangdigital.bot.TgLongPollingBot;
 import top.feiyangdigital.bot.TgWebhookBot;
 import top.feiyangdigital.entity.BaseInfo;
 import top.feiyangdigital.entity.InitWebhook;
-
 import javax.annotation.PostConstruct;
 import java.util.Arrays;
 import java.util.List;
