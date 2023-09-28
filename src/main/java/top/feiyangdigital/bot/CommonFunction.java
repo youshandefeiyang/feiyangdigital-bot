@@ -96,6 +96,20 @@ public class CommonFunction {
     @Autowired
     private SpamChannelBotService spamChannelBotService;
 
+    private boolean checkTextMessage(AbsSender sender, Update update) {
+        if (setBot.adminSetBot(sender, update)) {
+            return true;
+        } else if (banOrUnBan.banOption(sender, update)) {
+            return true;
+        } else if (banOrUnBan.dbanOption(sender, update)) {
+            return true;
+        } else if (banOrUnBan.unBanOption(sender, update)) {
+            return true;
+        } else if (restrictOrUnrestrictUser.muteOption(sender, update)) {
+            return true;
+        } else return restrictOrUnrestrictUser.unMuteOption(sender, update);
+    }
+
     public void mainFunc(AbsSender sender, Update update) {
 
         if ((update.hasMessage() && (update.getMessage().getChat().isGroupChat() || update.getMessage().getChat().isSuperGroupChat()))
@@ -123,27 +137,18 @@ public class CommonFunction {
                 }
             }
             if (spamChannelBotService.checkChannelOption(sender, update)) {
+                checkTextMessage(sender, update);
                 return;
             }
+            antiFloodService.checkFlood(sender, update);
             if (update.getMessage().hasText()) {
-                if (setBot.adminSetBot(sender, update)) {
-                    return;
-                } else if (banOrUnBan.banOption(sender, update)) {
-                    return;
-                } else if (banOrUnBan.dbanOption(sender, update)) {
-                    return;
-                } else if (banOrUnBan.unBanOption(sender, update)) {
-                    return;
-                } else if (restrictOrUnrestrictUser.muteOption(sender, update)) {
-                    return;
-                } else if (restrictOrUnrestrictUser.unMuteOption(sender, update)) {
+                if (checkTextMessage(sender, update)) {
                     return;
                 } else if (reportToOwner.haddle(sender, update)) {
                     return;
                 }
                 aiCheckMessage.checkMessage(sender, update);
                 clearOtherInfo.clearBotCommand(sender, update);
-                antiFloodService.checkFlood(sender, update);
                 return;
             }
             aiCheckMedia.checkMedia(sender, update);

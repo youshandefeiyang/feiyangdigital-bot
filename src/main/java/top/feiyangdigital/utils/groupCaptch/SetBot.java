@@ -31,7 +31,7 @@ public class SetBot {
     private CheckUser checkUser;
 
     public boolean adminSetBot(AbsSender sender, Update update) {
-        if (("/setbot".equals(update.getMessage().getText()) || ("/setbot@" + BaseInfo.getBotName()).equals(update.getMessage().getText())) && ("GroupAnonymousBot".equals(update.getMessage().getFrom().getUserName()) || checkUser.isChatOwner(sender, update))) {
+        if (("/setbot".equals(update.getMessage().getText()) || ("/setbot@" + BaseInfo.getBotName()).equals(update.getMessage().getText())) && ("GroupAnonymousBot".equals(update.getMessage().getFrom().getUserName()) || checkUser.isGroupChannel(sender, update) || checkUser.isChatOwner(sender, update))) {
             GroupInfoWithBLOBs groupInfo = new GroupInfoWithBLOBs();
             groupInfo.setOwnerandanonymousadmins(adminList.fetchHighAdminList(sender, update));
             groupInfo.setGroupname(update.getMessage().getChat().getTitle());
