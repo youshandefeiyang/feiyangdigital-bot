@@ -15,22 +15,17 @@ public class NightMode {
     @Autowired
     private CheckUser checkUser;
 
-    public boolean deleteMedia(AbsSender sender, Update update) {
+    public boolean deleteMedia(AbsSender sender, Update update) throws TelegramApiException {
         Message message = update.getMessage();
         boolean hasLinkOrMedia = (message.hasEntities() && "url".equals(message.getEntities().get(message.getEntities().size() - 1).getType()))
                 || message.hasPhoto() || message.hasVideo() || message.hasDocument() || message.hasSticker() || message.hasVideoNote() || message.hasVoice();
 
-        if (hasLinkOrMedia && !checkUser.isGroupAdmin(sender,update)) {
+        if (hasLinkOrMedia && !checkUser.isGroupAdmin(sender, update)) {
             DeleteMessage deleteMessage = new DeleteMessage();
             deleteMessage.setChatId(String.valueOf(message.getChatId()));
             deleteMessage.setMessageId(message.getMessageId());
-
-            try {
-                sender.execute(deleteMessage);
-                return true;
-            } catch (TelegramApiException e) {
-                return false;
-            }
+            sender.execute(deleteMessage);
+            return true;
         }
         return false;
     }

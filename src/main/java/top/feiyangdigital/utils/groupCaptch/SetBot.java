@@ -30,26 +30,18 @@ public class SetBot {
     @Autowired
     private CheckUser checkUser;
 
-    public boolean adminSetBot(AbsSender sender, Update update) {
+    public boolean adminSetBot(AbsSender sender, Update update) throws TelegramApiException {
         if (("/setbot".equals(update.getMessage().getText()) || ("/setbot@" + BaseInfo.getBotName()).equals(update.getMessage().getText())) && ("GroupAnonymousBot".equals(update.getMessage().getFrom().getUserName()) || checkUser.isGroupChannel(sender, update) || checkUser.isChatOwner(sender, update))) {
             GroupInfoWithBLOBs groupInfo = new GroupInfoWithBLOBs();
-            groupInfo.setOwnerandanonymousadmins(adminList.fetchHighAdminList(sender, update));
+            groupInfo.setOwnerandanonymousadmins(checkUser.fetchHighAdminList(sender, update));
             groupInfo.setGroupname(update.getMessage().getChat().getTitle());
             groupInfo.setSettingtimestamp(String.valueOf(new Date().getTime()));
             groupInfoService.updateSelectiveByChatId(groupInfo, update.getMessage().getChatId().toString());
             botHelper.sendAdminButton(sender, update);
-            try {
-                sender.execute(new DeleteMessage(update.getMessage().getChatId().toString(), update.getMessage().getMessageId()));
-            } catch (TelegramApiException e) {
-                e.printStackTrace();
-            }
+            sender.execute(new DeleteMessage(update.getMessage().getChatId().toString(), update.getMessage().getMessageId()));
             return true;
         } else if ("/setbot".equals(update.getMessage().getText()) || ("/setbot@" + BaseInfo.getBotName()).equals(update.getMessage().getText())) {
-            try {
-                sender.execute(new DeleteMessage(update.getMessage().getChatId().toString(), update.getMessage().getMessageId()));
-            } catch (TelegramApiException e) {
-                e.printStackTrace();
-            }
+            sender.execute(new DeleteMessage(update.getMessage().getChatId().toString(), update.getMessage().getMessageId()));
             return true;
         }
         return false;

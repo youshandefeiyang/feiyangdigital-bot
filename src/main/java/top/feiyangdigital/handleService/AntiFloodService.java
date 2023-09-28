@@ -44,7 +44,7 @@ public class AntiFloodService {
         }
     }
 
-    public void checkFlood(AbsSender sender, Update update) {
+    public void checkFlood(AbsSender sender, Update update) throws TelegramApiException {
         String groupId = update.getMessage().getChatId().toString();
         Long userId = update.getMessage().getFrom().getId();
         String firstName = update.getMessage().getFrom().getFirstName();
@@ -84,7 +84,7 @@ public class AntiFloodService {
             try {
                 sender.execute(deleteMessage);
             } catch (TelegramApiException e) {
-                //不做任何事情
+                throw new RuntimeException(e);
             }
         });
     }

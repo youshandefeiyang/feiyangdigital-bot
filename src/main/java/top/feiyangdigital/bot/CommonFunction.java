@@ -96,7 +96,7 @@ public class CommonFunction {
     @Autowired
     private SpamChannelBotService spamChannelBotService;
 
-    private boolean checkTextMessage(AbsSender sender, Update update) {
+    private boolean checkTextMessage(AbsSender sender, Update update) throws TelegramApiException {
         if (setBot.adminSetBot(sender, update)) {
             return true;
         } else if (banOrUnBan.banOption(sender, update)) {
@@ -110,7 +110,7 @@ public class CommonFunction {
         } else return restrictOrUnrestrictUser.unMuteOption(sender, update);
     }
 
-    public void mainFunc(AbsSender sender, Update update) {
+    public void mainFunc(AbsSender sender, Update update) throws TelegramApiException {
 
         if ((update.hasMessage() && (update.getMessage().getChat().isGroupChat() || update.getMessage().getChat().isSuperGroupChat()))
                 || (update.hasEditedMessage() && (update.getEditedMessage().getChat().isGroupChat() || update.getEditedMessage().getChat().isSuperGroupChat()))
@@ -174,11 +174,7 @@ public class CommonFunction {
 
                     captchaGenerator.sendCaptcha(sender, update.getMessage().getFrom().getId(), chatId, currentChatId, firstName);
                 } else {
-                    try {
-                        sender.execute(sendContent.messageText(update, "❌这不是你的验证"));
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
+                    sender.execute(sendContent.messageText(update, "❌这不是你的验证"));
                 }
             } else if ("/start".equals(update.getMessage().getText())) {
                 String url = String.format("https://t.me/%s?startgroup=start", BaseInfo.getBotName());
@@ -188,11 +184,7 @@ public class CommonFunction {
                 keywordsButtons.add("❌关闭菜单##close");
                 keywordsFormat.setReplyText("<b>GitHub地址：</b><b><a href='https://github.com/youshandefeiyang/feiyangdigital-bot'>点击查看</a></b>\n<b>官方群组：</b><b><a href='https://t.me/feiyangdigital'>点击加入</a></b>\n");
                 keywordsFormat.setKeywordsButtons(keywordsButtons);
-                try {
-                    sender.execute(sendContent.createResponseMessage(update, keywordsFormat, "html"));
-                } catch (TelegramApiException e) {
-                    e.printStackTrace();
-                }
+                sender.execute(sendContent.createResponseMessage(update, keywordsFormat, "html"));
             } else {
                 String userId = update.getMessage().getFrom().getId().toString();
                 if ("allow".equals(addRuleCacheMap.getKeywordsFlagForUser(userId))) {

@@ -1,6 +1,7 @@
 package top.feiyangdigital.utils.groupCaptch;
 
 import com.alibaba.fastjson2.JSONObject;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
@@ -24,6 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Component
+@Slf4j
 public class RestrictOrUnrestrictUser {
 
     @Autowired
@@ -73,7 +75,7 @@ public class RestrictOrUnrestrictUser {
         }
     }
 
-    public boolean muteOption(AbsSender sender, Update update) {
+    public boolean muteOption(AbsSender sender, Update update) throws TelegramApiException {
         String text = update.getMessage().getText().trim();
         String chatId = update.getMessage().getChatId().toString();
         Integer oldMessageId = update.getMessage().getMessageId();
@@ -82,55 +84,46 @@ public class RestrictOrUnrestrictUser {
             if (text.startsWith("!mute") || text.startsWith("!mute@" + BaseInfo.getBotName())
                     || text.startsWith("/mute") || text.startsWith("/mute@" + BaseInfo.getBotName())
             ) {
-                try {
-                    if (update.getMessage().hasEntities() && !"bot_command".equals(update.getMessage().getEntities().get(update.getMessage().getEntities().size() - 1).getType())) {
-                        MessageEntity messageEntity = update.getMessage().getEntities().get(update.getMessage().getEntities().size() - 1);
-                        if (text.split(" ").length >= 2 && text.split(" ")[1].contains("@") && "mention".equals(messageEntity.getType())) {
-                            JSONObject jsonObject = obtainUserId.fetchUserWithOkHttp(messageEntity.getText());
-                            Long userNameToId = jsonObject.getLong("id");
-                            String userNameToFirstName = jsonObject.getString("first_name");
-                            commonFunc(sender, update, userNameToId, userNameToFirstName, chatId, text, "noreply");
-                        } else if (text.split(" ").length >= 2 && "text_mention".equals(messageEntity.getType())) {
-                            Long userId = messageEntity.getUser().getId();
-                            String firstName = messageEntity.getUser().getFirstName();
-                            commonFunc(sender, update, userId, firstName, chatId, text, "noreply");
-                        }
-                    } else if (text.split(" ").length >= 2 && update.getMessage().getReplyToMessage() == null) {
-                        Long userId = Long.valueOf(text.split(" ")[1]);
-                        GetChatMember getChatMember = new GetChatMember();
-                        getChatMember.setUserId(userId);
-                        getChatMember.setChatId(chatId);
-                        ChatMember chatMember = sender.execute(getChatMember);
-                        String firstName = chatMember.getUser().getFirstName();
+                if (update.getMessage().hasEntities() && !"bot_command".equals(update.getMessage().getEntities().get(update.getMessage().getEntities().size() - 1).getType())) {
+                    MessageEntity messageEntity = update.getMessage().getEntities().get(update.getMessage().getEntities().size() - 1);
+                    if (text.split(" ").length >= 2 && text.split(" ")[1].contains("@") && "mention".equals(messageEntity.getType())) {
+                        JSONObject jsonObject = obtainUserId.fetchUserWithOkHttp(messageEntity.getText());
+                        Long userNameToId = jsonObject.getLong("id");
+                        String userNameToFirstName = jsonObject.getString("first_name");
+                        commonFunc(sender, update, userNameToId, userNameToFirstName, chatId, text, "noreply");
+                    } else if (text.split(" ").length >= 2 && "text_mention".equals(messageEntity.getType())) {
+                        Long userId = messageEntity.getUser().getId();
+                        String firstName = messageEntity.getUser().getFirstName();
                         commonFunc(sender, update, userId, firstName, chatId, text, "noreply");
-                    } else if (update.getMessage().getReplyToMessage() != null) {
-                        Long userId = update.getMessage().getReplyToMessage().getFrom().getId();
-                        String firstName = update.getMessage().getReplyToMessage().getFrom().getFirstName();
-                        commonFunc(sender, update, userId, firstName, chatId, text, "reply");
                     }
-                    sender.execute(new DeleteMessage(chatId, oldMessageId));
-                } catch (TelegramApiException e) {
-                    e.printStackTrace();
+                } else if (text.split(" ").length >= 2 && update.getMessage().getReplyToMessage() == null) {
+                    Long userId = Long.valueOf(text.split(" ")[1]);
+                    GetChatMember getChatMember = new GetChatMember();
+                    getChatMember.setUserId(userId);
+                    getChatMember.setChatId(chatId);
+                    ChatMember chatMember = sender.execute(getChatMember);
+                    String firstName = chatMember.getUser().getFirstName();
+                    commonFunc(sender, update, userId, firstName, chatId, text, "noreply");
+                } else if (update.getMessage().getReplyToMessage() != null) {
+                    Long userId = update.getMessage().getReplyToMessage().getFrom().getId();
+                    String firstName = update.getMessage().getReplyToMessage().getFrom().getFirstName();
+                    commonFunc(sender, update, userId, firstName, chatId, text, "reply");
                 }
+                sender.execute(new DeleteMessage(chatId, oldMessageId));
                 return true;
             }
         } else if (text.startsWith("!mute") || text.startsWith("!mute@" + BaseInfo.getBotName())
                 || text.startsWith("/mute") || text.startsWith("/mute@" + BaseInfo.getBotName())
         ) {
-            try {
-                sender.execute(new DeleteMessage(chatId, oldMessageId));
-            } catch (TelegramApiException e) {
-                e.printStackTrace();
-            }
+            sender.execute(new DeleteMessage(chatId, oldMessageId));
             return true;
         }
-
         return false;
 
     }
 
 
-    public boolean unMuteOption(AbsSender sender, Update update) {
+    public boolean unMuteOption(AbsSender sender, Update update) throws TelegramApiException {
         String text = update.getMessage().getText().trim();
         String chatId = update.getMessage().getChatId().toString();
         Integer oldMessageId = update.getMessage().getMessageId();
@@ -139,49 +132,40 @@ public class RestrictOrUnrestrictUser {
             if (text.startsWith("!unmute") || text.startsWith("!unmute@" + BaseInfo.getBotName())
                     || text.startsWith("/unmute") || text.startsWith("/unmute@" + BaseInfo.getBotName())
             ) {
-                try {
-                    if (update.getMessage().hasEntities() && !"bot_command".equals(update.getMessage().getEntities().get(update.getMessage().getEntities().size() - 1).getType())) {
-                        MessageEntity messageEntity = update.getMessage().getEntities().get(update.getMessage().getEntities().size() - 1);
-                        if (text.split(" ").length >= 2 && text.split(" ")[1].contains("@") && "mention".equals(messageEntity.getType())) {
-                            JSONObject jsonObject = obtainUserId.fetchUserWithOkHttp(messageEntity.getText());
-                            Long userNameToId = jsonObject.getLong("id");
-                            String userNameToFirstName = jsonObject.getString("first_name");
-                            unMuteFunc(sender, update, userNameToId, userNameToFirstName, chatId);
-                        } else if (text.split(" ").length >= 2 && "text_mention".equals(messageEntity.getType())) {
-                            Long userId = messageEntity.getUser().getId();
-                            String firstName = messageEntity.getUser().getFirstName();
-                            unMuteFunc(sender, update, userId, firstName, chatId);
-                        }
-                    } else if (text.split(" ").length >= 2 && update.getMessage().getReplyToMessage() == null) {
-                        Long userId = Long.valueOf(text.split(" ")[1]);
-                        GetChatMember getChatMember = new GetChatMember();
-                        getChatMember.setUserId(userId);
-                        getChatMember.setChatId(chatId);
-                        ChatMember chatMember = sender.execute(getChatMember);
-                        String firstName = chatMember.getUser().getFirstName();
-                        unMuteFunc(sender, update, userId, firstName, chatId);
-                    } else if (update.getMessage().getReplyToMessage() != null) {
-                        Long userId = update.getMessage().getReplyToMessage().getFrom().getId();
-                        String firstName = update.getMessage().getReplyToMessage().getFrom().getFirstName();
+                if (update.getMessage().hasEntities() && !"bot_command".equals(update.getMessage().getEntities().get(update.getMessage().getEntities().size() - 1).getType())) {
+                    MessageEntity messageEntity = update.getMessage().getEntities().get(update.getMessage().getEntities().size() - 1);
+                    if (text.split(" ").length >= 2 && text.split(" ")[1].contains("@") && "mention".equals(messageEntity.getType())) {
+                        JSONObject jsonObject = obtainUserId.fetchUserWithOkHttp(messageEntity.getText());
+                        Long userNameToId = jsonObject.getLong("id");
+                        String userNameToFirstName = jsonObject.getString("first_name");
+                        unMuteFunc(sender, update, userNameToId, userNameToFirstName, chatId);
+                    } else if (text.split(" ").length >= 2 && "text_mention".equals(messageEntity.getType())) {
+                        Long userId = messageEntity.getUser().getId();
+                        String firstName = messageEntity.getUser().getFirstName();
                         unMuteFunc(sender, update, userId, firstName, chatId);
                     }
-                    sender.execute(new DeleteMessage(chatId, oldMessageId));
-                } catch (TelegramApiException e) {
-                    e.printStackTrace();
+                } else if (text.split(" ").length >= 2 && update.getMessage().getReplyToMessage() == null) {
+                    Long userId = Long.valueOf(text.split(" ")[1]);
+                    GetChatMember getChatMember = new GetChatMember();
+                    getChatMember.setUserId(userId);
+                    getChatMember.setChatId(chatId);
+                    ChatMember chatMember = sender.execute(getChatMember);
+                    String firstName = chatMember.getUser().getFirstName();
+                    unMuteFunc(sender, update, userId, firstName, chatId);
+                } else if (update.getMessage().getReplyToMessage() != null) {
+                    Long userId = update.getMessage().getReplyToMessage().getFrom().getId();
+                    String firstName = update.getMessage().getReplyToMessage().getFrom().getFirstName();
+                    unMuteFunc(sender, update, userId, firstName, chatId);
                 }
+                sender.execute(new DeleteMessage(chatId, oldMessageId));
                 return true;
             }
         } else if (text.startsWith("!unmute") || text.startsWith("!unmute@" + BaseInfo.getBotName())
                 || text.startsWith("/unmute") || text.startsWith("/unmute@" + BaseInfo.getBotName())
         ) {
-            try {
-                sender.execute(new DeleteMessage(chatId, oldMessageId));
-            } catch (TelegramApiException e) {
-                e.printStackTrace();
-            }
+            sender.execute(new DeleteMessage(chatId, oldMessageId));
             return true;
         }
-
         return false;
 
     }
@@ -193,17 +177,14 @@ public class RestrictOrUnrestrictUser {
         restrictChatMember.setUserId(userId);
 
         ChatPermissions chatPermissions = new ChatPermissions();
-
         chatPermissions.setCanSendOtherMessages(false);
-
-
         restrictChatMember.setPermissions(chatPermissions);
 
         try {
-            sender.execute(restrictChatMember); // Execute the Telegram API method
+            sender.execute(restrictChatMember);
             return true;
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (TelegramApiException e) {
+            log.error("禁言用户失败，{}",e.getMessage(),e);
             return false;
         }
     }
@@ -228,7 +209,7 @@ public class RestrictOrUnrestrictUser {
             sender.execute(restrictChatMember); // Execute the Telegram API method
             return true;
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("解禁用户失败，{}",e.getMessage(),e);
             return false;
         }
     }

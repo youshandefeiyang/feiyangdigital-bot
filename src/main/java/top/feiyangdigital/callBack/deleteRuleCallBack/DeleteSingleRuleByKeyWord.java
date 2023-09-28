@@ -29,7 +29,7 @@ public class DeleteSingleRuleByKeyWord {
     @Autowired
     private DeleteGropuRuleMap deleteGropuRuleMap;
 
-    public void DeleteOption(AbsSender sender, Update update) {
+    public void DeleteOption(AbsSender sender, Update update) throws TelegramApiException {
         if (update.getMessage().getText() != null && !update.getMessage().getText().trim().isEmpty()) {
             String userId = update.getMessage().getFrom().getId().toString();
             String userMessage = update.getMessage().getText().trim();
@@ -39,11 +39,7 @@ public class DeleteSingleRuleByKeyWord {
                 String content = groupInfoWithBLOBs.getKeywords();
                 if (settingTimestamp != null && !settingTimestamp.isEmpty()) {
                     if (new Date().getTime() - Long.parseLong(settingTimestamp) > (15 * 60 * 1000)) {
-                        try {
-                            sender.execute(sendContent.messageText(update, "本次设置超时，请去群里重新发送/setbot"));
-                        } catch (TelegramApiException e) {
-                            e.printStackTrace();
-                        }
+                        sender.execute(sendContent.messageText(update, "本次设置超时，请去群里重新发送/setbot"));
                         deleteRuleCacheMap.updateUserMapping(userId, deleteRuleCacheMap.getGroupIdForUser(userId), deleteRuleCacheMap.getGroupNameForUser(userId), "notdelete");
                     } else {
                         if (content != null && !content.isEmpty()) {
@@ -53,7 +49,7 @@ public class DeleteSingleRuleByKeyWord {
                                     .map(String::trim)
                                     .forEach(i -> {
                                         String[] parts = i.split(" \\| ");
-                                        deleteGropuRuleMap.addRuleToGroup(deleteRuleCacheMap.getGroupIdForUser(userId),parts[0],parts[1]);
+                                        deleteGropuRuleMap.addRuleToGroup(deleteRuleCacheMap.getGroupIdForUser(userId), parts[0], parts[1]);
                                     });
                             keywordsFormat.setReplyText("⚠️当前页面最多显示匹配到的八条规则");
                             for (Map.Entry<String, String> entry : deleteGropuRuleMap.getAllRulesFromGroupId(deleteRuleCacheMap.getGroupIdForUser(userId)).getUuidToRuleMap().entrySet()) {
@@ -63,11 +59,7 @@ public class DeleteSingleRuleByKeyWord {
                             }
                             keywordsButtons.add("◀️返回上一级##deleteBackToAutoReply");
                             keywordsFormat.setKeywordsButtons(keywordsButtons);
-                            try {
-                                sender.execute(sendContent.createResponseMessage(update, keywordsFormat, "html"));
-                            } catch (TelegramApiException e) {
-                                e.printStackTrace();
-                            }
+                            sender.execute(sendContent.createResponseMessage(update, keywordsFormat, "html"));
                         }
 
 

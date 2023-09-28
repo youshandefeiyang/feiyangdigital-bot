@@ -10,6 +10,7 @@ import org.telegram.telegrambots.meta.api.methods.send.SendPhoto;
 import org.telegram.telegrambots.meta.api.objects.InputFile;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.bots.AbsSender;
+import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import top.feiyangdigital.entity.GroupInfoWithBLOBs;
 import top.feiyangdigital.entity.KeywordsFormat;
 import top.feiyangdigital.sqlService.BotRecordService;
@@ -56,7 +57,7 @@ public class CaptchaGenerator {
     private GroupMessageIdCacheMap groupMessageIdCacheMap;
 
 
-    public void sendCaptcha(AbsSender sender, Long userId, String chatId, String currentChatId, String firstName) {
+    public void sendCaptcha(AbsSender sender, Long userId, String chatId, String currentChatId, String firstName) throws TelegramApiException {
 
         ArithmeticCaptcha captcha = new ArithmeticCaptcha(130, 48);
         captcha.setLen(3);
@@ -78,16 +79,10 @@ public class CaptchaGenerator {
         String text = String.format("请 <b><a href=\"tg://user?id=%d\">%s</a></b> 在 <b>90秒内</b> 输入计算结果，超时将永久限制发言！", userId, firstName);
         sendPhoto.setCaption(text);
         sendPhoto.setParseMode(ParseMode.HTML);
-
-        try {
-            sender.execute(sendPhoto);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
+        sender.execute(sendPhoto);
     }
 
-    public void answerReplyhandle(AbsSender sender, Update update) {
+    public void answerReplyhandle(AbsSender sender, Update update) throws TelegramApiException {
         String userAnswer = update.getMessage().getText();
         String userId = update.getMessage().getFrom().getId().toString();
         String groupId = captchaManager.getGroupIdForUser(userId);
@@ -98,16 +93,12 @@ public class CaptchaGenerator {
         if (StringUtils.hasText(userAnswer) && !correctAnswer.isEmpty()) {
             if (userAnswer.equals(correctAnswer)) {
                 SendMessage message = sendContent.messageText(update, "验证通过，现在你可以在群里自由发言了");
-                try {
-                    sender.execute(message);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+                sender.execute(message);
                 restrictOrUnrestrictUser.unrestrictUser(sender, update.getMessage().getFrom().getId(), groupId);
-                botRecordService.addUserRecord(groupId,userId,update.getMessage().getDate().toString());
+                botRecordService.addUserRecord(groupId, userId, update.getMessage().getDate().toString());
                 if (groupInfoWithBLOBs != null && "open".equals(groupInfoWithBLOBs.getIntogroupwelcomeflag())) {
-                    if (groupMessageIdCacheMap.getMapSize()>0) {
-                        groupMessageIdCacheMap.deleteAllMessage(sender,groupId);
+                    if (groupMessageIdCacheMap.getMapSize() > 0) {
+                        groupMessageIdCacheMap.deleteAllMessage(sender, groupId);
                     }
                     if (StringUtils.hasText(groupInfoWithBLOBs.getKeywords()) && groupInfoWithBLOBs.getKeywords().contains("&&welcome=")) {
                         List<KeywordsFormat> keywordsFormatList = Arrays.stream(groupInfoWithBLOBs.getKeywords().split("\\n{2,}"))
@@ -125,7 +116,7 @@ public class CaptchaGenerator {
                                 newKeyFormat.setReplyText(text);
                                 SendMessage sendMessage = sendContent.createGroupMessage(groupId, newKeyFormat, "html");
                                 sendMessage.setDisableWebPagePreview(true);
-                                Integer msgId = timerDelete.deleteMessageImmediatelyAndNotifyAfterDelay(sender,sendMessage , groupId, messageId, update.getMessage().getFrom().getId(), Integer.parseInt(currentMap.get("DelWelcome")));
+                                Integer msgId = timerDelete.deleteMessageImmediatelyAndNotifyAfterDelay(sender, sendMessage, groupId, messageId, update.getMessage().getFrom().getId(), Integer.parseInt(currentMap.get("DelWelcome")));
                                 groupMessageIdCacheMap.setGroupMessageId(groupId, msgId);
                             }
                         }
@@ -139,24 +130,16 @@ public class CaptchaGenerator {
                 notification.setParseMode(ParseMode.HTML);
                 timerDelete.deleteMessageImmediatelyAndNotifyAfterDelay(sender, notification, groupId, messageId, update.getMessage().getFrom().getId(), 10);
             } else {
-                if(attempt != null) {
+                if (attempt != null) {
                     captchaManagerCacheMap.updateUserMapping(userId, groupId, attempt + 1, messageId);
                     if (attempt >= 1) {
-                        try {
-                            sender.execute(sendContent.messageText(update, "未通过验证，你的机会已经用尽！"));
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
+                        sender.execute(sendContent.messageText(update, "未通过验证，你的机会已经用尽！"));
                         timerDelete.deleteByMessageIdImmediately(sender, groupId, messageId);
                         captchaManager.clearMappingsForUser(userId);
                         return;
                     }
                     SendMessage message = sendContent.messageText(update, "未通过验证，请再试一次，你只有两次机会，次数用尽/超时都将会永久禁言");
-                    try {
-                        sender.execute(message);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
+                    sender.execute(message);
                 }
             }
         }

@@ -10,6 +10,7 @@ import org.telegram.telegrambots.meta.api.methods.ParseMode;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.bots.AbsSender;
+import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import top.feiyangdigital.entity.BaseInfo;
 import top.feiyangdigital.entity.BotRecord;
 import top.feiyangdigital.entity.GroupInfoWithBLOBs;
@@ -43,7 +44,7 @@ public class AiCheckMedia {
     @Autowired
     private AiCheckMessage aiCheckMessage;
 
-    public void checkMedia(AbsSender sender, Update update) {
+    public void checkMedia(AbsSender sender, Update update) throws TelegramApiException {
         String groupId = update.getMessage().getChatId().toString();
         String userId = update.getMessage().getFrom().getId().toString();
         Integer messageId = update.getMessage().getMessageId();
@@ -84,15 +85,8 @@ public class AiCheckMedia {
                     GetFile getFile = GetFile.builder()
                             .fileId(fileId)
                             .build();
-                    String url;
-                    File file = null;
-                    try {
-                        url = sender.execute(getFile).getFileUrl(BaseInfo.getBotToken());
-                        file = googleCloudVisionService.downloadFileWithOkHttp(url);
-
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
+                    String url = sender.execute(getFile).getFileUrl(BaseInfo.getBotToken());
+                    File file = googleCloudVisionService.downloadFileWithOkHttp(url);
                     String miaoshu = "";
                     List<EntityAnnotation> list = googleCloudVisionService.detectTextFromLocalImage(file);
                     if (!list.isEmpty()) {

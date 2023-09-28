@@ -7,6 +7,7 @@ import org.telegram.telegrambots.meta.api.methods.groupadministration.GetChat;
 import org.telegram.telegrambots.meta.api.objects.Chat;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.bots.AbsSender;
+import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import top.feiyangdigital.entity.GroupInfoWithBLOBs;
 import top.feiyangdigital.sqlService.GroupInfoService;
 import top.feiyangdigital.utils.SendContent;
@@ -24,35 +25,25 @@ public class SpamChannelBotService {
     @Autowired
     private GroupInfoService groupInfoService;
 
-    public boolean checkChannelOption(AbsSender sender, Update update){
+    public boolean checkChannelOption(AbsSender sender, Update update) throws TelegramApiException {
         Chat senderChat = update.getMessage().getSenderChat();
         String chatId = update.getMessage().getChatId().toString();
         GroupInfoWithBLOBs groupInfoWithBLOBs = groupInfoService.selAllByGroupId(chatId);
-        if (groupInfoWithBLOBs!=null && "open".equals(groupInfoWithBLOBs.getChannelspamflag()) && senderChat !=null && "channel".equals(senderChat.getType())){
-            Chat checkChat = getLinkedChat(sender,chatId);
-            if (checkChat.getLinkedChatId()!=null && !senderChat.getId().equals(checkChat.getLinkedChatId())){
+        if (groupInfoWithBLOBs != null && "open".equals(groupInfoWithBLOBs.getChannelspamflag()) && senderChat != null && "channel".equals(senderChat.getType())) {
+            Chat checkChat = getLinkedChat(sender, chatId);
+            if (checkChat.getLinkedChatId() != null && !senderChat.getId().equals(checkChat.getLinkedChatId())) {
                 BanChatSenderChat banChatSenderChat = BanChatSenderChat.builder().chatId(chatId).senderChatId(senderChat.getId()).build();
-                try {
-                    sender.execute(banChatSenderChat);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                timerDelete.deleteByMessageIdImmediately(sender,chatId,update.getMessage().getMessageId());
-                timerDelete.sendTimedMessage(sender,sendContent.messageText(update,"已检测到非本频道的野马甲，直接封禁！"),20);
+                sender.execute(banChatSenderChat);
+                timerDelete.deleteByMessageIdImmediately(sender, chatId, update.getMessage().getMessageId());
+                timerDelete.sendTimedMessage(sender, sendContent.messageText(update, "已检测到非本频道的野马甲，直接封禁！"), 20);
             }
             return true;
         }
         return false;
     }
 
-    public Chat getLinkedChat(AbsSender sender,String chatId){
-        Chat chat = new Chat();
-        try {
-            GetChat getChat = GetChat.builder().chatId(chatId).build();
-            chat = sender.execute(getChat);
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-        return chat;
+    public Chat getLinkedChat(AbsSender sender, String chatId) throws TelegramApiException {
+        GetChat getChat = GetChat.builder().chatId(chatId).build();
+        return sender.execute(getChat);
     }
 }

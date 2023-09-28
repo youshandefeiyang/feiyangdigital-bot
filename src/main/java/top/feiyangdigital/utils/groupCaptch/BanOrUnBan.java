@@ -1,6 +1,7 @@
 package top.feiyangdigital.utils.groupCaptch;
 
 import com.alibaba.fastjson2.JSONObject;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
@@ -24,6 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Component
+@Slf4j
 public class BanOrUnBan {
 
     @Autowired
@@ -41,7 +43,7 @@ public class BanOrUnBan {
     @Autowired
     private CaptchaManagerCacheMap captchaManagerCacheMap;
 
-    private void unBanFunc(AbsSender sender, Update update, Long userId, String firstName, String chatId){
+    private void unBanFunc(AbsSender sender, Update update, Long userId, String firstName, String chatId) {
         if (unBanUserById(sender, userId, chatId)) {
             KeywordsFormat keywordsFormat = new KeywordsFormat();
             String text1 = String.format("用户 <b><a href=\"tg://user?id=%d\">%s</a></b> 已被管理员解封。", userId, firstName);
@@ -72,7 +74,7 @@ public class BanOrUnBan {
         }
     }
 
-    public boolean banOption(AbsSender sender, Update update) {
+    public boolean banOption(AbsSender sender, Update update) throws TelegramApiException {
         String text = update.getMessage().getText().trim();
         String chatId = update.getMessage().getChatId().toString();
         Integer oldMessageId = update.getMessage().getMessageId();
@@ -81,54 +83,44 @@ public class BanOrUnBan {
             if (text.startsWith("!ban") || text.startsWith("!ban@" + BaseInfo.getBotName())
                     || text.startsWith("/ban") || text.startsWith("/ban@" + BaseInfo.getBotName())
             ) {
-                try {
-                    if (update.getMessage().hasEntities() && !"bot_command".equals(update.getMessage().getEntities().get(update.getMessage().getEntities().size() - 1).getType())) {
-                        MessageEntity messageEntity = update.getMessage().getEntities().get(update.getMessage().getEntities().size() - 1);
-                        if (text.split(" ").length >= 2 && text.split(" ")[1].contains("@") && "mention".equals(messageEntity.getType())) {
-                            JSONObject jsonObject = obtainUserId.fetchUserWithOkHttp(messageEntity.getText());
-                            Long userNameToId = jsonObject.getLong("id");
-                            String userNameToFirstName = jsonObject.getString("first_name");
-                            commonFunc(sender, update, userNameToId, userNameToFirstName, chatId, text, "noreply");
-                        } else if (text.split(" ").length >= 2 && "text_mention".equals(messageEntity.getType())) {
-                            Long userId = messageEntity.getUser().getId();
-                            String firstName = messageEntity.getUser().getFirstName();
-                            commonFunc(sender, update, userId, firstName, chatId, text, "noreply");
-                        }
-                    } else if (text.split(" ").length >= 2 && update.getMessage().getReplyToMessage() == null) {
-                        Long userId = Long.valueOf(text.split(" ")[1]);
-                        GetChatMember getChatMember = new GetChatMember();
-                        getChatMember.setUserId(userId);
-                        getChatMember.setChatId(chatId);
-                        ChatMember chatMember = sender.execute(getChatMember);
-                        String firstName = chatMember.getUser().getFirstName();
+                if (update.getMessage().hasEntities() && !"bot_command".equals(update.getMessage().getEntities().get(update.getMessage().getEntities().size() - 1).getType())) {
+                    MessageEntity messageEntity = update.getMessage().getEntities().get(update.getMessage().getEntities().size() - 1);
+                    if (text.split(" ").length >= 2 && text.split(" ")[1].contains("@") && "mention".equals(messageEntity.getType())) {
+                        JSONObject jsonObject = obtainUserId.fetchUserWithOkHttp(messageEntity.getText());
+                        Long userNameToId = jsonObject.getLong("id");
+                        String userNameToFirstName = jsonObject.getString("first_name");
+                        commonFunc(sender, update, userNameToId, userNameToFirstName, chatId, text, "noreply");
+                    } else if (text.split(" ").length >= 2 && "text_mention".equals(messageEntity.getType())) {
+                        Long userId = messageEntity.getUser().getId();
+                        String firstName = messageEntity.getUser().getFirstName();
                         commonFunc(sender, update, userId, firstName, chatId, text, "noreply");
-                    } else if (update.getMessage().getReplyToMessage() != null) {
-                        Long userId = update.getMessage().getReplyToMessage().getFrom().getId();
-                        String firstName = update.getMessage().getReplyToMessage().getFrom().getFirstName();
-                        commonFunc(sender, update, userId, firstName, chatId, text, "reply");
                     }
-                    sender.execute(new DeleteMessage(chatId, oldMessageId));
-                } catch (TelegramApiException e) {
-                    e.printStackTrace();
+                } else if (text.split(" ").length >= 2 && update.getMessage().getReplyToMessage() == null) {
+                    Long userId = Long.valueOf(text.split(" ")[1]);
+                    GetChatMember getChatMember = new GetChatMember();
+                    getChatMember.setUserId(userId);
+                    getChatMember.setChatId(chatId);
+                    ChatMember chatMember = sender.execute(getChatMember);
+                    String firstName = chatMember.getUser().getFirstName();
+                    commonFunc(sender, update, userId, firstName, chatId, text, "noreply");
+                } else if (update.getMessage().getReplyToMessage() != null) {
+                    Long userId = update.getMessage().getReplyToMessage().getFrom().getId();
+                    String firstName = update.getMessage().getReplyToMessage().getFrom().getFirstName();
+                    commonFunc(sender, update, userId, firstName, chatId, text, "reply");
                 }
+                sender.execute(new DeleteMessage(chatId, oldMessageId));
                 return true;
             }
         } else if (text.startsWith("!ban") || text.startsWith("!ban@" + BaseInfo.getBotName())
                 || text.startsWith("/ban") || text.startsWith("/ban@" + BaseInfo.getBotName())
         ) {
-            try {
-                sender.execute(new DeleteMessage(chatId, oldMessageId));
-            } catch (TelegramApiException e) {
-                e.printStackTrace();
-            }
+            sender.execute(new DeleteMessage(chatId, oldMessageId));
             return true;
         }
-
         return false;
-
     }
 
-    public boolean dbanOption(AbsSender sender, Update update) {
+    public boolean dbanOption(AbsSender sender, Update update) throws TelegramApiException {
         String text = update.getMessage().getText().trim();
         String chatId = update.getMessage().getChatId().toString();
         Integer oldMessageId = update.getMessage().getMessageId();
@@ -137,38 +129,29 @@ public class BanOrUnBan {
             if (text.startsWith("!dban") || text.startsWith("!dban@" + BaseInfo.getBotName())
                     || text.startsWith("/dban") || text.startsWith("/dban@" + BaseInfo.getBotName())
             ) {
-                try {
-                    if (update.getMessage().getReplyToMessage() != null) {
-                        Long userId = update.getMessage().getReplyToMessage().getFrom().getId();
-                        String firstName = update.getMessage().getReplyToMessage().getFrom().getFirstName();
-                        Integer dbanMessageId = update.getMessage().getReplyToMessage().getMessageId();
-                        sender.execute(new DeleteMessage(chatId, dbanMessageId));
-                        commonFunc(sender, update, userId, firstName, chatId, text, "reply");
-                    } else {
-                        timerDelete.sendTimedMessage(sender,sendContent.messageText(update,"你必须回复一条消息，才能执行此操作！"),10);
-                    }
-                    sender.execute(new DeleteMessage(chatId, oldMessageId));
-                } catch (TelegramApiException e) {
-                    e.printStackTrace();
+                if (update.getMessage().getReplyToMessage() != null) {
+                    Long userId = update.getMessage().getReplyToMessage().getFrom().getId();
+                    String firstName = update.getMessage().getReplyToMessage().getFrom().getFirstName();
+                    Integer dbanMessageId = update.getMessage().getReplyToMessage().getMessageId();
+                    sender.execute(new DeleteMessage(chatId, dbanMessageId));
+                    commonFunc(sender, update, userId, firstName, chatId, text, "reply");
+                } else {
+                    timerDelete.sendTimedMessage(sender, sendContent.messageText(update, "你必须回复一条消息，才能执行此操作！"), 10);
                 }
+                sender.execute(new DeleteMessage(chatId, oldMessageId));
                 return true;
             }
         } else if (text.startsWith("!dban") || text.startsWith("!dban@" + BaseInfo.getBotName())
                 || text.startsWith("/dban") || text.startsWith("/dban@" + BaseInfo.getBotName())
         ) {
-            try {
-                sender.execute(new DeleteMessage(chatId, oldMessageId));
-            } catch (TelegramApiException e) {
-                e.printStackTrace();
-            }
+            sender.execute(new DeleteMessage(chatId, oldMessageId));
             return true;
         }
-
         return false;
 
     }
 
-    public boolean unBanOption(AbsSender sender, Update update) {
+    public boolean unBanOption(AbsSender sender, Update update) throws TelegramApiException {
         String text = update.getMessage().getText().trim();
         String chatId = update.getMessage().getChatId().toString();
         Integer oldMessageId = update.getMessage().getMessageId();
@@ -177,51 +160,41 @@ public class BanOrUnBan {
             if (text.startsWith("!unban") || text.startsWith("!unban@" + BaseInfo.getBotName())
                     || text.startsWith("/unban") || text.startsWith("/unban@" + BaseInfo.getBotName())
             ) {
-                try {
-                    if (update.getMessage().hasEntities() && !"bot_command".equals(update.getMessage().getEntities().get(update.getMessage().getEntities().size() - 1).getType())) {
-                        MessageEntity messageEntity = update.getMessage().getEntities().get(update.getMessage().getEntities().size() - 1);
-                        if (text.split(" ").length >= 2 && text.split(" ")[1].contains("@") && "mention".equals(messageEntity.getType())) {
-                            JSONObject jsonObject = obtainUserId.fetchUserWithOkHttp(messageEntity.getText());
-                            Long userNameToId = jsonObject.getLong("id");
-                            String userNameToFirstName = jsonObject.getString("first_name");
-                            unBanFunc(sender,update,userNameToId,userNameToFirstName,chatId);
-                        } else if (text.split(" ").length >= 2 && "text_mention".equals(messageEntity.getType())) {
-                            Long userId = messageEntity.getUser().getId();
-                            String firstName = messageEntity.getUser().getFirstName();
-                            unBanFunc(sender, update, userId, firstName, chatId);
-                        }
-                    } else if (text.split(" ").length >= 2 && update.getMessage().getReplyToMessage() == null) {
-                        Long userId = Long.valueOf(text.split(" ")[1]);
-                        GetChatMember getChatMember = new GetChatMember();
-                        getChatMember.setUserId(userId);
-                        getChatMember.setChatId(chatId);
-                        ChatMember chatMember = sender.execute(getChatMember);
-                        String firstName = chatMember.getUser().getFirstName();
-                        unBanFunc(sender, update, userId, firstName, chatId);
-                    } else if (update.getMessage().getReplyToMessage() != null) {
-                        Long userId = update.getMessage().getReplyToMessage().getFrom().getId();
-                        String firstName = update.getMessage().getReplyToMessage().getFrom().getFirstName();
+                if (update.getMessage().hasEntities() && !"bot_command".equals(update.getMessage().getEntities().get(update.getMessage().getEntities().size() - 1).getType())) {
+                    MessageEntity messageEntity = update.getMessage().getEntities().get(update.getMessage().getEntities().size() - 1);
+                    if (text.split(" ").length >= 2 && text.split(" ")[1].contains("@") && "mention".equals(messageEntity.getType())) {
+                        JSONObject jsonObject = obtainUserId.fetchUserWithOkHttp(messageEntity.getText());
+                        Long userNameToId = jsonObject.getLong("id");
+                        String userNameToFirstName = jsonObject.getString("first_name");
+                        unBanFunc(sender, update, userNameToId, userNameToFirstName, chatId);
+                    } else if (text.split(" ").length >= 2 && "text_mention".equals(messageEntity.getType())) {
+                        Long userId = messageEntity.getUser().getId();
+                        String firstName = messageEntity.getUser().getFirstName();
                         unBanFunc(sender, update, userId, firstName, chatId);
                     }
-                    sender.execute(new DeleteMessage(chatId, oldMessageId));
-                } catch (TelegramApiException e) {
-                    e.printStackTrace();
+                } else if (text.split(" ").length >= 2 && update.getMessage().getReplyToMessage() == null) {
+                    Long userId = Long.valueOf(text.split(" ")[1]);
+                    GetChatMember getChatMember = new GetChatMember();
+                    getChatMember.setUserId(userId);
+                    getChatMember.setChatId(chatId);
+                    ChatMember chatMember = sender.execute(getChatMember);
+                    String firstName = chatMember.getUser().getFirstName();
+                    unBanFunc(sender, update, userId, firstName, chatId);
+                } else if (update.getMessage().getReplyToMessage() != null) {
+                    Long userId = update.getMessage().getReplyToMessage().getFrom().getId();
+                    String firstName = update.getMessage().getReplyToMessage().getFrom().getFirstName();
+                    unBanFunc(sender, update, userId, firstName, chatId);
                 }
+                sender.execute(new DeleteMessage(chatId, oldMessageId));
                 return true;
             }
         } else if (text.startsWith("!unban") || text.startsWith("!unban@" + BaseInfo.getBotName())
                 || text.startsWith("/unban") || text.startsWith("/unban@" + BaseInfo.getBotName())
         ) {
-            try {
-                sender.execute(new DeleteMessage(chatId, oldMessageId));
-            } catch (TelegramApiException e) {
-                e.printStackTrace();
-            }
+            sender.execute(new DeleteMessage(chatId, oldMessageId));
             return true;
         }
-
         return false;
-
     }
 
 
@@ -233,7 +206,7 @@ public class BanOrUnBan {
             sender.execute(banChatMember);
             return true;
         } catch (TelegramApiException e) {
-            e.printStackTrace();
+            log.error("封禁用户失败，{}",e.getMessage(),e);
             return false;
         }
     }
@@ -246,7 +219,7 @@ public class BanOrUnBan {
             sender.execute(unbanChatMember);
             return true;
         } catch (TelegramApiException e) {
-            e.printStackTrace();
+            log.error("解封用户失败，{}",e.getMessage(),e);
             return false;
         }
     }

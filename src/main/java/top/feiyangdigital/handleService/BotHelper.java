@@ -103,7 +103,7 @@ public class BotHelper {
     }
 
 
-    public void sendInlineKeyboard(AbsSender sender, Update update) {
+    public void sendInlineKeyboard(AbsSender sender, Update update) throws TelegramApiException {
         String userId = update.getMessage().getFrom().getId().toString();
 
         List<String> keywordsButtons = new ArrayList<>();
@@ -115,14 +115,10 @@ public class BotHelper {
         keywordsButtons.add("❌关闭菜单##closeMenu");
         keywordsFormat.setReplyText("当前群组：<b>" + addRuleCacheMap.getGroupNameForUser(userId) + "</b>\n当前群组ID：<b>" + addRuleCacheMap.getGroupIdForUser(userId) + "</b>\n当前可输入状态：<b>" + addRuleCacheMap.getKeywordsFlagForUser(userId) + "</b>\n当前定时发送消息状态：<b>" + addRuleCacheMap.getCrontabFlagForUser(userId) + "</b>\n当前AI状态：<b>" + addRuleCacheMap.getAiFlagForUser(userId) + "</b>\n⚡️请选择一个操作!⚡️");
         keywordsFormat.setKeywordsButtons(keywordsButtons);
-        try {
-            sender.execute(sendContent.createResponseMessage(update, keywordsFormat, "html"));
-        } catch (TelegramApiException e) {
-            e.printStackTrace();
-        }
+        sender.execute(sendContent.createResponseMessage(update, keywordsFormat, "html"));
     }
 
-    public void handleCallbackQuery(AbsSender sender, Update update) {
+    public void handleCallbackQuery(AbsSender sender, Update update) throws TelegramApiException {
         CallbackQuery callbackQuery = update.getCallbackQuery();
         String callbackData = callbackQuery.getData();
         if (callbackData == null || callbackData.isEmpty()) return;
@@ -131,22 +127,22 @@ public class BotHelper {
         answer.setCallbackQueryId(callbackQuery.getId());
         switch (callbackData) {
             case "spamChannelBot":
-                nightModeAndReport.spamChannelBot(sender,update);
+                nightModeAndReport.spamChannelBot(sender, update);
                 return;
             case "setFloodTime":
-                setFloodTime.haddle(sender,update,false);
+                setFloodTime.haddle(sender, update, false);
                 return;
             case "setFloodInfoCount":
-                setFloodInfoCount.haddle(sender,update,false);
+                setFloodInfoCount.haddle(sender, update, false);
                 return;
             case "closeAntiFloodFlag":
-                antiFlood.closeAntiFloodFlag(sender,update);
+                antiFlood.closeAntiFloodFlag(sender, update);
                 return;
             case "openAntiFloodFlag":
-                antiFlood.openAntiFloodFlag(sender,update);
+                antiFlood.openAntiFloodFlag(sender, update);
                 return;
             case "antiFlood":
-                antiFlood.hadleCallBack(sender,update);
+                antiFlood.hadleCallBack(sender, update);
                 return;
             case "changeIntoGroupUserNameCheckStatus":
                 setGroupSettingView.changeIntoGroupUserNameCheckStatus(sender, update);
@@ -185,22 +181,22 @@ public class BotHelper {
                 timerDelete.deletePrivateMessageImmediately(sender, update);
                 return;
             case "aiOption":
-                commonCallBack.aiOption(sender,update);
+                commonCallBack.aiOption(sender, update);
                 return;
             case "cronOption":
-                commonCallBack.cronOption(sender,update);
+                commonCallBack.cronOption(sender, update);
                 return;
             case "otherGroupSetting":
-                nightModeAndReport.hadleCallBack(sender,update);
+                nightModeAndReport.hadleCallBack(sender, update);
                 return;
             case "changeNightModeFlag":
-                nightModeAndReport.changeNightModeFlag(sender,update);
+                nightModeAndReport.changeNightModeFlag(sender, update);
                 return;
             case "reportToAdmin":
-                nightModeAndReport.reportToAdmin(sender,update);
+                nightModeAndReport.reportToAdmin(sender, update);
                 return;
             case "clearCommand":
-                nightModeAndReport.clearCommand(sender,update);
+                nightModeAndReport.clearCommand(sender, update);
                 return;
             case "close":
                 timerDelete.deletePrivateUsualMessageImmediately(sender, update);
@@ -212,57 +208,45 @@ public class BotHelper {
 
             for (ChatMember admin : adminList.getAdmins(sender, callbackQuery.getMessage().getChatId().toString())) {
                 if ("GroupAnonymousBot".equals(callbackQuery.getFrom().getUserName()) || admin.getUser().getId().equals(callbackQuery.getFrom().getId())) {
-                    adminAllow.allow(sender, Long.valueOf(callbackData.substring(15)), callbackQuery.getMessage().getChatId().toString(), captchaManagerCacheMap.getMessageIdForUser(callbackData.substring(15), callbackQuery.getMessage().getChatId().toString()), answer,true);
+                    adminAllow.allow(sender, Long.valueOf(callbackData.substring(15)), callbackQuery.getMessage().getChatId().toString(), captchaManagerCacheMap.getMessageIdForUser(callbackData.substring(15), callbackQuery.getMessage().getChatId().toString()), answer, true);
                     return;
                 }
             }
             answer.setText("❌你无权执行该操作！");
-            try {
-                sender.execute(answer);
-            } catch (TelegramApiException e) {
-                e.printStackTrace();
-            }
+            sender.execute(answer);
             return;
         }
 
-        if (callbackData.startsWith("adminUnBan")){
+        if (callbackData.startsWith("adminUnBan")) {
             for (ChatMember admin : adminList.getAdmins(sender, callbackQuery.getMessage().getChatId().toString())) {
                 if ("GroupAnonymousBot".equals(callbackQuery.getFrom().getUserName()) || admin.getUser().getId().equals(callbackQuery.getFrom().getId())) {
-                    adminAllow.allowUnBan(sender, Long.valueOf(callbackData.substring(10)), callbackQuery.getMessage().getChatId().toString(),captchaManagerCacheMap.getMessageIdForUser(callbackData.substring(10), callbackQuery.getMessage().getChatId().toString()), answer);
+                    adminAllow.allowUnBan(sender, Long.valueOf(callbackData.substring(10)), callbackQuery.getMessage().getChatId().toString(), captchaManagerCacheMap.getMessageIdForUser(callbackData.substring(10), callbackQuery.getMessage().getChatId().toString()), answer);
                     return;
                 }
             }
             answer.setText("❌你无权执行该操作！");
-            try {
-                sender.execute(answer);
-            } catch (TelegramApiException e) {
-                e.printStackTrace();
-            }
+            sender.execute(answer);
             return;
         }
 
-        if (callbackData.startsWith("adminUnmute")){
+        if (callbackData.startsWith("adminUnmute")) {
             for (ChatMember admin : adminList.getAdmins(sender, callbackQuery.getMessage().getChatId().toString())) {
                 if ("GroupAnonymousBot".equals(callbackQuery.getFrom().getUserName()) || admin.getUser().getId().equals(callbackQuery.getFrom().getId())) {
-                    adminAllow.allow(sender, Long.valueOf(callbackData.substring(11)), callbackQuery.getMessage().getChatId().toString(),captchaManagerCacheMap.getMessageIdForUser(callbackData.substring(11), callbackQuery.getMessage().getChatId().toString()), answer,false);
+                    adminAllow.allow(sender, Long.valueOf(callbackData.substring(11)), callbackQuery.getMessage().getChatId().toString(), captchaManagerCacheMap.getMessageIdForUser(callbackData.substring(11), callbackQuery.getMessage().getChatId().toString()), answer, false);
                     return;
                 }
             }
             answer.setText("❌你无权执行该操作！");
-            try {
-                sender.execute(answer);
-            } catch (TelegramApiException e) {
-                e.printStackTrace();
-            }
+            sender.execute(answer);
             return;
         }
 
-        if (callbackData.startsWith("floodInfoCount")){
-            setFloodInfoCount.haddle(sender,update,true);
+        if (callbackData.startsWith("floodInfoCount")) {
+            setFloodInfoCount.haddle(sender, update, true);
         }
 
-        if (callbackData.startsWith("floodTime")){
-            setFloodTime.haddle(sender,update,true);
+        if (callbackData.startsWith("floodTime")) {
+            setFloodTime.haddle(sender, update, true);
         }
 
         if (deleteGropuRuleMap.getGroupRuleMapSize() > 0) {
@@ -275,8 +259,8 @@ public class BotHelper {
                 if (groupInfoService.updateSelectiveByChatId(groupInfoWithBLOBs, chatId)) {
                     GroupInfoWithBLOBs groupInfoWithBLOBs2 = groupInfoService.selAllByGroupId(addRuleCacheMap.getGroupIdForUser(update.getCallbackQuery().getFrom().getId().toString()));
                     String keyWords = groupInfoWithBLOBs2.getKeywords();
-                    if (StringUtils.hasText(keyWords)){
-                        handleOption.ruleHandle(sender, addRuleCacheMap.getGroupIdForUser(update.getCallbackQuery().getFrom().getId().toString()),keyWords);
+                    if (StringUtils.hasText(keyWords)) {
+                        handleOption.ruleHandle(sender, addRuleCacheMap.getGroupIdForUser(update.getCallbackQuery().getFrom().getId().toString()), keyWords);
                     }
                     setDeleteView.deleteRuleSuccessCallBack(sender, update);
                 }

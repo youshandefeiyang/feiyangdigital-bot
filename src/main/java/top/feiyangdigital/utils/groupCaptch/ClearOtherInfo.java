@@ -19,25 +19,25 @@ public class ClearOtherInfo {
     @Autowired
     private TimerDelete timerDelete;
 
-    public void clearAdviceInfo(AbsSender sender, Update update) {
+    public void clearAdviceInfo(AbsSender sender, Update update) throws TelegramApiException {
         String chatId = update.getMessage().getChatId().toString();
         Integer messageId = update.getMessage().getMessageId();
         GroupInfoWithBLOBs groupInfoWithBLOBs = groupInfoService.selAllByGroupId(chatId);
-        if (groupInfoWithBLOBs!=null && "open".equals(groupInfoWithBLOBs.getClearinfoflag()) && (update.getMessage().getLeftChatMember() != null || !update.getMessage().getNewChatMembers().isEmpty() || update.getMessage().getPinnedMessage() != null)) {
-            try {
-                sender.execute(new DeleteMessage(chatId,messageId));
-            } catch (TelegramApiException e) {
-                e.printStackTrace();
-            }
+        if (groupInfoWithBLOBs != null && "open".equals(groupInfoWithBLOBs.getClearinfoflag()) && (update.getMessage().getLeftChatMember() != null || !update.getMessage().getNewChatMembers().isEmpty() || update.getMessage().getPinnedMessage() != null)) {
+            sender.execute(new DeleteMessage(chatId, messageId));
         }
     }
 
-    public void clearBotCommand(AbsSender sender,Update update){
+    public void clearBotCommand(AbsSender sender, Update update) {
         GroupInfoWithBLOBs groupInfoWithBLOBs = groupInfoService.selAllByGroupId(update.getMessage().getChatId().toString());
-        if (groupInfoWithBLOBs!=null && "open".equals(groupInfoWithBLOBs.getClearinfoflag()) && update.getMessage().hasEntities()){
-            update.getMessage().getEntities().forEach(i->{
-                if ("bot_command".equals(i.getType())){
-                    timerDelete.deleteMessageAfterDelay(sender,update,10);
+        if (groupInfoWithBLOBs != null && "open".equals(groupInfoWithBLOBs.getClearinfoflag()) && update.getMessage().hasEntities()) {
+            update.getMessage().getEntities().forEach(i -> {
+                if ("bot_command".equals(i.getType())) {
+                    try {
+                        timerDelete.deleteMessageAfterDelay(sender, update, 10);
+                    } catch (TelegramApiException e) {
+                        throw new RuntimeException(e);
+                    }
                 }
             });
         }

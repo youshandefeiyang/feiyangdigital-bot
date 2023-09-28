@@ -36,7 +36,7 @@ public class NightModeAndReport {
     @Autowired
     private HandleOption handleOption;
 
-    public void hadleCallBack(AbsSender sender, Update update) {
+    public void hadleCallBack(AbsSender sender, Update update) throws TelegramApiException {
         String userId = update.getCallbackQuery().getFrom().getId().toString();
         GroupInfoWithBLOBs groupInfoWithBLOBs = groupInfoService.selAllByGroupId(addRuleCacheMap.getGroupIdForUser(userId));
         List<String> keywordsButtons = new ArrayList<>();
@@ -47,14 +47,10 @@ public class NightModeAndReport {
         keywordsButtons.add("❌关闭菜单##closeMenu");
         keywordsFormat.setReplyText("当前群组：<b>" + addRuleCacheMap.getGroupNameForUser(userId) + "</b>\n当前群组ID：<b>" + addRuleCacheMap.getGroupIdForUser(userId) + "</b>\n当前夜间模式状态：<b>" + groupInfoWithBLOBs.getNightmodeflag() + "</b>\n当前通知Admin状态：<b>" + groupInfoWithBLOBs.getReportflag() + "</b>\n当前清理指令/通知状态：<b>" + groupInfoWithBLOBs.getClearinfoflag() + "</b>\n当前反频道马甲模式状态：<b>" + groupInfoWithBLOBs.getChannelspamflag() + "</b>\n⚡️请选择一个操作!⚡️");
         keywordsFormat.setKeywordsButtons(keywordsButtons);
-        try {
-            sender.execute(sendContent.editResponseMessage(update, keywordsFormat, "html"));
-        } catch (TelegramApiException e) {
-            e.printStackTrace();
-        }
+        sender.execute(sendContent.editResponseMessage(update, keywordsFormat, "html"));
     }
 
-    public void reportToAdmin(AbsSender sender, Update update) {
+    public void reportToAdmin(AbsSender sender, Update update) throws TelegramApiException {
         String userId = update.getCallbackQuery().getFrom().getId().toString();
         GroupInfoWithBLOBs groupInfoWithBLOBs = groupInfoService.selAllByGroupId(addRuleCacheMap.getGroupIdForUser(userId));
         String reportFlag = "";
@@ -81,15 +77,11 @@ public class NightModeAndReport {
         keywordsButtons.add("❌关闭菜单##closeMenu");
         keywordsFormat.setReplyText(text + "\n当前群组：<b>" + addRuleCacheMap.getGroupNameForUser(userId) + "</b>\n当前群组ID：<b>" + addRuleCacheMap.getGroupIdForUser(userId) + "</b>\n当前夜间模式状态：<b>" + groupInfoWithBLOBs.getNightmodeflag() + "</b>\n当前通知Admin状态：<b>" + reportFlag + "</b>\n当前清理指令/通知状态：<b>" + groupInfoWithBLOBs.getClearinfoflag() + "</b>\n当前反频道马甲模式状态：<b>" + groupInfoWithBLOBs.getChannelspamflag() + "</b>\n⚡️请选择一个操作!⚡️");
         keywordsFormat.setKeywordsButtons(keywordsButtons);
-        try {
-            sender.execute(sendContent.editResponseMessage(update, keywordsFormat, "html"));
-        } catch (TelegramApiException e) {
-            e.printStackTrace();
-        }
+        sender.execute(sendContent.editResponseMessage(update, keywordsFormat, "html"));
 
     }
 
-    public void clearCommand(AbsSender sender, Update update) {
+    public void clearCommand(AbsSender sender, Update update) throws TelegramApiException {
         String userId = update.getCallbackQuery().getFrom().getId().toString();
         GroupInfoWithBLOBs groupInfoWithBLOBs = groupInfoService.selAllByGroupId(addRuleCacheMap.getGroupIdForUser(userId));
         String clearFlag = "";
@@ -116,15 +108,11 @@ public class NightModeAndReport {
         keywordsButtons.add("❌关闭菜单##closeMenu");
         keywordsFormat.setReplyText(text + "\n当前群组：<b>" + addRuleCacheMap.getGroupNameForUser(userId) + "</b>\n当前群组ID：<b>" + addRuleCacheMap.getGroupIdForUser(userId) + "</b>\n当前夜间模式状态：<b>" + groupInfoWithBLOBs.getNightmodeflag() + "</b>\n当前通知Admin状态：<b>" + groupInfoWithBLOBs.getReportflag() + "</b>\n当前清理指令/通知状态：<b>" + clearFlag + "</b>\n当前反频道马甲模式状态：<b>" + groupInfoWithBLOBs.getChannelspamflag() + "</b>\n⚡️请选择一个操作!⚡️");
         keywordsFormat.setKeywordsButtons(keywordsButtons);
-        try {
-            sender.execute(sendContent.editResponseMessage(update, keywordsFormat, "html"));
-        } catch (TelegramApiException e) {
-            e.printStackTrace();
-        }
+        sender.execute(sendContent.editResponseMessage(update, keywordsFormat, "html"));
 
     }
 
-    public void changeNightModeFlag(AbsSender sender, Update update) {
+    public void changeNightModeFlag(AbsSender sender, Update update) throws TelegramApiException {
         String userId = update.getCallbackQuery().getFrom().getId().toString();
         GroupInfoWithBLOBs groupInfoWithBLOBs = groupInfoService.selAllByGroupId(addRuleCacheMap.getGroupIdForUser(userId));
         String keyWords = groupInfoWithBLOBs.getKeywords();
@@ -156,15 +144,10 @@ public class NightModeAndReport {
         keywordsButtons.add("❌关闭菜单##closeMenu");
         keywordsFormat.setReplyText(text + "\n当前群组：<b>" + addRuleCacheMap.getGroupNameForUser(userId) + "</b>\n当前群组ID：<b>" + addRuleCacheMap.getGroupIdForUser(userId) + "</b>\n当前夜间模式状态：<b>" + nightFlag + "</b>\n当前通知Admin状态：<b>" + groupInfoWithBLOBs.getReportflag() + "</b>\n当前清理指令/通知状态：<b>" + groupInfoWithBLOBs.getClearinfoflag() + "</b>\n当前反频道马甲模式状态：<b>" + groupInfoWithBLOBs.getChannelspamflag() + "</b>\n⚡️请选择一个操作!⚡️");
         keywordsFormat.setKeywordsButtons(keywordsButtons);
-        try {
-            sender.execute(sendContent.editResponseMessage(update, keywordsFormat, "html"));
-        } catch (TelegramApiException e) {
-            e.printStackTrace();
-        }
-
+        sender.execute(sendContent.editResponseMessage(update, keywordsFormat, "html"));
     }
 
-    public void spamChannelBot(AbsSender sender, Update update) {
+    public void spamChannelBot(AbsSender sender, Update update) throws TelegramApiException {
         String userId = update.getCallbackQuery().getFrom().getId().toString();
         GroupInfoWithBLOBs groupInfoWithBLOBs = groupInfoService.selAllByGroupId(addRuleCacheMap.getGroupIdForUser(userId));
         String spamFlag = "";
@@ -191,12 +174,7 @@ public class NightModeAndReport {
         keywordsButtons.add("❌关闭菜单##closeMenu");
         keywordsFormat.setReplyText(text + "\n当前群组：<b>" + addRuleCacheMap.getGroupNameForUser(userId) + "</b>\n当前群组ID：<b>" + addRuleCacheMap.getGroupIdForUser(userId) + "</b>\n当前夜间模式状态：<b>" + groupInfoWithBLOBs.getNightmodeflag() + "</b>\n当前通知Admin状态：<b>" + groupInfoWithBLOBs.getReportflag() + "</b>\n当前清理指令/通知状态：<b>" + groupInfoWithBLOBs.getClearinfoflag() + "</b>\n当前反频道马甲模式状态：<b>" + spamFlag + "</b>\n⚡️请选择一个操作!⚡️");
         keywordsFormat.setKeywordsButtons(keywordsButtons);
-        try {
-            sender.execute(sendContent.editResponseMessage(update, keywordsFormat, "html"));
-        } catch (TelegramApiException e) {
-            e.printStackTrace();
-        }
-
+        sender.execute(sendContent.editResponseMessage(update, keywordsFormat, "html"));
     }
 
 

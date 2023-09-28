@@ -1,5 +1,6 @@
 package top.feiyangdigital.bot;
 
+import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.bots.TelegramWebhookBot;
@@ -23,6 +24,7 @@ public class TgWebhookBot extends TelegramWebhookBot {
     @Autowired
     private GroupCommands groupCommands;
 
+    @SneakyThrows
     @Override
     public BotApiMethod<?> onWebhookUpdateReceived(Update update) {
         commonFunction.mainFunc(this,update);

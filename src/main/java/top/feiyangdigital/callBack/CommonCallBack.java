@@ -36,7 +36,7 @@ public class CommonCallBack {
     private HandleOption handleOption;
 
 
-    public void cronOption(AbsSender sender, Update update) {
+    public void cronOption(AbsSender sender, Update update) throws TelegramApiException {
         String userId = update.getCallbackQuery().getFrom().getId().toString();
         GroupInfoWithBLOBs groupInfoWithBLOBs = groupInfoService.selAllByGroupId(addRuleCacheMap.getGroupIdForUser(userId));
         String keyWords = groupInfoWithBLOBs.getKeywords();
@@ -48,8 +48,8 @@ public class CommonCallBack {
             if (groupInfoService.updateSelectiveByChatId(groupInfoWithBLOBs1, addRuleCacheMap.getGroupIdForUser(userId))) {
                 crontabFlag = "open";
                 text = "✅定时发送消息已打开";
-                if (StringUtils.hasText(keyWords)){
-                    handleOption.ruleHandle(sender, addRuleCacheMap.getGroupIdForUser(userId),keyWords);
+                if (StringUtils.hasText(keyWords)) {
+                    handleOption.ruleHandle(sender, addRuleCacheMap.getGroupIdForUser(userId), keyWords);
                 }
             }
         } else {
@@ -69,17 +69,13 @@ public class CommonCallBack {
         keywordsButtons.add("❌关闭菜单##closeMenu");
         keywordsFormat.setReplyText(text + "\n当前群组：<b>" + addRuleCacheMap.getGroupNameForUser(userId) + "</b>\n当前群组ID：<b>" + addRuleCacheMap.getGroupIdForUser(userId) + "</b>\n当前可输入状态：<b>" + addRuleCacheMap.getKeywordsFlagForUser(userId) + "</b>\n当前定时发送消息状态：<b>" + crontabFlag + "</b>\n当前AI状态：<b>" + addRuleCacheMap.getAiFlagForUser(userId) + "</b>\n⚡️请选择一个操作!⚡️");
         keywordsFormat.setKeywordsButtons(keywordsButtons);
-        addRuleCacheMap.updateUserMapping(userId,addRuleCacheMap.getGroupIdForUser(userId),addRuleCacheMap.getGroupNameForUser(userId),addRuleCacheMap.getKeywordsFlagForUser(userId),addRuleCacheMap.getAiFlagForUser(userId),crontabFlag);
-        try {
-            sender.execute(sendContent.editResponseMessage(update, keywordsFormat, "html"));
-        } catch (TelegramApiException e) {
-            e.printStackTrace();
-        }
+        addRuleCacheMap.updateUserMapping(userId, addRuleCacheMap.getGroupIdForUser(userId), addRuleCacheMap.getGroupNameForUser(userId), addRuleCacheMap.getKeywordsFlagForUser(userId), addRuleCacheMap.getAiFlagForUser(userId), crontabFlag);
+        sender.execute(sendContent.editResponseMessage(update, keywordsFormat, "html"));
 
     }
 
 
-    public void aiOption(AbsSender sender, Update update) {
+    public void aiOption(AbsSender sender, Update update) throws TelegramApiException {
         String userId = update.getCallbackQuery().getFrom().getId().toString();
         GroupInfoWithBLOBs groupInfoWithBLOBs = groupInfoService.selAllByGroupId(addRuleCacheMap.getGroupIdForUser(userId));
         String aiFlag = "";
@@ -105,18 +101,13 @@ public class CommonCallBack {
         keywordsButtons.add("🌊防刷屏模式##antiFlood%%💎其他群组设置##otherGroupSetting");
         keywordsButtons.add("👨🏻‍💻仓库地址$$https://github.com/youshandefeiyang/feiyangdigital-bot%%👥官方群组$$https://t.me/feiyangdigital");
         keywordsButtons.add("❌关闭菜单##closeMenu");
-        keywordsFormat.setReplyText(text + "\n当前群组：<b>" + addRuleCacheMap.getGroupNameForUser(userId) + "</b>\n当前群组ID：<b>" + addRuleCacheMap.getGroupIdForUser(userId) + "</b>\n当前可输入状态：<b>" + addRuleCacheMap.getKeywordsFlagForUser(userId) + "</b>\n当前定时发送消息状态：<b>" + addRuleCacheMap.getCrontabFlagForUser(userId)  + "</b>\n当前AI状态：<b>" + aiFlag + "</b>\n⚡️请选择一个操作!⚡️");
+        keywordsFormat.setReplyText(text + "\n当前群组：<b>" + addRuleCacheMap.getGroupNameForUser(userId) + "</b>\n当前群组ID：<b>" + addRuleCacheMap.getGroupIdForUser(userId) + "</b>\n当前可输入状态：<b>" + addRuleCacheMap.getKeywordsFlagForUser(userId) + "</b>\n当前定时发送消息状态：<b>" + addRuleCacheMap.getCrontabFlagForUser(userId) + "</b>\n当前AI状态：<b>" + aiFlag + "</b>\n⚡️请选择一个操作!⚡️");
         keywordsFormat.setKeywordsButtons(keywordsButtons);
-        addRuleCacheMap.updateUserMapping(userId,addRuleCacheMap.getGroupIdForUser(userId),addRuleCacheMap.getGroupNameForUser(userId),addRuleCacheMap.getKeywordsFlagForUser(userId),aiFlag,addRuleCacheMap.getCrontabFlagForUser(userId));
-        try {
-            sender.execute(sendContent.editResponseMessage(update, keywordsFormat, "html"));
-        } catch (TelegramApiException e) {
-            e.printStackTrace();
-        }
-
+        addRuleCacheMap.updateUserMapping(userId, addRuleCacheMap.getGroupIdForUser(userId), addRuleCacheMap.getGroupNameForUser(userId), addRuleCacheMap.getKeywordsFlagForUser(userId), aiFlag, addRuleCacheMap.getCrontabFlagForUser(userId));
+        sender.execute(sendContent.editResponseMessage(update, keywordsFormat, "html"));
     }
 
-    public void backMainMenu(AbsSender sender, Update update) {
+    public void backMainMenu(AbsSender sender, Update update) throws TelegramApiException {
         String userId = update.getCallbackQuery().getFrom().getId().toString();
         List<String> keywordsButtons = new ArrayList<>();
         KeywordsFormat keywordsFormat = new KeywordsFormat();
@@ -127,10 +118,6 @@ public class CommonCallBack {
         keywordsButtons.add("❌关闭菜单##closeMenu");
         keywordsFormat.setReplyText("当前群组：<b>" + addRuleCacheMap.getGroupNameForUser(userId) + "</b>\n当前群组ID：<b>" + addRuleCacheMap.getGroupIdForUser(userId) + "</b>\n当前可输入状态：<b>" + addRuleCacheMap.getKeywordsFlagForUser(userId) + "</b>\n当前定时发送消息状态：<b>" + addRuleCacheMap.getCrontabFlagForUser(userId) + "</b>\n当前AI状态：<b>" + addRuleCacheMap.getAiFlagForUser(userId) + "</b>\n⚡️请选择一个操作!⚡️");
         keywordsFormat.setKeywordsButtons(keywordsButtons);
-        try {
-            sender.execute(sendContent.editResponseMessage(update, keywordsFormat, "html"));
-        } catch (TelegramApiException e) {
-            e.printStackTrace();
-        }
+        sender.execute(sendContent.editResponseMessage(update, keywordsFormat, "html"));
     }
 }

@@ -22,7 +22,7 @@ public class BotFirstIntoGroup {
     @Autowired
     private NewMemberIntoGroup newMemberIntoGroup;
 
-    public void handleMessage(AbsSender sender, Update update) {
+    public void handleMessage(AbsSender sender, Update update) throws TelegramApiException {
         Message message = update.getMessage();
         if (message.getNewChatMembers() != null) {
             for (User user : message.getNewChatMembers()) {
@@ -41,11 +41,7 @@ public class BotFirstIntoGroup {
                         } else {
                             LeaveChat leaveChat = new LeaveChat();
                             leaveChat.setChatId(chatId);
-                            try {
-                                sender.execute(leaveChat);
-                            } catch (TelegramApiException e) {
-                                e.printStackTrace();
-                            }
+                            sender.execute(leaveChat);
                         }
                     } else {
                         newMemberIntoGroup.handleMessage(sender, update, user);

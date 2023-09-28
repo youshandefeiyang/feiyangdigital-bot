@@ -18,27 +18,11 @@ import java.util.stream.Collectors;
 @Component
 public class AdminList {
 
-
-    @CacheEvict(value = "adminsCache", allEntries = true)
-    public String fetchHighAdminList(AbsSender sender, Update update) {
-        return getAdmins(sender,update.getMessage().getChatId().toString()).stream()
-                .filter(admin ->
-                        (admin instanceof ChatMemberAdministrator && ((ChatMemberAdministrator) admin).getIsAnonymous()) || admin instanceof ChatMemberOwner
-                ).map(admin -> String.valueOf(admin.getUser().getId()))
-                .collect(Collectors.joining("|"));
-    }
-
     @Cacheable(value = "adminsCache", key = "#chatId + 'admins'")
-    public List<ChatMember> getAdmins(AbsSender sender,String chatId){
-        List<ChatMember> list = new ArrayList<>();
+    public List<ChatMember> getAdmins(AbsSender sender,String chatId) throws TelegramApiException {
         GetChatAdministrators getChatAdministrators = new GetChatAdministrators();
         getChatAdministrators.setChatId(chatId);
-        try {
-           list = sender.execute(getChatAdministrators);
-        } catch (TelegramApiException e) {
-            e.printStackTrace();
-        }
-        return list;
+        return sender.execute(getChatAdministrators);
     }
 
 }

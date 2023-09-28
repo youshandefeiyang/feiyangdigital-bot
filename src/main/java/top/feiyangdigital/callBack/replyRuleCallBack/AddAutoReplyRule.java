@@ -36,7 +36,7 @@ public class AddAutoReplyRule {
     @Autowired
     private HandleOption handleOption;
 
-    public void addNewRule(AbsSender sender, Update update) {
+    public void addNewRule(AbsSender sender, Update update) throws TelegramApiException {
         if (update.getMessage().getText() != null && !update.getMessage().getText().trim().isEmpty()) {
             String userId = update.getMessage().getFrom().getId().toString();
             String newRule = update.getMessage().getText().trim();
@@ -46,25 +46,17 @@ public class AddAutoReplyRule {
                     String settingTimestamp = groupInfoWithBLOBs.getSettingtimestamp();
                     if (settingTimestamp != null && !settingTimestamp.isEmpty()) {
                         if (new Date().getTime() - Long.parseLong(settingTimestamp) > (15 * 60 * 1000)) {
-                            try {
-                                sender.execute(sendContent.messageText(update, "本次设置超时，请去群里重新发送/setbot"));
-                            } catch (TelegramApiException e) {
-                                e.printStackTrace();
-                            }
-                            addRuleCacheMap.updateUserMapping(userId, addRuleCacheMap.getGroupIdForUser(userId), addRuleCacheMap.getGroupNameForUser(userId), "notallow",addRuleCacheMap.getAiFlagForUser(userId),addRuleCacheMap.getCrontabFlagForUser(userId));
+                            sender.execute(sendContent.messageText(update, "本次设置超时，请去群里重新发送/setbot"));
+                            addRuleCacheMap.updateUserMapping(userId, addRuleCacheMap.getGroupIdForUser(userId), addRuleCacheMap.getGroupNameForUser(userId), "notallow", addRuleCacheMap.getAiFlagForUser(userId), addRuleCacheMap.getCrontabFlagForUser(userId));
                         } else {
                             String waitRule = UUID.randomUUID().toString() + " | " + newRule;
                             String oldContent = groupInfoWithBLOBs.getKeywords();
                             String newContent;
-                            if (oldContent==null||oldContent.isEmpty()){
+                            if (oldContent == null || oldContent.isEmpty()) {
                                 newContent = waitRule;
-                            }else {
+                            } else {
                                 if (oldContent.contains("&&welcome=") && newRule.contains("&&welcome=")) {
-                                    try {
-                                        sender.execute(sendContent.messageText(update, "欢迎词只能设置一个！"));
-                                    } catch (TelegramApiException e) {
-                                        e.printStackTrace();
-                                    }
+                                    sender.execute(sendContent.messageText(update, "欢迎词只能设置一个！"));
                                     return;
                                 }
                                 newContent = groupInfoWithBLOBs.getKeywords() + ("\n\n" + waitRule);
@@ -72,16 +64,12 @@ public class AddAutoReplyRule {
                             GroupInfoWithBLOBs groupInfoWithBLOBs1 = new GroupInfoWithBLOBs();
                             groupInfoWithBLOBs1.setKeywords(newContent);
                             if (groupInfoService.updateSelectiveByChatId(groupInfoWithBLOBs1, addRuleCacheMap.getGroupIdForUser(userId))) {
-                                try {
-                                    GroupInfoWithBLOBs groupInfoWithBLOBs2 = groupInfoService.selAllByGroupId(addRuleCacheMap.getGroupIdForUser(userId));
-                                    String keyWords = groupInfoWithBLOBs2.getKeywords();
-                                    if (StringUtils.hasText(keyWords)){
-                                        handleOption.ruleHandle(sender, addRuleCacheMap.getGroupIdForUser(userId),keyWords);
-                                    }
-                                    sender.execute(sendContent.createResponseMessage(update, new KeywordsFormat(waitRule), "html"));
-                                } catch (TelegramApiException e) {
-                                    e.printStackTrace();
+                                GroupInfoWithBLOBs groupInfoWithBLOBs2 = groupInfoService.selAllByGroupId(addRuleCacheMap.getGroupIdForUser(userId));
+                                String keyWords = groupInfoWithBLOBs2.getKeywords();
+                                if (StringUtils.hasText(keyWords)) {
+                                    handleOption.ruleHandle(sender, addRuleCacheMap.getGroupIdForUser(userId), keyWords);
                                 }
+                                sender.execute(sendContent.createResponseMessage(update, new KeywordsFormat(waitRule), "html"));
                             }
                         }
                     }
@@ -95,11 +83,7 @@ public class AddAutoReplyRule {
                 keywordsButtons.add("❌关闭菜单##closeMenu");
                 keywordsFormat.setReplyText("⚡️<b>规则不合法，请重新添加！</b>⚡️\n当前群组：<b>" + addRuleCacheMap.getGroupNameForUser(userId) + "</b>\n当前群组ID：<b>" + addRuleCacheMap.getGroupIdForUser(userId) + "</b>\n当前可输入状态：<b>" + addRuleCacheMap.getKeywordsFlagForUser(userId) + "</b>️");
                 keywordsFormat.setKeywordsButtons(keywordsButtons);
-                try {
-                    sender.execute(sendContent.createResponseMessage(update, keywordsFormat, "html"));
-                } catch (TelegramApiException e) {
-                    e.printStackTrace();
-                }
+                sender.execute(sendContent.createResponseMessage(update, keywordsFormat, "html"));
             }
         }
     }

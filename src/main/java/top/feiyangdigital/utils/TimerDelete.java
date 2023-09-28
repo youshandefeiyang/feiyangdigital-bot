@@ -60,7 +60,7 @@ public class TimerDelete {
         }
     }
 
-    public void deleteMessageImmediately(AbsSender sender, Update update) {
+    public void deleteMessageImmediately(AbsSender sender, Update update) throws TelegramApiException {
         if (!checkUser.isGroupAdmin(sender, update)) {
             try {
                 sender.execute(new DeleteMessage(update.getMessage().getChatId().toString(), update.getMessage().getMessageId()));
@@ -70,7 +70,7 @@ public class TimerDelete {
         }
     }
 
-    public void deleteMessageAfterDelay(AbsSender sender, Update update, int delayInSeconds) {
+    public void deleteMessageAfterDelay(AbsSender sender, Update update, int delayInSeconds) throws TelegramApiException {
         if (!checkUser.isGroupAdmin(sender, update)) {
             new Timer().schedule(new TimerTask() {
                 @Override

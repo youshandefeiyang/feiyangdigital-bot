@@ -23,7 +23,7 @@ public class MessageHandle {
     @Autowired
     private SendContent sendContent;
 
-    public boolean processUserMessage(AbsSender sender, Update update, List<KeywordsFormat> keywordsList) {
+    public boolean processUserMessage(AbsSender sender, Update update, List<KeywordsFormat> keywordsList) throws TelegramApiException {
         String messageText = update.getMessage().getText();
 
         // 如果消息文本为null，直接返回，不做处理
@@ -66,11 +66,7 @@ public class MessageHandle {
             } // 可以判断后续逻辑，比如是否ban或者禁言
             else {
                 if (pattern.matcher(messageText).find()) {
-                    try {
-                        sender.execute(sendContent.replyToUser(update, keywordFormat, "markdown"));
-                    } catch (TelegramApiException e) {
-                        e.printStackTrace();
-                    }
+                    sender.execute(sendContent.replyToUser(update, keywordFormat, "markdown"));
                     return true;
                 }
             }

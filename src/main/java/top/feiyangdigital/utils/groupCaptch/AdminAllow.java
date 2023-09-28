@@ -24,30 +24,22 @@ public class AdminAllow {
     @Autowired
     private CaptchaManagerCacheMap captchaManagerCacheMap;
 
-    public void allow(AbsSender sender, Long userId, String chatId,Integer messageId, AnswerCallbackQuery answer,boolean haveAnswer){
-        restrictOrUnrestrictUser.unrestrictUser(sender,userId,chatId);
+    public void allow(AbsSender sender, Long userId, String chatId, Integer messageId, AnswerCallbackQuery answer, boolean haveAnswer) throws TelegramApiException {
+        restrictOrUnrestrictUser.unrestrictUser(sender, userId, chatId);
         answer.setText("用户已被手动解禁");
-        timerDelete.deleteByMessageIdImmediately(sender,chatId,messageId);
-        if (haveAnswer){
+        timerDelete.deleteByMessageIdImmediately(sender, chatId, messageId);
+        if (haveAnswer) {
             captchaManager.clearMappingsForUser(userId.toString());
         }
         captchaManagerCacheMap.clearMappingsForUser(userId.toString(), chatId);
-        try {
-            sender.execute(answer);
-        } catch (TelegramApiException e) {
-            e.printStackTrace();
-        }
+        sender.execute(answer);
     }
 
-    public void allowUnBan(AbsSender sender, Long userId, String chatId, Integer messageId, AnswerCallbackQuery answer){
-        banOrUnBan.unBanUserById(sender,userId,chatId);
+    public void allowUnBan(AbsSender sender, Long userId, String chatId, Integer messageId, AnswerCallbackQuery answer) throws TelegramApiException {
+        banOrUnBan.unBanUserById(sender, userId, chatId);
         answer.setText("用户已被手动解封");
-        timerDelete.deleteByMessageIdImmediately(sender,chatId,messageId);
+        timerDelete.deleteByMessageIdImmediately(sender, chatId, messageId);
         captchaManagerCacheMap.clearMappingsForUser(userId.toString(), chatId);
-        try {
-            sender.execute(answer);
-        } catch (TelegramApiException e) {
-            e.printStackTrace();
-        }
+        sender.execute(answer);
     }
 }

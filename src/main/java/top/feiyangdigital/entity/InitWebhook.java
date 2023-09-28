@@ -2,10 +2,13 @@ package top.feiyangdigital.entity;
 
 import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONObject;
+import lombok.extern.slf4j.Slf4j;
 import okhttp3.*;
 
+import java.io.IOException;
 import java.util.List;
 
+@Slf4j
 public class InitWebhook {
     private static final OkHttpClient client = new OkHttpClient();
 
@@ -39,9 +42,9 @@ public class InitWebhook {
             } else {
                 return false;
             }
-        } catch (Exception e) {
+        } catch (IOException e) {
             // 如果执行请求时出现异常，打印错误信息
-            e.printStackTrace();
+            log.error("初始化webhook失败，{}",e.getMessage(),e);
             return false;
         }
     }

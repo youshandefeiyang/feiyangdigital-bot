@@ -1,5 +1,6 @@
 package top.feiyangdigital.bot;
 
+import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
@@ -18,9 +19,10 @@ public class TgLongPollingBot extends TelegramLongPollingBot {
     @Autowired
     private GroupCommands groupCommands;
 
+    @SneakyThrows
     @Override
     public void onUpdateReceived(Update update) {
-        commonFunction.mainFunc(this,update);
+        commonFunction.mainFunc(this, update);
     }
 
     public void setGroupCommands() throws TelegramApiException {

@@ -9,6 +9,7 @@ import org.telegram.telegrambots.meta.api.methods.ParseMode;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.bots.AbsSender;
+import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import top.feiyangdigital.entity.BotRecord;
 import top.feiyangdigital.entity.GroupInfoWithBLOBs;
 import top.feiyangdigital.entity.KeywordsFormat;
@@ -46,7 +47,7 @@ public class AiCheckMessage {
     @Autowired
     private OpenAiApiService openAiApiService;
 
-    public void checkMessage(AbsSender sender, Update update) {
+    public void checkMessage(AbsSender sender, Update update) throws TelegramApiException {
         String groupId = update.getMessage().getChatId().toString();
         String userId = update.getMessage().getFrom().getId().toString();
         Integer messageId = update.getMessage().getMessageId();

@@ -1,5 +1,6 @@
 package top.feiyangdigital.utils;
 
+import lombok.Getter;
 import org.springframework.stereotype.Component;
 
 import java.util.Map;
@@ -34,6 +35,7 @@ public class DeleteGropuRuleMap {
         }
     }
 
+    @Getter
     public static class GroupRuleMappings {
         // UUID对应规则
         private final Map<String, String> uuidToRuleMap = new ConcurrentHashMap<>();
@@ -52,14 +54,6 @@ public class DeleteGropuRuleMap {
 
         public String getFullUuidByShortUuid(String shortUuid) {
             return shortUuidToFullUuidMap.get(shortUuid);
-        }
-
-        public Map<String, String> getUuidToRuleMap() {
-            return uuidToRuleMap;
-        }
-
-        public Map<String, String> getShortUuidToFullUuidMap() {
-            return shortUuidToFullUuidMap;
         }
 
         public void removeRuleByUuid(String uuid) {
