@@ -26,7 +26,7 @@ public class SetFloodTime {
     @Autowired
     private AddRuleCacheMap addRuleCacheMap;
 
-    public void haddle(AbsSender sender, Update update, boolean mode) {
+    public void haddle(AbsSender sender, Update update, boolean mode) throws TelegramApiException {
         String userId = update.getCallbackQuery().getFrom().getId().toString();
         GroupInfoWithBLOBs groupInfoWithBLOBs = groupInfoService.selAllByGroupId(addRuleCacheMap.getGroupIdForUser(userId));
         String second = "";
@@ -38,10 +38,10 @@ public class SetFloodTime {
         if (mode) {
             String time = update.getCallbackQuery().getData().substring(9);
             GroupInfoWithBLOBs groupInfoWithBLOBs1 = new GroupInfoWithBLOBs();
-            groupInfoWithBLOBs1.setAntifloodsetting(time+","+groupInfoWithBLOBs.getAntifloodsetting().split(",")[1]);
+            groupInfoWithBLOBs1.setAntifloodsetting(time + "," + groupInfoWithBLOBs.getAntifloodsetting().split(",")[1]);
             infoCount = groupInfoWithBLOBs.getAntifloodsetting().split(",")[1];
-            if (groupInfoService.updateSelectiveByChatId(groupInfoWithBLOBs1,addRuleCacheMap.getGroupIdForUser(userId))){
-               second = time;
+            if (groupInfoService.updateSelectiveByChatId(groupInfoWithBLOBs1, addRuleCacheMap.getGroupIdForUser(userId))) {
+                second = time;
             }
         }
         List<String> keywordsButtons = new ArrayList<>();
@@ -52,10 +52,6 @@ public class SetFloodTime {
         keywordsButtons.add("🔙返回##openAntiFloodFlag");
         keywordsFormat.setReplyText("当前群组：<b>" + addRuleCacheMap.getGroupNameForUser(userId) + "</b>\n当前群组ID：<b>" + addRuleCacheMap.getGroupIdForUser(userId) + "</b>\n\n👉目前：" + "<b>" + second + "</b>秒内发送" + "<b>" + infoCount + "</b>条消息会触发反刷屏。");
         keywordsFormat.setKeywordsButtons(keywordsButtons);
-        try {
-            sender.execute(sendContent.editResponseMessage(update, keywordsFormat, "html"));
-        } catch (TelegramApiException e) {
-            e.printStackTrace();
-        }
+        sender.execute(sendContent.editResponseMessage(update, keywordsFormat, "html"));
     }
 }

@@ -27,7 +27,7 @@ public class SetFloodInfoCount {
     @Autowired
     private AddRuleCacheMap addRuleCacheMap;
 
-    public void haddle(AbsSender sender, Update update, boolean mode) {
+    public void haddle(AbsSender sender, Update update, boolean mode) throws TelegramApiException {
         String userId = update.getCallbackQuery().getFrom().getId().toString();
         GroupInfoWithBLOBs groupInfoWithBLOBs = groupInfoService.selAllByGroupId(addRuleCacheMap.getGroupIdForUser(userId));
         String second = "";
@@ -41,7 +41,7 @@ public class SetFloodInfoCount {
             GroupInfoWithBLOBs groupInfoWithBLOBs1 = new GroupInfoWithBLOBs();
             groupInfoWithBLOBs1.setAntifloodsetting(groupInfoWithBLOBs.getAntifloodsetting().split(",")[0] + "," + count);
             second = groupInfoWithBLOBs.getAntifloodsetting().split(",")[0];
-            if (groupInfoService.updateSelectiveByChatId(groupInfoWithBLOBs1,addRuleCacheMap.getGroupIdForUser(userId))){
+            if (groupInfoService.updateSelectiveByChatId(groupInfoWithBLOBs1, addRuleCacheMap.getGroupIdForUser(userId))) {
                 infoCount = count;
             }
         }
@@ -53,10 +53,6 @@ public class SetFloodInfoCount {
         keywordsButtons.add("🔙返回##openAntiFloodFlag");
         keywordsFormat.setReplyText("当前群组：<b>" + addRuleCacheMap.getGroupNameForUser(userId) + "</b>\n当前群组ID：<b>" + addRuleCacheMap.getGroupIdForUser(userId) + "</b>\n\n👉目前：" + "<b>" + second + "</b>秒内发送" + "<b>" + infoCount + "</b>条消息会触发反刷屏。");
         keywordsFormat.setKeywordsButtons(keywordsButtons);
-        try {
-            sender.execute(sendContent.editResponseMessage(update, keywordsFormat, "html"));
-        } catch (TelegramApiException e) {
-            e.printStackTrace();
-        }
+        sender.execute(sendContent.editResponseMessage(update, keywordsFormat, "html"));
     }
 }

@@ -13,6 +13,7 @@ import top.feiyangdigital.callBack.CommonCallBack;
 import top.feiyangdigital.callBack.deleteRuleCallBack.SetDeleteView;
 import top.feiyangdigital.callBack.groupSetting.SetGroupSettingView;
 import top.feiyangdigital.callBack.otherGroupSetting.NightModeAndReport;
+import top.feiyangdigital.callBack.otherGroupSetting.NightSetting;
 import top.feiyangdigital.callBack.replyRuleCallBack.SetAutoReplyMenu;
 import top.feiyangdigital.callBack.spamOption.AntiFlood;
 import top.feiyangdigital.callBack.spamOption.SetFloodInfoCount;
@@ -34,6 +35,9 @@ import java.util.List;
 
 @Service
 public class BotHelper {
+
+    @Autowired
+    private NightSetting nightSetting;
 
     @Autowired
     private SetFloodTime setFloodTime;
@@ -126,6 +130,15 @@ public class BotHelper {
         AnswerCallbackQuery answer = new AnswerCallbackQuery();
         answer.setCallbackQueryId(callbackQuery.getId());
         switch (callbackData) {
+            case "openCanSendMediaFlag":
+                nightSetting.openCanSendMediaFlag(sender,update);
+                return;
+            case "closeCanSendMediaFlag":
+                nightSetting.closeCanSendMediaFlag(sender,update);
+                return;
+            case "nightSetting":
+                nightSetting.hadleCallBack(sender,update);
+                return;
             case "spamChannelBot":
                 nightModeAndReport.spamChannelBot(sender, update);
                 return;
@@ -190,7 +203,7 @@ public class BotHelper {
                 nightModeAndReport.hadleCallBack(sender, update);
                 return;
             case "changeNightModeFlag":
-                nightModeAndReport.changeNightModeFlag(sender, update);
+                nightSetting.changeNightModeFlag(sender, update);
                 return;
             case "reportToAdmin":
                 nightModeAndReport.reportToAdmin(sender, update);
