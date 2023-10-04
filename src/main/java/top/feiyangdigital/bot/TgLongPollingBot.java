@@ -7,6 +7,8 @@ import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
+import java.util.List;
+
 @Component
 public class TgLongPollingBot extends TelegramLongPollingBot {
 
@@ -19,10 +21,19 @@ public class TgLongPollingBot extends TelegramLongPollingBot {
     @Autowired
     private GroupCommands groupCommands;
 
-    @SneakyThrows
     @Override
     public void onUpdateReceived(Update update) {
-        commonFunction.mainFunc(this, update);
+    }
+
+    @Override
+    public void onUpdatesReceived(List<Update> updates) {
+        updates.parallelStream().forEach(update -> {
+            try {
+                commonFunction.mainFunc(this, update);
+            } catch (TelegramApiException e) {
+                throw new RuntimeException(e);
+            }
+        });
     }
 
     public void setGroupCommands() throws TelegramApiException {
