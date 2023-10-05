@@ -72,9 +72,10 @@ public class AiCheckMessage {
             Integer normalCount = botRecord.getNormalcount();
             if (violationCount >= 5) {
                 String text = String.format("用户 <b><a href=\"tg://user?id=%d\">%s</a></b> 已被AI检测违规超过5次，永久限制发言！", Long.valueOf(userId), firstName);
+                String otherText = String.format("<b>违规用户UserID为：<a href=\"tg://user?id=%d\">%s</a></b>", Long.valueOf(userId), userId);
                 SendMessage notification = new SendMessage();
                 notification.setChatId(groupId);
-                notification.setText(text);
+                notification.setText(text+"\n"+otherText);
                 notification.setParseMode(ParseMode.HTML);
                 timerDelete.deleteMessageImmediatelyAndNotifyAfterDelay(sender, notification, groupId, messageId, Long.valueOf(userId), 90);
                 restrictOrUnrestrictUser.restrictUser(sender, Long.valueOf(userId), groupId);
@@ -90,9 +91,10 @@ public class AiCheckMessage {
                 BotRecord botRecord1 = new BotRecord();
                 if (spamChance >= 6) {
                     String text = String.format("用户 <b><a href=\"tg://user?id=%d\">%s</a></b> 已被AI检测发送违规词，判断原因如下：\n<tg-spoiler>%s</tg-spoiler>", Long.valueOf(userId), firstName, spamReason);
+                    String otherText = String.format("<b>违规用户UserID为：<a href=\"tg://user?id=%d\">%s</a></b>", Long.valueOf(userId), userId);
                     SendMessage notification = new SendMessage();
                     notification.setChatId(groupId);
-                    notification.setText(text);
+                    notification.setText(text+"\n"+otherText);
                     notification.setParseMode(ParseMode.HTML);
                     timerDelete.deleteMessageImmediatelyAndNotifyAfterDelay(sender, notification, groupId, messageId, Long.valueOf(userId), 90);
                     botRecord1.setViolationcount(violationCount + 1);

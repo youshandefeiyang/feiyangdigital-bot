@@ -25,6 +25,7 @@ public class MessageHandle {
 
     public boolean processUserMessage(AbsSender sender, Update update, List<KeywordsFormat> keywordsList) throws TelegramApiException {
         String messageText = update.getMessage().getText();
+        Long userId = update.getMessage().getFrom().getId();
 
         // 如果消息文本为null，直接返回，不做处理
         if (!StringUtils.hasText(messageText)) {
@@ -52,13 +53,15 @@ public class MessageHandle {
                     }
 
                     if (currentMap.containsKey("DeleteReplyAfterYSeconds")) {
+                        String text = String.format("<b>违规用户UserID为：<a href=\"tg://user?id=%d\">%s</a></b>",userId,userId);
+                        keywordFormat.setReplyText(keywordFormat.getReplyText()+"\n"+text);
                         int deleteReplyAfterYSeconds = Integer.parseInt(currentMap.get("DeleteReplyAfterYSeconds"));
                         if (deleteReplyAfterYSeconds == 0) {
                             // 立即删除reply
-                            timerDelete.sendAndDeleteMessageImmediately(sender, sendContent.createResponseMessage(update, keywordFormat, "markdown"));
+                            timerDelete.sendAndDeleteMessageImmediately(sender, sendContent.createResponseMessage(update, keywordFormat, "html"));
                         } else {
                             // 使用timer删除reply
-                            timerDelete.sendTimedMessage(sender, sendContent.createResponseMessage(update, keywordFormat, "markdown"), deleteReplyAfterYSeconds);
+                            timerDelete.sendTimedMessage(sender, sendContent.createResponseMessage(update, keywordFormat, "html"), deleteReplyAfterYSeconds);
                         }
                     }
                     return true;
@@ -66,7 +69,7 @@ public class MessageHandle {
             } // 可以判断后续逻辑，比如是否ban或者禁言
             else {
                 if (pattern.matcher(messageText).find()) {
-                    sender.execute(sendContent.replyToUser(update, keywordFormat, "markdown"));
+                    sender.execute(sendContent.replyToUser(update, keywordFormat, "html"));
                     return true;
                 }
             }
