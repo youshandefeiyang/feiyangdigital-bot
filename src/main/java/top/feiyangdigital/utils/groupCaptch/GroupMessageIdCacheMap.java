@@ -14,22 +14,17 @@ public class GroupMessageIdCacheMap {
     @Autowired
     private TimerDelete timerDelete;
 
-    Map<String, Integer> groupMessageIdManager = new ConcurrentHashMap<>();
+    private final Map<String, Integer> groupMessageIdManager = new ConcurrentHashMap<>();
 
     public void setGroupMessageId(String groupId, Integer messageId) {
-        this.groupMessageIdManager.put(groupId + "|" + messageId, messageId);
+        groupMessageIdManager.put(groupId + "|" + messageId, messageId);
     }
 
-    public int getMapSize(){
+    public int getMapSize() {
         return groupMessageIdManager.size();
     }
 
-    public void deleteAllMessage(AbsSender sender,String chatId){
-        for (Map.Entry<String, Integer> entry : groupMessageIdManager.entrySet()) {
-           if (timerDelete.deleteByMessageIdImmediately(sender, chatId, entry.getValue())){
-               groupMessageIdManager.remove(entry.getKey());
-           }
-        }
+    public void deleteAllMessage(AbsSender sender, String chatId) {
+        groupMessageIdManager.entrySet().removeIf(entry -> timerDelete.deleteByMessageIdImmediately(sender, chatId, entry.getValue()));
     }
-
 }
