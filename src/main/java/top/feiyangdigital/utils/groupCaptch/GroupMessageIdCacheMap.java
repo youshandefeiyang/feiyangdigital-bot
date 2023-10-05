@@ -25,6 +25,10 @@ public class GroupMessageIdCacheMap {
     }
 
     public void deleteAllMessage(AbsSender sender, String chatId) {
-        groupMessageIdManager.entrySet().removeIf(entry -> timerDelete.deleteByMessageIdImmediately(sender, chatId, entry.getValue()));
+        groupMessageIdManager.entrySet().removeIf(entry -> {
+            timerDelete.deleteByMessageIdImmediately(sender, chatId, entry.getValue());
+            return true;
+        });
     }
+
 }
