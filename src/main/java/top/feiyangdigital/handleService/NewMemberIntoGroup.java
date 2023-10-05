@@ -121,9 +121,6 @@ public class NewMemberIntoGroup {
         }
 
         if (groupInfoWithBLOBs != null && "close".equals(groupInfoWithBLOBs.getIntogroupcheckflag()) && "open".equals(groupInfoWithBLOBs.getIntogroupwelcomeflag())) {
-            if (groupMessageIdCacheMap.getMapSize() > 0) {
-                groupMessageIdCacheMap.deleteAllMessage(sender, chatId.toString());
-            }
             if (StringUtils.hasText(groupInfoWithBLOBs.getKeywords()) && groupInfoWithBLOBs.getKeywords().contains("&&welcome=")) {
                 List<KeywordsFormat> keywordsFormatList = Arrays.stream(groupInfoWithBLOBs.getKeywords().split("\\n{2,}"))
                         .map(String::trim)
@@ -141,6 +138,9 @@ public class NewMemberIntoGroup {
                         SendMessage sendMessage = sendContent.createGroupMessage(chatId.toString(), newKeyFormat, "html");
                         sendMessage.setDisableWebPagePreview(true);
                         String msgId = timerDelete.sendTimedMessage(sender, sendMessage, Integer.parseInt(currentMap.get("DelWelcome")));
+                        if (groupMessageIdCacheMap.getMapSize() > 0) {
+                            groupMessageIdCacheMap.deleteAllMessage(sender, chatId.toString());
+                        }
                         groupMessageIdCacheMap.setGroupMessageId(chatId.toString(), Integer.valueOf(msgId));
                     }
                 }
@@ -149,9 +149,6 @@ public class NewMemberIntoGroup {
         }
 
         if (groupInfoWithBLOBs != null && "open".equals(groupInfoWithBLOBs.getIntogroupcheckflag())) {
-            if (groupMessageIdCacheMap.getMapSize() > 0) {
-                groupMessageIdCacheMap.deleteAllMessage(sender, chatId.toString());
-            }
             String url = String.format("https://t.me/%s?start=_intoGroupInfo%sand%s", BaseInfo.getBotName(), chatId.toString(), userId.toString());
             restrictOrUnrestrictUser.restrictUser(sender, userId, chatId.toString());
             KeywordsFormat keywordsFormat = new KeywordsFormat();
