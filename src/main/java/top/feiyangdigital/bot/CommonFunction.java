@@ -137,7 +137,9 @@ public class CommonFunction {
                 }
             }
             if (spamChannelBotService.checkChannelOption(sender, update)) {
-                checkTextMessage(sender, update);
+                if (update.getMessage().hasText()) {
+                    checkTextMessage(sender, update);
+                }
                 return;
             }
             antiFloodService.checkFlood(sender, update);
