@@ -27,8 +27,8 @@ public class ReplyLegal {
         // 验证消息部分
         if (conditions[0].isEmpty()) return false;
 
-        // 验证按钮部分
-        if (conditions.length > 1) {
+        // 验证按钮部分（如果存在）
+        if (conditions.length > 1 && !conditions[1].isEmpty()) {
             String[] buttonsLines = conditions[1].split("\\$\\$\\$");
             for (String buttonLine : buttonsLines) {
                 String[] buttons = buttonLine.split("%%");
@@ -41,8 +41,8 @@ public class ReplyLegal {
         }
 
         // 验证机器人操作部分
-        if (conditions.length == 3) {
-            String botAction = conditions[2];
+        if (conditions.length >= 2) {
+            String botAction = conditions[conditions.length - 1];
             String[] botActionParts = botAction.split("=");
 
             // 确保操作有效
@@ -67,7 +67,6 @@ public class ReplyLegal {
             } else if (botActionParts.length == 2) {
                 return false;
             }
-
 
             // 如果有一个操作和x值的时间设置
             if (botActionParts.length == 3) {
@@ -106,6 +105,4 @@ public class ReplyLegal {
 
         return true;  // 其他情况，返回true
     }
-
-
 }
