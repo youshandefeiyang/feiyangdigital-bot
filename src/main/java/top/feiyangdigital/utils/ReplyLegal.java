@@ -28,7 +28,7 @@ public class ReplyLegal {
         if (conditions[0].isEmpty()) return false;
 
         // 验证按钮部分（如果存在）
-        if (conditions.length > 1 && !conditions[1].isEmpty()) {
+        if (conditions.length > 1 && conditions[1].contains("btns=") && (conditions[1].contains("$$") || conditions[1].contains("##"))) {
             String[] buttonsLines = conditions[1].split("\\$\\$\\$");
             for (String buttonLine : buttonsLines) {
                 String[] buttons = buttonLine.split("%%");
@@ -41,7 +41,7 @@ public class ReplyLegal {
         }
 
         // 验证机器人操作部分
-        if (conditions.length >= 2) {
+        if ((conditions.length == 2 && !conditions[1].contains("btns=")) || conditions.length == 3) {
             String botAction = conditions[conditions.length - 1];
             String[] botActionParts = botAction.split("=");
 
