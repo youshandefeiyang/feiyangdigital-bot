@@ -95,7 +95,7 @@ public class NewMemberIntoGroup {
                         String regex = keywordFormat.getRegex();
                         Pattern pattern = Pattern.compile(regex);
                         if (pattern.matcher(firstName).find() || pattern.matcher(lastName).find() || pattern.matcher(firstName + lastName).find()) {
-                            restrictOrUnrestrictUser.restrictUser(sender, userId, chatId.toString());
+                            restrictOrUnrestrictUser.restrictUser(sender, userId, chatId.toString(),0L);
                             KeywordsFormat newKeyFormat = new KeywordsFormat();
                             newKeyFormat.setKeywordsButtons(keywordFormat.getKeywordsButtons());
                             String text = keywordFormat.getReplyText()
@@ -150,7 +150,7 @@ public class NewMemberIntoGroup {
 
         if (groupInfoWithBLOBs != null && "open".equals(groupInfoWithBLOBs.getIntogroupcheckflag())) {
             String url = String.format("https://t.me/%s?start=_intoGroupInfo%sand%s", BaseInfo.getBotName(), chatId.toString(), userId.toString());
-            restrictOrUnrestrictUser.restrictUser(sender, userId, chatId.toString());
+            restrictOrUnrestrictUser.restrictUser(sender, userId, chatId.toString(),0L);
             KeywordsFormat keywordsFormat = new KeywordsFormat();
             List<String> keywordsButtons = new ArrayList<>();
             keywordsButtons.add("👥管理员解禁##adminUnrestrict" + userId);

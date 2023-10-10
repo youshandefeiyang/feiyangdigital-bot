@@ -21,6 +21,7 @@ import top.feiyangdigital.utils.SendContent;
 import top.feiyangdigital.utils.TimerDelete;
 import top.feiyangdigital.utils.userNameToUserId.ObtainUserId;
 
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -54,16 +55,39 @@ public class BanOrUnBan {
 
     private void commonFunc(AbsSender sender, Update update, Long userId, String firstName, String chatId, String text, String biaoshi) {
         String banReason = "";
+        Long secondsToAdd = null;
         if (text.split(" ").length >= 3 && "noreply".equals(biaoshi)) {
-            banReason = text.split(" ")[2];
+            try {
+                secondsToAdd = Long.valueOf(text.split(" ")[2]);
+                if (text.split(" ").length >= 4) {
+                    banReason = text.split(" ")[3];
+                }
+            } catch (NumberFormatException e) {
+                banReason = text.split(" ")[2];
+            }
         } else if (text.split(" ").length >= 2 && "reply".equals(biaoshi)) {
-            banReason = text.split(" ")[1];
+            try {
+                secondsToAdd = Long.valueOf(text.split(" ")[1]);
+                if (text.split(" ").length >= 3) {
+                    banReason = text.split(" ")[2];
+                }
+            } catch (NumberFormatException e) {
+                banReason = text.split(" ")[1];
+            }
         }
-        if (banUserById(sender, userId, chatId)) {
+        if (secondsToAdd == null || secondsToAdd <= 30L) {
+            secondsToAdd = 0L;
+        }
+        if (banUserById(sender, userId, chatId, secondsToAdd)) {
             KeywordsFormat keywordsFormat = new KeywordsFormat();
             String text1 = String.format("用户 <b><a href=\"tg://user?id=%d\">%s</a></b> 已被管理员封禁。", userId, firstName);
             if (StringUtils.hasText(banReason)) {
                 text1 += "\n" + String.format("封禁原因：<b>%s</b>！", banReason);
+            }
+            if (secondsToAdd != 0L) {
+                text1 += "\n" + String.format("封禁时间：<b>%s秒</b>！", secondsToAdd);
+            } else {
+                text1 += "\n" + "封禁时间：<b>永久</b>！";
             }
             List<String> keywordsButtons = new ArrayList<>();
             keywordsButtons.add("👥管理员解封##adminUnBan" + userId);
@@ -198,15 +222,16 @@ public class BanOrUnBan {
     }
 
 
-    public boolean banUserById(AbsSender sender, Long userId, String chatId) {
+    public boolean banUserById(AbsSender sender, Long userId, String chatId, Long secondsToAdd) {
         BanChatMember banChatMember = new BanChatMember();
         banChatMember.setChatId(chatId);
         banChatMember.setUserId(userId);
+        banChatMember.setUntilDateDateTime(ZonedDateTime.now().plusSeconds(secondsToAdd));
         try {
             sender.execute(banChatMember);
             return true;
         } catch (TelegramApiException e) {
-            log.error("封禁用户失败，{}",e.getMessage(),e);
+            log.error("封禁用户失败，{}", e.getMessage(), e);
             return false;
         }
     }
@@ -219,7 +244,7 @@ public class BanOrUnBan {
             sender.execute(unbanChatMember);
             return true;
         } catch (TelegramApiException e) {
-            log.error("解封用户失败，{}",e.getMessage(),e);
+            log.error("解封用户失败，{}", e.getMessage(), e);
             return false;
         }
     }

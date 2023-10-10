@@ -63,7 +63,7 @@ public class AiCheckMedia {
                     notification.setText(text+"\n"+otherText);
                     notification.setParseMode(ParseMode.HTML);
                     timerDelete.deleteMessageImmediatelyAndNotifyAfterDelay(sender, notification, groupId, messageId, Long.valueOf(userId), 90);
-                    restrictOrUnrestrictUser.restrictUser(sender, Long.valueOf(userId), groupId);
+                    restrictOrUnrestrictUser.restrictUser(sender, Long.valueOf(userId), groupId,0L);
                     return;
                 } else if (normalCount >= 5) {
                     return;

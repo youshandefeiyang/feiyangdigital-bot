@@ -21,6 +21,7 @@ import top.feiyangdigital.utils.SendContent;
 import top.feiyangdigital.utils.TimerDelete;
 import top.feiyangdigital.utils.userNameToUserId.ObtainUserId;
 
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -55,16 +56,39 @@ public class RestrictOrUnrestrictUser {
 
     private void commonFunc(AbsSender sender, Update update, Long userId, String firstName, String chatId, String text, String biaoshi) {
         String muteReason = "";
+        Long secondsToAdd = null;
         if (text.split(" ").length >= 3 && "noreply".equals(biaoshi)) {
-            muteReason = text.split(" ")[2];
+            try {
+                secondsToAdd = Long.valueOf(text.split(" ")[2]);
+                if (text.split(" ").length >= 4) {
+                    muteReason = text.split(" ")[3];
+                }
+            } catch (NumberFormatException e) {
+                muteReason = text.split(" ")[2];
+            }
         } else if (text.split(" ").length >= 2 && "reply".equals(biaoshi)) {
-            muteReason = text.split(" ")[1];
+            try {
+                secondsToAdd = Long.valueOf(text.split(" ")[1]);
+                if (text.split(" ").length >= 3) {
+                    muteReason = text.split(" ")[2];
+                }
+            } catch (NumberFormatException e) {
+                muteReason = text.split(" ")[1];
+            }
         }
-        if (restrictUser(sender, userId, chatId)) {
+        if (secondsToAdd == null || secondsToAdd <= 30L) {
+            secondsToAdd = 0L;
+        }
+        if (restrictUser(sender, userId, chatId,secondsToAdd)) {
             KeywordsFormat keywordsFormat = new KeywordsFormat();
             String text1 = String.format("用户 <b><a href=\"tg://user?id=%d\">%s</a></b> 已被管理员禁言。", userId, firstName);
             if (StringUtils.hasText(muteReason)) {
                 text1 += "\n" + String.format("禁言原因：<b>%s</b>！", muteReason);
+            }
+            if (secondsToAdd != 0L) {
+                text1 += "\n" + String.format("禁言时间：<b>%s秒</b>！", secondsToAdd);
+            } else {
+                text1 += "\n" + "禁言时间：<b>永久</b>！";
             }
             List<String> keywordsButtons = new ArrayList<>();
             keywordsButtons.add("👥管理员解禁##adminUnmute" + userId);
@@ -171,10 +195,11 @@ public class RestrictOrUnrestrictUser {
     }
 
 
-    public boolean restrictUser(AbsSender sender, Long userId, String chatId) {
+    public boolean restrictUser(AbsSender sender, Long userId, String chatId,Long secondsToAdd) {
         RestrictChatMember restrictChatMember = new RestrictChatMember();
         restrictChatMember.setChatId(chatId);
         restrictChatMember.setUserId(userId);
+        restrictChatMember.setUntilDateDateTime(ZonedDateTime.now().plusSeconds(secondsToAdd));
 
         ChatPermissions chatPermissions = new ChatPermissions();
         chatPermissions.setCanSendOtherMessages(false);
