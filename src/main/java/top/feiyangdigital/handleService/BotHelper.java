@@ -1,10 +1,13 @@
 package top.feiyangdigital.handleService;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.telegram.telegrambots.meta.api.methods.AnswerCallbackQuery;
+import org.telegram.telegrambots.meta.api.methods.groupadministration.GetChat;
 import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
+import org.telegram.telegrambots.meta.api.objects.Chat;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.chatmember.ChatMember;
 import org.telegram.telegrambots.meta.bots.AbsSender;
@@ -32,6 +35,8 @@ import top.feiyangdigital.utils.ruleCacheMap.DeleteRuleCacheMap;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 @Service
 public class BotHelper {
@@ -96,6 +101,9 @@ public class BotHelper {
     @Autowired
     private NightModeAndReport nightModeAndReport;
 
+    @Autowired
+    private FollowChannelVerification followChannelVerificationl;
+
     public void sendAdminButton(AbsSender sender, Update update) {
         String url = String.format("https://t.me/%s?start=_groupId%s", BaseInfo.getBotName(), update.getMessage().getChatId().toString());
         List<String> keywordsButtons = new ArrayList<>();
@@ -130,6 +138,18 @@ public class BotHelper {
         AnswerCallbackQuery answer = new AnswerCallbackQuery();
         answer.setCallbackQueryId(callbackQuery.getId());
         switch (callbackData) {
+            case "changeGroupCheckFlag":
+                setGroupSettingView.changeGroupCheckFlag(sender,update);
+                return;
+            case "changeToJoinChannel":
+                setGroupSettingView.changeToJoinChannel(sender,update);
+                return;
+            case "changeToCompute":
+                setGroupSettingView.changeToCompute(sender,update);
+                return;
+            case "answerReplyhandle":
+                followChannelVerificationl.answerReplyhandle(sender,update);
+                return;
             case "openCanSendMediaFlag":
                 nightSetting.openCanSendMediaFlag(sender,update);
                 return;
@@ -281,6 +301,5 @@ public class BotHelper {
             }
         }
     }
-
 
 }

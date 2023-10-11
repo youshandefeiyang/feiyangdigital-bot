@@ -1,6 +1,7 @@
 package top.feiyangdigital.bot;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.telegram.telegrambots.meta.api.objects.Update;
@@ -96,8 +97,11 @@ public class CommonFunction {
     @Autowired
     private SpamChannelBotService spamChannelBotService;
 
+    @Autowired
+    private FollowChannelVerification followChannelVerification;
+
     private boolean checkTextMessage(AbsSender sender, Update update) throws TelegramApiException {
-        if (setBot.adminSetBot(sender, update)) {
+        if (setBot.adminSetBot(sender, update, update.getMessage().getChatId().toString())) {
             return true;
         } else if (banOrUnBan.banOption(sender, update)) {
             return true;
@@ -170,11 +174,13 @@ public class CommonFunction {
                 String[] idGroup = update.getMessage().getText().split("_")[1].substring(13).split("and");
                 String chatId = idGroup[0];
                 String userId = idGroup[1];
-                String currentChatId = update.getMessage().getChatId().toString();
-                String firstName = update.getMessage().getChat().getFirstName();
-                if (update.getMessage().getFrom().getId().toString().equals(userId) && "open".equals(groupInfoService.selAllByGroupId(chatId).getIntogroupcheckflag())) {
-
-                    captchaGenerator.sendCaptcha(sender, update.getMessage().getFrom().getId(), chatId, currentChatId, firstName);
+                GroupInfoWithBLOBs groupInfoWithBLOBs = groupInfoService.selAllByGroupId(chatId);
+                if (update.getMessage().getFrom().getId().toString().equals(userId) && "open".equals(groupInfoWithBLOBs.getIntogroupcheckflag())) {
+                    if ("compute".equals(groupInfoWithBLOBs.getCaptchamode())) {
+                        captchaGenerator.sendCaptcha(sender, update, chatId);
+                    } else if ("joinChannel".equals(groupInfoWithBLOBs.getCaptchamode())) {
+                        followChannelVerification.sendCaptcha(sender, update, chatId);
+                    }
                 } else {
                     sender.execute(sendContent.messageText(update, "❌这不是你的验证"));
                 }
@@ -195,7 +201,6 @@ public class CommonFunction {
                     deleteSingleRuleByKeyWord.DeleteOption(sender, update);
                 } else if (StringUtils.hasText(captchaManager.getAnswerForUser(userId))) {
                     captchaGenerator.answerReplyhandle(sender, update);
-
                 }
             }
 
@@ -203,14 +208,12 @@ public class CommonFunction {
 
 
         //检测新入群用户且状态正常的用户
-        if (update.getChatMember() != null && "left".equals(update.getChatMember().getOldChatMember().getStatus()) && "member".equals(update.getChatMember().getNewChatMember().getStatus())) {
-
+        if (update.getChatMember() != null && "left".equals(update.getChatMember().getOldChatMember().getStatus()) && "member".equals(update.getChatMember().getNewChatMember().getStatus()) && (update.getChatMember().getChat().isGroupChat() || update.getChatMember().getChat().isSuperGroupChat())) {
             newMemberIntoGroup.handleMessage(sender, update, null);
         }
 
         //检测新入群Bot
-        if (update.hasMessage() && (update.getMessage().getNewChatMembers() != null && !update.getMessage().getNewChatMembers().isEmpty())) {
-
+        if (update.hasMessage() && (update.getMessage().getNewChatMembers() != null && !update.getMessage().getNewChatMembers().isEmpty()) && (update.getMessage().getChat().isGroupChat() || update.getMessage().getChat().isSuperGroupChat())) {
             botFirstIntoGroup.handleMessage(sender, update);
         }
 

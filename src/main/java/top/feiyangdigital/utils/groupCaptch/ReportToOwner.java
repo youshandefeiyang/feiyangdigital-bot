@@ -10,6 +10,7 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import top.feiyangdigital.entity.GroupInfoWithBLOBs;
 import top.feiyangdigital.sqlService.GroupInfoService;
 import top.feiyangdigital.utils.CheckUser;
+import top.feiyangdigital.utils.TimerDelete;
 
 import java.util.Map;
 
@@ -22,8 +23,12 @@ public class ReportToOwner {
     @Autowired
     private GroupInfoService groupInfoService;
 
+    @Autowired
+    private TimerDelete timerDelete;
+
     public boolean haddle(AbsSender sender, Update update) throws TelegramApiException {
         String chatId = update.getMessage().getChatId().toString();
+        Integer messageId = update.getMessage().getMessageId();
         GroupInfoWithBLOBs groupInfoWithBLOBs = groupInfoService.selAllByGroupId(chatId);
         if ("@admin".equals(update.getMessage().getText()) && "open".equals(groupInfoWithBLOBs.getReportflag())) {
             Map<String, String> map = checkUser.getChatOwner(sender, update);
@@ -33,6 +38,7 @@ public class ReportToOwner {
             notification.setText(text);
             notification.setParseMode(ParseMode.HTML);
             sender.execute(notification);
+            timerDelete.deleteMessageByMessageIdDelay(sender,chatId,messageId,10);
             return true;
         }
         return false;

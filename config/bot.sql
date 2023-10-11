@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- 主机： localhost
--- 生成日期： 2023-09-27 13:16:53
+-- 生成日期： 2023-10-11 15:29:40
 -- 服务器版本： 8.0.24
 -- PHP 版本： 8.1.12
 
@@ -52,6 +52,7 @@ CREATE TABLE `groupinfo`
     `groupName`                  varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci          DEFAULT NULL,
     `keyWords`                   longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci,
     `antiFloodSetting`           varchar(50) COLLATE utf8mb4_general_ci                       NOT NULL DEFAULT '3,5',
+    `captchaMode`                varchar(50) COLLATE utf8mb4_general_ci                       NOT NULL DEFAULT 'compute',
     `keyWordsFlag`               varchar(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'notallow',
     `deleteKeywordFlag`          varchar(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'notdelete',
     `settingTimeStamp`           varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci          DEFAULT NULL,
@@ -107,7 +108,8 @@ ALTER TABLE `groupinfo`
   ADD KEY `clearInfoFlag` (`clearInfoFlag`),
   ADD KEY `antiFloodFlag` (`antiFloodFlag`),
   ADD KEY `antiFloodSetting` (`antiFloodSetting`),
-  ADD KEY `channelSpamFlag` (`channelSpamFlag`);
+  ADD KEY `channelSpamFlag` (`channelSpamFlag`),
+  ADD KEY `captchaMode` (`captchaMode`);
 ALTER TABLE `groupinfo`
     ADD FULLTEXT KEY `ownerAndAnonymousAdmins` (`ownerAndAnonymousAdmins`);
 ALTER TABLE `groupinfo`

@@ -7,6 +7,7 @@
     <result column="ownerAndAnonymousAdmins" jdbcType="VARCHAR" property="ownerandanonymousadmins" />
     <result column="groupName" jdbcType="VARCHAR" property="groupname" />
     <result column="antiFloodSetting" jdbcType="VARCHAR" property="antifloodsetting" />
+    <result column="captchaMode" jdbcType="VARCHAR" property="captchamode" />
     <result column="keyWordsFlag" jdbcType="VARCHAR" property="keywordsflag" />
     <result column="deleteKeywordFlag" jdbcType="VARCHAR" property="deletekeywordflag" />
     <result column="settingTimeStamp" jdbcType="VARCHAR" property="settingtimestamp" />
@@ -85,7 +86,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, groupId, ownerAndAnonymousAdmins, groupName, antiFloodSetting, keyWordsFlag, 
+    id, groupId, ownerAndAnonymousAdmins, groupName, antiFloodSetting, captchaMode, keyWordsFlag, 
     deleteKeywordFlag, settingTimeStamp, intoGroupCheckFlag, intoGroupWelcomeFlag, intoGroupUserNameCheckFlag, 
     aiFlag, crontabFlag, nightModeFlag, canSendMediaFlag, clearInfoFlag, reportFlag, 
     antiFloodFlag, channelSpamFlag
@@ -159,21 +160,21 @@
   </delete>
   <insert id="insert" keyColumn="id" keyProperty="id" parameterType="top.feiyangdigital.entity.GroupInfoWithBLOBs" useGeneratedKeys="true">
     insert into groupinfo (groupId, ownerAndAnonymousAdmins, 
-      groupName, antiFloodSetting, keyWordsFlag, 
-      deleteKeywordFlag, settingTimeStamp, intoGroupCheckFlag, 
-      intoGroupWelcomeFlag, intoGroupUserNameCheckFlag, 
-      aiFlag, crontabFlag, nightModeFlag, 
-      canSendMediaFlag, clearInfoFlag, reportFlag, 
-      antiFloodFlag, channelSpamFlag, keyWords, 
-      `backup`)
+      groupName, antiFloodSetting, captchaMode, 
+      keyWordsFlag, deleteKeywordFlag, settingTimeStamp, 
+      intoGroupCheckFlag, intoGroupWelcomeFlag, 
+      intoGroupUserNameCheckFlag, aiFlag, crontabFlag, 
+      nightModeFlag, canSendMediaFlag, clearInfoFlag, 
+      reportFlag, antiFloodFlag, channelSpamFlag, 
+      keyWords, `backup`)
     values (#{groupid,jdbcType=VARCHAR}, #{ownerandanonymousadmins,jdbcType=VARCHAR}, 
-      #{groupname,jdbcType=VARCHAR}, #{antifloodsetting,jdbcType=VARCHAR}, #{keywordsflag,jdbcType=VARCHAR}, 
-      #{deletekeywordflag,jdbcType=VARCHAR}, #{settingtimestamp,jdbcType=VARCHAR}, #{intogroupcheckflag,jdbcType=VARCHAR}, 
-      #{intogroupwelcomeflag,jdbcType=VARCHAR}, #{intogroupusernamecheckflag,jdbcType=VARCHAR}, 
-      #{aiflag,jdbcType=VARCHAR}, #{crontabflag,jdbcType=VARCHAR}, #{nightmodeflag,jdbcType=VARCHAR}, 
-      #{cansendmediaflag,jdbcType=VARCHAR}, #{clearinfoflag,jdbcType=VARCHAR}, #{reportflag,jdbcType=VARCHAR}, 
-      #{antifloodflag,jdbcType=VARCHAR}, #{channelspamflag,jdbcType=VARCHAR}, #{keywords,jdbcType=LONGVARCHAR}, 
-      #{backup,jdbcType=LONGVARCHAR})
+      #{groupname,jdbcType=VARCHAR}, #{antifloodsetting,jdbcType=VARCHAR}, #{captchamode,jdbcType=VARCHAR}, 
+      #{keywordsflag,jdbcType=VARCHAR}, #{deletekeywordflag,jdbcType=VARCHAR}, #{settingtimestamp,jdbcType=VARCHAR}, 
+      #{intogroupcheckflag,jdbcType=VARCHAR}, #{intogroupwelcomeflag,jdbcType=VARCHAR}, 
+      #{intogroupusernamecheckflag,jdbcType=VARCHAR}, #{aiflag,jdbcType=VARCHAR}, #{crontabflag,jdbcType=VARCHAR}, 
+      #{nightmodeflag,jdbcType=VARCHAR}, #{cansendmediaflag,jdbcType=VARCHAR}, #{clearinfoflag,jdbcType=VARCHAR}, 
+      #{reportflag,jdbcType=VARCHAR}, #{antifloodflag,jdbcType=VARCHAR}, #{channelspamflag,jdbcType=VARCHAR}, 
+      #{keywords,jdbcType=LONGVARCHAR}, #{backup,jdbcType=LONGVARCHAR})
   </insert>
   <insert id="insertSelective" keyColumn="id" keyProperty="id" parameterType="top.feiyangdigital.entity.GroupInfoWithBLOBs" useGeneratedKeys="true">
     insert into groupinfo
@@ -189,6 +190,9 @@
       </if>
       <if test="antifloodsetting != null">
         antiFloodSetting,
+      </if>
+      <if test="captchamode != null">
+        captchaMode,
       </if>
       <if test="keywordsflag != null">
         keyWordsFlag,
@@ -251,6 +255,9 @@
       </if>
       <if test="antifloodsetting != null">
         #{antifloodsetting,jdbcType=VARCHAR},
+      </if>
+      <if test="captchamode != null">
+        #{captchamode,jdbcType=VARCHAR},
       </if>
       <if test="keywordsflag != null">
         #{keywordsflag,jdbcType=VARCHAR},
@@ -326,6 +333,9 @@
       <if test="record.antifloodsetting != null">
         antiFloodSetting = #{record.antifloodsetting,jdbcType=VARCHAR},
       </if>
+      <if test="record.captchamode != null">
+        captchaMode = #{record.captchamode,jdbcType=VARCHAR},
+      </if>
       <if test="record.keywordsflag != null">
         keyWordsFlag = #{record.keywordsflag,jdbcType=VARCHAR},
       </if>
@@ -386,6 +396,7 @@
       ownerAndAnonymousAdmins = #{record.ownerandanonymousadmins,jdbcType=VARCHAR},
       groupName = #{record.groupname,jdbcType=VARCHAR},
       antiFloodSetting = #{record.antifloodsetting,jdbcType=VARCHAR},
+      captchaMode = #{record.captchamode,jdbcType=VARCHAR},
       keyWordsFlag = #{record.keywordsflag,jdbcType=VARCHAR},
       deleteKeywordFlag = #{record.deletekeywordflag,jdbcType=VARCHAR},
       settingTimeStamp = #{record.settingtimestamp,jdbcType=VARCHAR},
@@ -413,6 +424,7 @@
       ownerAndAnonymousAdmins = #{record.ownerandanonymousadmins,jdbcType=VARCHAR},
       groupName = #{record.groupname,jdbcType=VARCHAR},
       antiFloodSetting = #{record.antifloodsetting,jdbcType=VARCHAR},
+      captchaMode = #{record.captchamode,jdbcType=VARCHAR},
       keyWordsFlag = #{record.keywordsflag,jdbcType=VARCHAR},
       deleteKeywordFlag = #{record.deletekeywordflag,jdbcType=VARCHAR},
       settingTimeStamp = #{record.settingtimestamp,jdbcType=VARCHAR},
@@ -445,6 +457,9 @@
       </if>
       <if test="antifloodsetting != null">
         antiFloodSetting = #{antifloodsetting,jdbcType=VARCHAR},
+      </if>
+      <if test="captchamode != null">
+        captchaMode = #{captchamode,jdbcType=VARCHAR},
       </if>
       <if test="keywordsflag != null">
         keyWordsFlag = #{keywordsflag,jdbcType=VARCHAR},
@@ -503,6 +518,7 @@
       ownerAndAnonymousAdmins = #{ownerandanonymousadmins,jdbcType=VARCHAR},
       groupName = #{groupname,jdbcType=VARCHAR},
       antiFloodSetting = #{antifloodsetting,jdbcType=VARCHAR},
+      captchaMode = #{captchamode,jdbcType=VARCHAR},
       keyWordsFlag = #{keywordsflag,jdbcType=VARCHAR},
       deleteKeywordFlag = #{deletekeywordflag,jdbcType=VARCHAR},
       settingTimeStamp = #{settingtimestamp,jdbcType=VARCHAR},
@@ -527,6 +543,7 @@
       ownerAndAnonymousAdmins = #{ownerandanonymousadmins,jdbcType=VARCHAR},
       groupName = #{groupname,jdbcType=VARCHAR},
       antiFloodSetting = #{antifloodsetting,jdbcType=VARCHAR},
+      captchaMode = #{captchamode,jdbcType=VARCHAR},
       keyWordsFlag = #{keywordsflag,jdbcType=VARCHAR},
       deleteKeywordFlag = #{deletekeywordflag,jdbcType=VARCHAR},
       settingTimeStamp = #{settingtimestamp,jdbcType=VARCHAR},

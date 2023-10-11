@@ -27,7 +27,7 @@ public class AntiFlood {
     @Autowired
     private AddRuleCacheMap addRuleCacheMap;
 
-    public void hadleCallBack(AbsSender sender, Update update) {
+    public void hadleCallBack(AbsSender sender, Update update) throws TelegramApiException {
         String userId = update.getCallbackQuery().getFrom().getId().toString();
         GroupInfoWithBLOBs groupInfoWithBLOBs = groupInfoService.selAllByGroupId(addRuleCacheMap.getGroupIdForUser(userId));
         List<String> keywordsButtons = new ArrayList<>();
@@ -37,14 +37,10 @@ public class AntiFlood {
         keywordsButtons.add("❌关闭菜单##closeMenu");
         keywordsFormat.setReplyText("当前群组：<b>" + addRuleCacheMap.getGroupNameForUser(userId) + "</b>\n当前群组ID：<b>" + addRuleCacheMap.getGroupIdForUser(userId) + "</b>\n当前群组开启防刷屏模式状态：<b>" + groupInfoWithBLOBs.getAntifloodflag() + "</b>\n⚡️请选择一个操作!⚡️");
         keywordsFormat.setKeywordsButtons(keywordsButtons);
-        try {
-            sender.execute(sendContent.editResponseMessage(update, keywordsFormat, "html"));
-        } catch (TelegramApiException e) {
-            e.printStackTrace();
-        }
+        sender.execute(sendContent.editResponseMessage(update, keywordsFormat, "html"));
     }
 
-    public void openAntiFloodFlag(AbsSender sender, Update update) {
+    public void openAntiFloodFlag(AbsSender sender, Update update) throws TelegramApiException {
         String userId = update.getCallbackQuery().getFrom().getId().toString();
         GroupInfoWithBLOBs groupInfoWithBLOBs = groupInfoService.selAllByGroupId(addRuleCacheMap.getGroupIdForUser(userId));
         String second = "";
@@ -70,11 +66,7 @@ public class AntiFlood {
         keywordsButtons.add("❌关闭菜单##closeMenu");
         keywordsFormat.setReplyText(text + "当前群组：<b>" + addRuleCacheMap.getGroupNameForUser(userId) + "</b>\n当前群组ID：<b>" + addRuleCacheMap.getGroupIdForUser(userId) + "</b>\n当前群组开启防刷屏模式状态：<b>" + antiFloodFlag + "</b>\n\n👉目前：" + "<b>" + second + "</b>秒内发送" + "<b>" + infoCount + "</b>条消息会触发反刷屏。");
         keywordsFormat.setKeywordsButtons(keywordsButtons);
-        try {
-            sender.execute(sendContent.editResponseMessage(update, keywordsFormat, "html"));
-        } catch (TelegramApiException e) {
-            e.printStackTrace();
-        }
+        sender.execute(sendContent.editResponseMessage(update, keywordsFormat, "html"));
     }
 
     public void closeAntiFloodFlag(AbsSender sender, Update update) throws TelegramApiException {

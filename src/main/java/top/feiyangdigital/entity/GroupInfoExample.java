@@ -464,6 +464,76 @@ public class GroupInfoExample {
             return (Criteria) this;
         }
 
+        public Criteria andCaptchamodeIsNull() {
+            addCriterion("captchaMode is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andCaptchamodeIsNotNull() {
+            addCriterion("captchaMode is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andCaptchamodeEqualTo(String value) {
+            addCriterion("captchaMode =", value, "captchamode");
+            return (Criteria) this;
+        }
+
+        public Criteria andCaptchamodeNotEqualTo(String value) {
+            addCriterion("captchaMode <>", value, "captchamode");
+            return (Criteria) this;
+        }
+
+        public Criteria andCaptchamodeGreaterThan(String value) {
+            addCriterion("captchaMode >", value, "captchamode");
+            return (Criteria) this;
+        }
+
+        public Criteria andCaptchamodeGreaterThanOrEqualTo(String value) {
+            addCriterion("captchaMode >=", value, "captchamode");
+            return (Criteria) this;
+        }
+
+        public Criteria andCaptchamodeLessThan(String value) {
+            addCriterion("captchaMode <", value, "captchamode");
+            return (Criteria) this;
+        }
+
+        public Criteria andCaptchamodeLessThanOrEqualTo(String value) {
+            addCriterion("captchaMode <=", value, "captchamode");
+            return (Criteria) this;
+        }
+
+        public Criteria andCaptchamodeLike(String value) {
+            addCriterion("captchaMode like", value, "captchamode");
+            return (Criteria) this;
+        }
+
+        public Criteria andCaptchamodeNotLike(String value) {
+            addCriterion("captchaMode not like", value, "captchamode");
+            return (Criteria) this;
+        }
+
+        public Criteria andCaptchamodeIn(List<String> values) {
+            addCriterion("captchaMode in", values, "captchamode");
+            return (Criteria) this;
+        }
+
+        public Criteria andCaptchamodeNotIn(List<String> values) {
+            addCriterion("captchaMode not in", values, "captchamode");
+            return (Criteria) this;
+        }
+
+        public Criteria andCaptchamodeBetween(String value1, String value2) {
+            addCriterion("captchaMode between", value1, value2, "captchamode");
+            return (Criteria) this;
+        }
+
+        public Criteria andCaptchamodeNotBetween(String value1, String value2) {
+            addCriterion("captchaMode not between", value1, value2, "captchamode");
+            return (Criteria) this;
+        }
+
         public Criteria andKeywordsflagIsNull() {
             addCriterion("keyWordsFlag is null");
             return (Criteria) this;

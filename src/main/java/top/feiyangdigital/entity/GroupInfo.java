@@ -17,6 +17,8 @@ public class GroupInfo implements Serializable {
 
     private String antifloodsetting;
 
+    private String captchamode;
+
     private String keywordsflag;
 
     private String deletekeywordflag;
@@ -85,6 +87,14 @@ public class GroupInfo implements Serializable {
 
     public void setAntifloodsetting(String antifloodsetting) {
         this.antifloodsetting = antifloodsetting;
+    }
+
+    public String getCaptchamode() {
+        return captchamode;
+    }
+
+    public void setCaptchamode(String captchamode) {
+        this.captchamode = captchamode;
     }
 
     public String getKeywordsflag() {
@@ -216,6 +226,7 @@ public class GroupInfo implements Serializable {
             && (this.getOwnerandanonymousadmins() == null ? other.getOwnerandanonymousadmins() == null : this.getOwnerandanonymousadmins().equals(other.getOwnerandanonymousadmins()))
             && (this.getGroupname() == null ? other.getGroupname() == null : this.getGroupname().equals(other.getGroupname()))
             && (this.getAntifloodsetting() == null ? other.getAntifloodsetting() == null : this.getAntifloodsetting().equals(other.getAntifloodsetting()))
+            && (this.getCaptchamode() == null ? other.getCaptchamode() == null : this.getCaptchamode().equals(other.getCaptchamode()))
             && (this.getKeywordsflag() == null ? other.getKeywordsflag() == null : this.getKeywordsflag().equals(other.getKeywordsflag()))
             && (this.getDeletekeywordflag() == null ? other.getDeletekeywordflag() == null : this.getDeletekeywordflag().equals(other.getDeletekeywordflag()))
             && (this.getSettingtimestamp() == null ? other.getSettingtimestamp() == null : this.getSettingtimestamp().equals(other.getSettingtimestamp()))
@@ -241,6 +252,7 @@ public class GroupInfo implements Serializable {
         result = prime * result + ((getOwnerandanonymousadmins() == null) ? 0 : getOwnerandanonymousadmins().hashCode());
         result = prime * result + ((getGroupname() == null) ? 0 : getGroupname().hashCode());
         result = prime * result + ((getAntifloodsetting() == null) ? 0 : getAntifloodsetting().hashCode());
+        result = prime * result + ((getCaptchamode() == null) ? 0 : getCaptchamode().hashCode());
         result = prime * result + ((getKeywordsflag() == null) ? 0 : getKeywordsflag().hashCode());
         result = prime * result + ((getDeletekeywordflag() == null) ? 0 : getDeletekeywordflag().hashCode());
         result = prime * result + ((getSettingtimestamp() == null) ? 0 : getSettingtimestamp().hashCode());
@@ -269,6 +281,7 @@ public class GroupInfo implements Serializable {
         sb.append(", ownerandanonymousadmins=").append(ownerandanonymousadmins);
         sb.append(", groupname=").append(groupname);
         sb.append(", antifloodsetting=").append(antifloodsetting);
+        sb.append(", captchamode=").append(captchamode);
         sb.append(", keywordsflag=").append(keywordsflag);
         sb.append(", deletekeywordflag=").append(deletekeywordflag);
         sb.append(", settingtimestamp=").append(settingtimestamp);

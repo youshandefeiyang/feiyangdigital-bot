@@ -1,5 +1,12 @@
 <ehcache>
     <cache
+            name="linkedChatInfo"
+            eternal="true"
+            maxElementsInMemory="10000"
+            overflowToDisk="false"
+            memoryStoreEvictionPolicy="LRU">
+    </cache>
+    <cache
             name="adminsCache"
             eternal="true"
             maxElementsInMemory="10000"

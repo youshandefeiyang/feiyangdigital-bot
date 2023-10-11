@@ -2,6 +2,7 @@ package top.feiyangdigital.utils;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.groupadministration.GetChat;
 import org.telegram.telegrambots.meta.api.objects.Chat;
@@ -25,24 +26,19 @@ public class CheckUser {
 
     @CacheEvict(value = "adminsCache", allEntries = true)
     public String fetchHighAdminList(AbsSender sender, Update update) throws TelegramApiException {
-        return adminList.getAdmins(sender,update.getMessage().getChatId().toString()).stream()
+        return adminList.getAdmins(sender, update.getMessage().getChatId().toString()).stream()
                 .filter(admin ->
                         (admin instanceof ChatMemberAdministrator && ((ChatMemberAdministrator) admin).getIsAnonymous()) || admin instanceof ChatMemberOwner
                 ).map(admin -> String.valueOf(admin.getUser().getId()))
                 .collect(Collectors.joining("|"));
     }
 
-    public boolean isGroupChannel(AbsSender sender,Update update){
+    public boolean isGroupChannel(AbsSender sender, Update update) throws TelegramApiException {
         Chat senderChat = update.getMessage().getSenderChat();
         String chatId = update.getMessage().getChatId().toString();
-        if (senderChat !=null && "channel".equals(senderChat.getType())){
-            Chat checkChat = new Chat();
-            try {
-                GetChat getChat = GetChat.builder().chatId(chatId).build();
-                checkChat = sender.execute(getChat);
-            }catch (Exception e){
-                e.printStackTrace();
-            }
+        if (senderChat != null && "channel".equals(senderChat.getType())) {
+            GetChat getChat = GetChat.builder().chatId(chatId).build();
+            Chat checkChat = sender.execute(getChat);
             return checkChat.getLinkedChatId() != null && senderChat.getId().equals(checkChat.getLinkedChatId());
         }
         return false;
@@ -51,7 +47,7 @@ public class CheckUser {
 
     public boolean isGroupAdmin(AbsSender sender, Update update) throws TelegramApiException {
         for (ChatMember admin : adminList.getAdmins(sender, update.getMessage().getChatId().toString())) {
-            if ("GroupAnonymousBot".equals(update.getMessage().getFrom().getUserName()) || admin.getUser().getId().equals(update.getMessage().getFrom().getId()) || isGroupChannel(sender,update)) {
+            if ("GroupAnonymousBot".equals(update.getMessage().getFrom().getUserName()) || admin.getUser().getId().equals(update.getMessage().getFrom().getId()) || isGroupChannel(sender, update)) {
                 return true;
             }
         }
@@ -79,18 +75,31 @@ public class CheckUser {
         return false;
     }
 
-    public Map<String,String> getChatOwner(AbsSender sender, Update update) throws TelegramApiException {
-        Map<String,String> map = new ConcurrentHashMap<>();
+    public Map<String, String> getChatOwner(AbsSender sender, Update update) throws TelegramApiException {
+        Map<String, String> map = new ConcurrentHashMap<>();
         String chatId = "";
-        if (update.hasMessage()){
+        if (update.hasMessage()) {
             chatId = update.getMessage().getChatId().toString();
         }
         for (ChatMember admin : adminList.getAdmins(sender, chatId)) {
-                if (admin instanceof ChatMemberOwner) {
-                    map.put("ownerId",admin.getUser().getId().toString());
-                    map.put("ownerFirstName",admin.getUser().getFirstName());
-                }
+            if (admin instanceof ChatMemberOwner) {
+                map.put("ownerId", admin.getUser().getId().toString());
+                map.put("ownerFirstName", admin.getUser().getFirstName());
+            }
         }
+        return map;
+    }
+
+    @Cacheable(value = "linkedChatInfo", key = "#chatId")
+    public Map<String,String> getLinkedChatInfo(AbsSender sender, String chatId) throws TelegramApiException {
+        Map<String,String> map = new ConcurrentHashMap<>();
+        GetChat getChat = GetChat.builder().chatId(chatId).build();
+        Chat checkChat = sender.execute(getChat);
+        checkChat.getUserName();
+        map.put("LinkedChatId",checkChat.getLinkedChatId().toString());
+        GetChat getChat1 = GetChat.builder().chatId(checkChat.getLinkedChatId()).build();
+        Chat checkChat1 = sender.execute(getChat1);
+        map.put("LinkedChatString","https://t.me/"+checkChat1.getUserName());
         return map;
     }
 

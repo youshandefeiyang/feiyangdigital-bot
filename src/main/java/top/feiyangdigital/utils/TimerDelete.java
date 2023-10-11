@@ -140,6 +140,7 @@ public class TimerDelete {
                         sender.execute(new DeleteMessage(chatId, messageId));
                     }
                     captchaManager.clearMappingsForUser(userId.toString());
+                    captchaManagerCacheMap.clearMappingsForUser(userId.toString(),chatId);
                     // 在此发送提示消息
                     Message message = sender.execute(sendMessage);
                     deleteMessageByMessageIdDelay(sender,chatId,message.getMessageId(),notifyDelay);
