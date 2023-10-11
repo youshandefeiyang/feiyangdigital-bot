@@ -109,7 +109,7 @@ public class SetGroupSettingView {
         keywordsButtons.add("📱切换计算型验证##changeToCompute%%💡切换至加入频道验证##changeToJoinChannel");
         keywordsButtons.add("🎈进群验证总开关##changeGroupCheckFlag%%◀️返回上一页##groupSetting");
         keywordsButtons.add("❌关闭菜单##closeMenu");
-        keywordsFormat.setReplyText("当前群组：<b>" + addRuleCacheMap.getGroupNameForUser(userId) + "</b>\n当前群组ID：<b>" + addRuleCacheMap.getGroupIdForUser(userId) + "</b>\n当前群组验证状态：<b>" + groupInfoWithBLOBs.getIntogroupcheckflag() + "</b>\n当前进群验证模式：<b>" + mode + "</b>\n⚡️请选择一个操作!⚡️");
+        keywordsFormat.setReplyText("当前群组：<b>" + addRuleCacheMap.getGroupNameForUser(userId) + "</b>\n当前群组ID：<b>" + addRuleCacheMap.getGroupIdForUser(userId) + "</b>\n当前群组验证状态：<b>" + groupInfoWithBLOBs.getIntogroupcheckflag() + "</b>\n当前进群验证模式：<b>" + mode + "</b>\n⚡️注意，在切换至关联频道验证之前，必须将Bot拉入群组关联频道，并赋予管理员权限!⚡️");
         keywordsFormat.setKeywordsButtons(keywordsButtons);
         sender.execute(sendContent.editResponseMessage(update, keywordsFormat, "html"));
     }
@@ -142,7 +142,7 @@ public class SetGroupSettingView {
         keywordsButtons.add("📱切换计算型验证##changeToCompute%%💡切换至加入频道验证##changeToJoinChannel");
         keywordsButtons.add("🎈进群验证总开关##changeGroupCheckFlag%%◀️返回上一页##groupSetting");
         keywordsButtons.add("❌关闭菜单##closeMenu");
-        keywordsFormat.setReplyText(text + "\n当前群组：<b>" + addRuleCacheMap.getGroupNameForUser(userId) + "</b>\n当前群组ID：<b>" + addRuleCacheMap.getGroupIdForUser(userId) + "</b>\n当前群组验证状态：<b>" + intoGroupCheckFlag + "</b>\n当前进群验证模式：<b>" + mode + "</b>\n⚡️请选择一个操作!⚡️");
+        keywordsFormat.setReplyText(text + "\n当前群组：<b>" + addRuleCacheMap.getGroupNameForUser(userId) + "</b>\n当前群组ID：<b>" + addRuleCacheMap.getGroupIdForUser(userId) + "</b>\n当前群组验证状态：<b>" + intoGroupCheckFlag + "</b>\n当前进群验证模式：<b>" + mode + "</b>\n⚡️注意，在切换至关联频道验证之前，必须将Bot拉入群组关联频道，并赋予管理员权限!⚡️");
         keywordsFormat.setKeywordsButtons(keywordsButtons);
         sender.execute(sendContent.editResponseMessage(update, keywordsFormat, "html"));
     }
@@ -169,7 +169,7 @@ public class SetGroupSettingView {
         keywordsButtons.add("📱切换计算型验证##changeToCompute%%💡切换至加入频道验证##changeToJoinChannel");
         keywordsButtons.add("🎈进群验证总开关##changeGroupCheckFlag%%◀️返回上一页##groupSetting");
         keywordsButtons.add("❌关闭菜单##closeMenu");
-        keywordsFormat.setReplyText(text + "\n当前群组：<b>" + addRuleCacheMap.getGroupNameForUser(userId) + "</b>\n当前群组ID：<b>" + addRuleCacheMap.getGroupIdForUser(userId) + "</b>\n当前群组验证状态：<b>" + groupInfoWithBLOBs.getIntogroupcheckflag() + "</b>\n当前进群验证模式：<b>" + mode + "</b>\n⚡️请选择一个操作!⚡️");
+        keywordsFormat.setReplyText(text + "\n当前群组：<b>" + addRuleCacheMap.getGroupNameForUser(userId) + "</b>\n当前群组ID：<b>" + addRuleCacheMap.getGroupIdForUser(userId) + "</b>\n当前群组验证状态：<b>" + groupInfoWithBLOBs.getIntogroupcheckflag() + "</b>\n当前进群验证模式：<b>" + mode + "</b>\n⚡️注意，在切换至关联频道验证之前，必须将Bot拉入群组关联频道，并赋予管理员权限!⚡️");
         keywordsFormat.setKeywordsButtons(keywordsButtons);
         sender.execute(sendContent.editResponseMessage(update, keywordsFormat, "html"));
     }
@@ -196,7 +196,7 @@ public class SetGroupSettingView {
         keywordsButtons.add("📱切换计算型验证##changeToCompute%%💡切换至加入频道验证##changeToJoinChannel");
         keywordsButtons.add("🎈进群验证总开关##changeGroupCheckFlag%%◀️返回上一页##groupSetting");
         keywordsButtons.add("❌关闭菜单##closeMenu");
-        keywordsFormat.setReplyText(text + "\n当前群组：<b>" + addRuleCacheMap.getGroupNameForUser(userId) + "</b>\n当前群组ID：<b>" + addRuleCacheMap.getGroupIdForUser(userId) + "</b>\n当前群组验证状态：<b>" + groupInfoWithBLOBs.getIntogroupcheckflag() + "</b>\n当前进群验证模式：<b>" + mode + "</b>\n⚡️请选择一个操作!⚡️");
+        keywordsFormat.setReplyText(text + "\n当前群组：<b>" + addRuleCacheMap.getGroupNameForUser(userId) + "</b>\n当前群组ID：<b>" + addRuleCacheMap.getGroupIdForUser(userId) + "</b>\n当前群组验证状态：<b>" + groupInfoWithBLOBs.getIntogroupcheckflag() + "</b>\n当前进群验证模式：<b>" + mode + "</b>\n⚡️注意，在切换至关联频道验证之前，必须将Bot拉入群组关联频道，并赋予管理员权限!⚡️");
         keywordsFormat.setKeywordsButtons(keywordsButtons);
         sender.execute(sendContent.editResponseMessage(update, keywordsFormat, "html"));
     }
