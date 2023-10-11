@@ -3,14 +3,11 @@ package top.feiyangdigital.callBack.otherGroupSetting;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.util.StringUtils;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.bots.AbsSender;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import top.feiyangdigital.entity.GroupInfoWithBLOBs;
 import top.feiyangdigital.entity.KeywordsFormat;
-import top.feiyangdigital.scheduledTasks.HandleOption;
-import top.feiyangdigital.scheduledTasks.SchedulerService;
 import top.feiyangdigital.sqlService.GroupInfoService;
 import top.feiyangdigital.utils.SendContent;
 import top.feiyangdigital.utils.ruleCacheMap.AddRuleCacheMap;
