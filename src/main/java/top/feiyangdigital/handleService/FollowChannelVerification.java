@@ -59,7 +59,7 @@ public class FollowChannelVerification implements CaptchaService {
     public void sendCaptcha(AbsSender sender, Update update, String chatId) throws TelegramApiException {
         Long userId = update.getMessage().getFrom().getId();
         captchaManager.updateUserMapping(userId.toString(), chatId, "");
-        String text = String.format("请 <b><a href=\"tg://user?id=%d\">%s</a></b> 首先点击 <b>订阅频道按钮</b> ，在成功<b>订阅频道</b>之后，点击<b>完成验证按钮</b>，即可在群组内正常发言！", userId, update.getMessage().getChat().getFirstName());
+        String text = String.format("请 <b><a href=\"tg://user?id=%d\">%s</a></b> 首先点击 <b>订阅频道按钮</b> ，在成功<b>订阅频道</b>之后，点击<b>完成验证按钮</b>，即可在群组内正常发言，你需要在 <b>90秒</b> 内完成验证，否则你将会被永久限制发言！", userId, update.getMessage().getChat().getFirstName());
         List<String> keywordsButtons = new ArrayList<>();
         KeywordsFormat keywordsFormat = new KeywordsFormat();
         keywordsButtons.add("👉订阅频道$$" + checkUser.getLinkedChatInfo(sender, chatId).get("LinkedChatString") + "%%🔄完成验证##answerReplyhandle");
