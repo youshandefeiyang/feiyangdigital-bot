@@ -23,7 +23,6 @@ import java.util.List;
 
 @SpringBootApplication
 @EnableCaching
-@EnableScheduling
 @MapperScan("top.feiyangdigital.mapper")
 public class TgBotApplication implements CommandLineRunner {
 

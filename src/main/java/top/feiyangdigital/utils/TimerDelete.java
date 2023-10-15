@@ -16,6 +16,7 @@ import top.feiyangdigital.utils.ruleCacheMap.AddRuleCacheMap;
 import top.feiyangdigital.utils.ruleCacheMap.DeleteRuleCacheMap;
 
 import java.io.Serializable;
+import java.time.Instant;
 import java.util.Date;
 
 @Component
@@ -82,7 +83,7 @@ public class TimerDelete {
                     // 这里可以捕获异常，但是我们可以选择不执行任何操作，因为我们不关心消息是否确实已经被删除
                 }
             };
-            taskScheduler.schedule(task, new Date(System.currentTimeMillis() + delayInSeconds * 1000));
+            taskScheduler.schedule(task, Instant.now().plusSeconds(delayInSeconds));
         }
     }
 
@@ -103,7 +104,7 @@ public class TimerDelete {
                     // 这里可以捕获异常，但是我们可以选择不执行任何操作，因为我们不关心消息是否确实已经被删除
                 }
             };
-            taskScheduler.schedule(task, new Date(System.currentTimeMillis() + delayInSeconds * 1000));
+            taskScheduler.schedule(task, Instant.now().plusSeconds(delayInSeconds));
             return messageId.toString();
         }
         return null;
@@ -132,7 +133,7 @@ public class TimerDelete {
                 // 如果您仍希望不论是否出现异常都发送提示，那么将发送提示的逻辑移至catch块外部
             }
         };
-        taskScheduler.schedule(task, new Date(System.currentTimeMillis() + delayInSeconds * 1000));
+        taskScheduler.schedule(task, Instant.now().plusSeconds(delayInSeconds));
     }
 
     public Integer deleteMessageImmediatelyAndNotifyAfterDelay(AbsSender sender, SendMessage sendMessage, String chatId, Integer messageId, Long userId, int notifyDelay) {
@@ -159,7 +160,7 @@ public class TimerDelete {
                 // 这里可以捕获异常，但是我们可以选择不执行任何操作，因为我们不关心消息是否确实已经被删除
             }
         };
-        taskScheduler.schedule(task, new Date(System.currentTimeMillis() + delayInSeconds * 1000));
+        taskScheduler.schedule(task, Instant.now().plusSeconds(delayInSeconds));
     }
 
     public boolean deleteByMessageIdImmediately(AbsSender sender, String chatId, Integer messageId) {
