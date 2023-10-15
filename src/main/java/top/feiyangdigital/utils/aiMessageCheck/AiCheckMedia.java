@@ -60,10 +60,10 @@ public class AiCheckMedia {
                     String otherText = String.format("<b>违规用户UserID为：<a href=\"tg://user?id=%d\">%s</a></b>", Long.valueOf(userId), userId);
                     SendMessage notification = new SendMessage();
                     notification.setChatId(groupId);
-                    notification.setText(text+"\n"+otherText);
+                    notification.setText(text + "\n" + otherText);
                     notification.setParseMode(ParseMode.HTML);
                     timerDelete.deleteMessageImmediatelyAndNotifyAfterDelay(sender, notification, groupId, messageId, Long.valueOf(userId), 90);
-                    restrictOrUnrestrictUser.restrictUser(sender, Long.valueOf(userId), groupId,0L);
+                    restrictOrUnrestrictUser.restrictUser(sender, Long.valueOf(userId), groupId, 0L);
                     return;
                 } else if (normalCount >= 5) {
                     return;
@@ -88,41 +88,43 @@ public class AiCheckMedia {
                             .build();
                     String url = sender.execute(getFile).getFileUrl(BaseInfo.getBotToken());
                     File file = googleCloudVisionService.downloadFileWithOkHttp(url);
-                    String miaoshu = "";
-                    List<EntityAnnotation> list = googleCloudVisionService.detectTextFromLocalImage(file);
-                    if (!list.isEmpty()) {
-                        miaoshu = list.get(0).getDescription();
-                    }
-                    SafeSearchAnnotation safeSearchAnnotation = googleCloudVisionService.detectSafeSearchFromLocalImage(file);
-                    BotRecord botRecord1 = new BotRecord();
-                    String realUpdateText = miaoshu;
-                    if (StringUtils.hasText(update.getMessage().getCaption())) {
-                        realUpdateText += "\n" + update.getMessage().getCaption();
-                    }
-                    update.getMessage().setText(realUpdateText);
-                    String content = update.getMessage().getText();
-                    if (safeSearchAnnotation.getAdultValue() >= 3 || safeSearchAnnotation.getViolenceValue() >= 3 || safeSearchAnnotation.getRacyValue() >= 3) {
-                        String text = String.format("用户 <b><a href=\"tg://user?id=%d\">%s</a></b> 已被AI检测发送违规媒体，直接删除！", Long.valueOf(userId), firstName);
-                        String otherText = String.format("<b>违规用户UserID为：<a href=\"tg://user?id=%d\">%s</a></b>", Long.valueOf(userId), userId);
-                        SendMessage notification = new SendMessage();
-                        notification.setChatId(groupId);
-                        notification.setText(text+"\n"+otherText);
-                        notification.setParseMode(ParseMode.HTML);
-                        timerDelete.deleteMessageImmediatelyAndNotifyAfterDelay(sender, notification, groupId, messageId, Long.valueOf(userId), 90);
-                        botRecord1.setViolationcount(violationCount + 1);
-                    } else if (StringUtils.hasText(realUpdateText)) {
-                        aiCheckMessage.contentAiOption(sender, groupId, userId, firstName, messageId, realUpdateText);
+                    if (file != null) {
+                        String miaoshu = "";
+                        List<EntityAnnotation> list = googleCloudVisionService.detectTextFromLocalImage(file);
+                        if (!list.isEmpty()) {
+                            miaoshu = list.get(0).getDescription();
+                        }
+                        SafeSearchAnnotation safeSearchAnnotation = googleCloudVisionService.detectSafeSearchFromLocalImage(file);
+                        BotRecord botRecord1 = new BotRecord();
+                        String realUpdateText = miaoshu;
+                        if (StringUtils.hasText(update.getMessage().getCaption())) {
+                            realUpdateText += "\n" + update.getMessage().getCaption();
+                        }
+                        update.getMessage().setText(realUpdateText);
+                        String content = update.getMessage().getText();
+                        if (safeSearchAnnotation != null && (safeSearchAnnotation.getAdultValue() >= 3 || safeSearchAnnotation.getViolenceValue() >= 3 || safeSearchAnnotation.getRacyValue() >= 3)) {
+                            String text = String.format("用户 <b><a href=\"tg://user?id=%d\">%s</a></b> 已被AI检测发送违规媒体，直接删除！", Long.valueOf(userId), firstName);
+                            String otherText = String.format("<b>违规用户UserID为：<a href=\"tg://user?id=%d\">%s</a></b>", Long.valueOf(userId), userId);
+                            SendMessage notification = new SendMessage();
+                            notification.setChatId(groupId);
+                            notification.setText(text + "\n" + otherText);
+                            notification.setParseMode(ParseMode.HTML);
+                            timerDelete.deleteMessageImmediatelyAndNotifyAfterDelay(sender, notification, groupId, messageId, Long.valueOf(userId), 90);
+                            botRecord1.setViolationcount(violationCount + 1);
+                        } else if (StringUtils.hasText(realUpdateText)) {
+                            aiCheckMessage.contentAiOption(sender, groupId, userId, firstName, messageId, realUpdateText);
+                            if (file != null) {
+                                file.delete();
+                            }
+                            return;
+                        } else {
+                            botRecord1.setNormalcount(normalCount + 1);
+                        }
+                        botRecord1.setLastmessage(content);
+                        botRecordService.updateRecordByGidAndUid(groupId, userId, botRecord1);
                         if (file != null) {
                             file.delete();
                         }
-                        return;
-                    } else {
-                        botRecord1.setNormalcount(normalCount + 1);
-                    }
-                    botRecord1.setLastmessage(content);
-                    botRecordService.updateRecordByGidAndUid(groupId, userId, botRecord1);
-                    if (file != null) {
-                        file.delete();
                     }
                 }
             }
