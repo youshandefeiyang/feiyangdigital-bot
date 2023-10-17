@@ -12,8 +12,6 @@ import top.feiyangdigital.entity.BaseInfo;
 import top.feiyangdigital.entity.GroupInfoWithBLOBs;
 import top.feiyangdigital.sqlService.GroupInfoService;
 
-import java.util.Date;
-
 @Service
 public class BotFirstIntoGroup {
     @Autowired
@@ -34,7 +32,7 @@ public class BotFirstIntoGroup {
                             GroupInfoWithBLOBs groupInfo = new GroupInfoWithBLOBs();
                             groupInfo.setGroupid(chatId);
                             groupInfo.setGroupname(groupName);
-                            groupInfo.setSettingtimestamp(String.valueOf(new Date().getTime()));
+                            groupInfo.setSettingtimestamp(String.valueOf(System.currentTimeMillis()));
                             if (groupInfoService.selGroup(chatId)) {
                                 groupInfoService.addGroup(groupInfo);
                             }

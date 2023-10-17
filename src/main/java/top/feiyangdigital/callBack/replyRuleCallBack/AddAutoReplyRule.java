@@ -10,12 +10,11 @@ import top.feiyangdigital.entity.GroupInfoWithBLOBs;
 import top.feiyangdigital.entity.KeywordsFormat;
 import top.feiyangdigital.scheduledTasks.HandleOption;
 import top.feiyangdigital.sqlService.GroupInfoService;
-import top.feiyangdigital.utils.ruleCacheMap.AddRuleCacheMap;
 import top.feiyangdigital.utils.ReplyLegal;
 import top.feiyangdigital.utils.SendContent;
+import top.feiyangdigital.utils.ruleCacheMap.AddRuleCacheMap;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -45,7 +44,7 @@ public class AddAutoReplyRule {
                     GroupInfoWithBLOBs groupInfoWithBLOBs = groupInfoService.selAllByGroupId(addRuleCacheMap.getGroupIdForUser(userId));
                     String settingTimestamp = groupInfoWithBLOBs.getSettingtimestamp();
                     if (settingTimestamp != null && !settingTimestamp.isEmpty()) {
-                        if (new Date().getTime() - Long.parseLong(settingTimestamp) > (15 * 60 * 1000)) {
+                        if (System.currentTimeMillis() - Long.parseLong(settingTimestamp) > (15 * 60 * 1000)) {
                             sender.execute(sendContent.messageText(update, "本次设置超时，请去群里重新发送/setbot"));
                             addRuleCacheMap.updateUserMapping(userId, addRuleCacheMap.getGroupIdForUser(userId), addRuleCacheMap.getGroupNameForUser(userId), "notallow", addRuleCacheMap.getAiFlagForUser(userId), addRuleCacheMap.getCrontabFlagForUser(userId));
                         } else {

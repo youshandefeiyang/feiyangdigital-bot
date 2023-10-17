@@ -2,7 +2,6 @@ package top.feiyangdigital.utils.groupCaptch;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.DeleteMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
@@ -12,10 +11,7 @@ import top.feiyangdigital.entity.BaseInfo;
 import top.feiyangdigital.entity.GroupInfoWithBLOBs;
 import top.feiyangdigital.handleService.BotHelper;
 import top.feiyangdigital.sqlService.GroupInfoService;
-import top.feiyangdigital.utils.AdminList;
 import top.feiyangdigital.utils.CheckUser;
-
-import java.util.Date;
 
 @Component
 public class SetBot {
@@ -27,9 +23,6 @@ public class SetBot {
     private BotHelper botHelper;
 
     @Autowired
-    private AdminList adminList;
-
-    @Autowired
     private CheckUser checkUser;
 
     @CacheEvict(value = "linkedChatInfo", key = "#chatId")
@@ -38,7 +31,7 @@ public class SetBot {
             GroupInfoWithBLOBs groupInfo = new GroupInfoWithBLOBs();
             groupInfo.setOwnerandanonymousadmins(checkUser.fetchHighAdminList(sender, update));
             groupInfo.setGroupname(update.getMessage().getChat().getTitle());
-            groupInfo.setSettingtimestamp(String.valueOf(new Date().getTime()));
+            groupInfo.setSettingtimestamp(String.valueOf(System.currentTimeMillis()));
             groupInfoService.updateSelectiveByChatId(groupInfo, chatId);
             botHelper.sendAdminButton(sender, update);
             sender.execute(new DeleteMessage(chatId, update.getMessage().getMessageId()));

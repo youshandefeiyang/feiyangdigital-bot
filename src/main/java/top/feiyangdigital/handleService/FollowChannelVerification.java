@@ -87,7 +87,7 @@ public class FollowChannelVerification implements CaptchaService {
                 SendMessage message = sendContent.messageText(update, "验证通过，现在你可以在群里自由发言了");
                 sender.execute(message);
                 restrictOrUnrestrictUser.unrestrictUser(sender, userId1, groupId);
-                botRecordService.addUserRecord(groupId, userId, String.valueOf(new Date().getTime() / 1000));
+                botRecordService.addUserRecord(groupId, userId, String.valueOf(System.currentTimeMillis() / 1000));
                 if (groupInfoWithBLOBs != null && "open".equals(groupInfoWithBLOBs.getIntogroupwelcomeflag())) {
                     if (groupMessageIdCacheMap.getMapSize() > 0) {
                         groupMessageIdCacheMap.deleteAllMessage(sender, groupId);

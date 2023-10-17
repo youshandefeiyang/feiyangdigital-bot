@@ -38,7 +38,7 @@ public class DeleteSingleRuleByKeyWord {
                 String settingTimestamp = groupInfoWithBLOBs.getSettingtimestamp();
                 String content = groupInfoWithBLOBs.getKeywords();
                 if (settingTimestamp != null && !settingTimestamp.isEmpty()) {
-                    if (new Date().getTime() - Long.parseLong(settingTimestamp) > (15 * 60 * 1000)) {
+                    if (System.currentTimeMillis() - Long.parseLong(settingTimestamp) > (15 * 60 * 1000)) {
                         sender.execute(sendContent.messageText(update, "本次设置超时，请去群里重新发送/setbot"));
                         deleteRuleCacheMap.updateUserMapping(userId, deleteRuleCacheMap.getGroupIdForUser(userId), deleteRuleCacheMap.getGroupNameForUser(userId), "notdelete");
                     } else {
