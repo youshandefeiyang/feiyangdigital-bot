@@ -16,11 +16,15 @@ RUN mvn clean package
 # 使用OpenJDK 17官方提供的基础镜像
 FROM openjdk:17-jdk
 
+# 安装中文字体
+RUN apt-get update && apt-get install -y fonts-wqy-microhei
+
 # 设置应用的目录结构
 WORKDIR /app
 
-# 从构建阶段复制构建的jar文件
+# 从构建阶段复制构建的jar文件和src目录
 COPY --from=build /app/target/*.jar app.jar
+COPY --from=build /app/src/ /app/src/
 
 # 设置Java的Headless模式
 ENV JAVA_TOOL_OPTIONS -Djava.awt.headless=true
