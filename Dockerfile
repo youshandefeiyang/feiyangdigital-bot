@@ -14,7 +14,7 @@ COPY src/ src/
 RUN mvn clean package
 
 # 使用OpenJDK 17官方提供的基础镜像
-FROM openjdk:17-jdk
+FROM openjdk:17-jdk-buster
 
 # 安装中文字体
 RUN apt-get update && apt-get install -y fonts-wqy-microhei
