@@ -58,6 +58,7 @@ public class WordCloudGenerator {
         wordCloud.setPadding(5);
         wordCloud.setBackgroundColor(Color.WHITE);
         wordCloud.setColorPalette(generateRandomColorPalette(10));
+        wordCloud.setKumoFont(new KumoFont(new Font("WenQuanYi Micro Hei", Font.PLAIN, 20))); 
         wordCloud.setFontScalar(new LinearFontScalar(20, 100));
         wordCloud.build(wordFrequencies);
         return wordCloud.getBufferedImage();
