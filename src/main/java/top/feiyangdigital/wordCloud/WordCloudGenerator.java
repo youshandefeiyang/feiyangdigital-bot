@@ -4,6 +4,7 @@ import com.kennycason.kumo.CollisionMode;
 import com.kennycason.kumo.WordCloud;
 import com.kennycason.kumo.WordFrequency;
 import com.kennycason.kumo.bg.CircleBackground;
+import com.kennycason.kumo.font.KumoFont;
 import com.kennycason.kumo.font.scale.LinearFontScalar;
 import com.kennycason.kumo.nlp.FrequencyAnalyzer;
 import com.kennycason.kumo.palette.ColorPalette;
@@ -61,6 +62,7 @@ public class WordCloudGenerator {
         wordCloud.setKumoFont(new KumoFont(new Font("WenQuanYi Micro Hei", Font.PLAIN, 20))); 
         wordCloud.setFontScalar(new LinearFontScalar(20, 100));
         wordCloud.build(wordFrequencies);
+        wordCloud.setKumoFont(new KumoFont(new Font("WenQuanYi Micro Hei", Font.PLAIN, 20)));
         return wordCloud.getBufferedImage();
     }
 
