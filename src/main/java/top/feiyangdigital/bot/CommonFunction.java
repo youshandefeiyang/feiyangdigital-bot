@@ -2,6 +2,7 @@ package top.feiyangdigital.bot;
 
 import cn.hutool.core.util.StrUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.DeleteMessage;
@@ -118,7 +119,7 @@ public class CommonFunction {
     private FollowChannelVerification followChannelVerification;
 
     @Autowired
-    private ExecutorService taskExecutor;
+    private ThreadPoolTaskExecutor threadPoolTaskExecutor;
 
     private boolean checkTextMessage(AbsSender sender, Update update) throws TelegramApiException {
         if (setBot.adminSetBot(sender, update, update.getMessage().getChatId().toString())) {
@@ -136,7 +137,7 @@ public class CommonFunction {
 
     public void mainFunc(AbsSender sender, Update update) {
 
-        taskExecutor.execute(() -> {
+        threadPoolTaskExecutor.execute(() -> {
             try {
                 if ((update.hasMessage() && (update.getMessage().getChat().isGroupChat() || update.getMessage().getChat().isSuperGroupChat()))
                         || (update.hasEditedMessage() && (update.getEditedMessage().getChat().isGroupChat() || update.getEditedMessage().getChat().isSuperGroupChat()))
@@ -247,7 +248,7 @@ public class CommonFunction {
             }
         });
 
-        taskExecutor.execute(() -> {
+        threadPoolTaskExecutor.execute(() -> {
             try {
                 if ((update.hasMessage() && (update.getMessage().getChat().isGroupChat() || update.getMessage().getChat().isSuperGroupChat()))
                         || (update.hasEditedMessage() && (update.getEditedMessage().getChat().isGroupChat() || update.getEditedMessage().getChat().isSuperGroupChat()))
@@ -277,7 +278,7 @@ public class CommonFunction {
             }
         });
 
-        taskExecutor.execute(() -> {
+        threadPoolTaskExecutor.execute(() -> {
             try {
                 if ((update.hasMessage() && (update.getMessage().getChat().isGroupChat() || update.getMessage().getChat().isSuperGroupChat()))
                         || (update.hasEditedMessage() && (update.getEditedMessage().getChat().isGroupChat() || update.getEditedMessage().getChat().isSuperGroupChat()))
