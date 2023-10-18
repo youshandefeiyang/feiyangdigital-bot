@@ -105,6 +105,7 @@ public class NightSetting {
     public void changeNightModeFlag(AbsSender sender, Update update) throws TelegramApiException {
         String userId = update.getCallbackQuery().getFrom().getId().toString();
         GroupInfoWithBLOBs groupInfoWithBLOBs = groupInfoService.selAllByGroupId(addRuleCacheMap.getGroupIdForUser(userId));
+        String groupName = groupInfoWithBLOBs.getGroupname();
         String keyWords = groupInfoWithBLOBs.getKeywords();
         String nightFlag = "";
         String text = "";
@@ -115,7 +116,7 @@ public class NightSetting {
                 nightFlag = "open";
                 text = "✅夜间值守模式已打开";
                 if (StringUtils.hasText(keyWords)) {
-                    handleOption.ruleHandle(sender, addRuleCacheMap.getGroupIdForUser(userId), keyWords);
+                    handleOption.ruleHandle(sender, addRuleCacheMap.getGroupIdForUser(userId),groupName, keyWords);
                 }
             }
         } else {

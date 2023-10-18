@@ -25,7 +25,7 @@ public class OnlySendMessage implements Job {
 
     @Override
     public void execute(JobExecutionContext jobExecutionContext) {
-        log.info("仅仅只发送消息，不执行操作");
+        log.warn("仅仅只发送消息，不执行操作");
         JobDataMap dataMap = jobExecutionContext.getMergedJobDataMap();
         AbsSender sender = (AbsSender) dataMap.get("sender");
         String groupId = dataMap.getString("groupId");

@@ -5,6 +5,9 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.TaskScheduler;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
 @Configuration
 public class SchedulerConfig {
     @Bean
@@ -16,4 +19,8 @@ public class SchedulerConfig {
         return taskScheduler;
     }
 
+    @Bean
+    public ExecutorService taskExecutor() {
+        return Executors.newFixedThreadPool(10); //设为10个线程，可以根据需要进行调整
+    }
 }

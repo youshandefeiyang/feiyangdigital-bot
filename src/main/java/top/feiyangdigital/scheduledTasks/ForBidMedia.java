@@ -30,7 +30,7 @@ public class ForBidMedia implements Job {
 
     @Override
     public void execute(JobExecutionContext jobExecutionContext) {
-        log.info("执行开启夜间模式");
+        log.warn("执行开启夜间模式");
         JobDataMap dataMap = jobExecutionContext.getMergedJobDataMap();
         AbsSender sender = (AbsSender) dataMap.get("sender");
         String groupId = dataMap.getString("groupId");
@@ -42,7 +42,7 @@ public class ForBidMedia implements Job {
         GroupInfoWithBLOBs groupInfoWithBLOBs = new GroupInfoWithBLOBs();
         groupInfoWithBLOBs.setCansendmediaflag("open");
         if (groupInfoService.updateSelectiveByChatId(groupInfoWithBLOBs,groupId)){
-            log.info("夜间模式开启成功");
+            log.warn("夜间模式开启成功");
         }
     }
 }

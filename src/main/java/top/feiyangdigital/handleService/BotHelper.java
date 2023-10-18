@@ -286,9 +286,10 @@ public class BotHelper {
                 groupInfoWithBLOBs.setKeywords(deleteGropuRuleMapEntity.removeRuleAndAssembleString(chatId, longUuid).trim());
                 if (groupInfoService.updateSelectiveByChatId(groupInfoWithBLOBs, chatId)) {
                     GroupInfoWithBLOBs groupInfoWithBLOBs2 = groupInfoService.selAllByGroupId(addRuleCacheMap.getGroupIdForUser(update.getCallbackQuery().getFrom().getId().toString()));
+                    String groupName = groupInfoWithBLOBs2.getGroupname();
                     String keyWords = groupInfoWithBLOBs2.getKeywords();
                     if (StringUtils.hasText(keyWords)) {
-                        handleOption.ruleHandle(sender, addRuleCacheMap.getGroupIdForUser(update.getCallbackQuery().getFrom().getId().toString()), keyWords);
+                        handleOption.ruleHandle(sender, addRuleCacheMap.getGroupIdForUser(update.getCallbackQuery().getFrom().getId().toString()),groupName, keyWords);
                     }
                     setDeleteView.deleteRuleSuccessCallBack(sender, update);
                 }

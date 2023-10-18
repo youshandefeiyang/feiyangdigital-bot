@@ -4,13 +4,16 @@ spring:
     username: root
     password: password
     driver-class-name: com.mysql.cj.jdbc.Driver
+  redis:
+    host: redis
+    port: 6379
   cache:
     ehcache:
       config: classpath:ehcache.xml
 
 logging:
   level:
-    root: info
+    root: warn
 
 mybatis:
   type-aliases-package: top.feiyangdigital.entity

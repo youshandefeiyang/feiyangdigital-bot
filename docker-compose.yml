@@ -10,6 +10,7 @@ services:
     restart: unless-stopped
     depends_on:
       - mysql
+      - redis
     environment:
       - SPRING_DATASOURCE_URL=jdbc:mysql://mysql:3306/bot?useSSL=false&serverTimezone=GMT&allowPublicKeyRetrieval=true
       - SPRING_DATASOURCE_USERNAME=root
@@ -30,5 +31,19 @@ services:
       - /home/feiyangdigitalbotconf/bot.sql:/docker-entrypoint-initdb.d/bot.sql
     restart: unless-stopped
 
+  redis:
+    image: redis:latest
+    command:
+      - --save 900 1
+      - --save 300 10
+      - --save 60 10000
+      - --rdbcompression yes
+      - --rdbchecksum yes
+      - --dbfilename dump.rdb
+    volumes:
+      - redis-data:/data
+    restart: unless-stopped
+
 volumes:
   mysql-data:
+  redis-data:

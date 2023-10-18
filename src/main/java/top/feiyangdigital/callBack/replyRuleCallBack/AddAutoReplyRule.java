@@ -64,9 +64,10 @@ public class AddAutoReplyRule {
                             groupInfoWithBLOBs1.setKeywords(newContent);
                             if (groupInfoService.updateSelectiveByChatId(groupInfoWithBLOBs1, addRuleCacheMap.getGroupIdForUser(userId))) {
                                 GroupInfoWithBLOBs groupInfoWithBLOBs2 = groupInfoService.selAllByGroupId(addRuleCacheMap.getGroupIdForUser(userId));
+                                String groupName = groupInfoWithBLOBs2.getGroupname();
                                 String keyWords = groupInfoWithBLOBs2.getKeywords();
                                 if (StringUtils.hasText(keyWords)) {
-                                    handleOption.ruleHandle(sender, addRuleCacheMap.getGroupIdForUser(userId), keyWords);
+                                    handleOption.ruleHandle(sender, addRuleCacheMap.getGroupIdForUser(userId),groupName, keyWords);
                                 }
                                 sender.execute(sendContent.createResponseMessage(update, new KeywordsFormat(waitRule), "html"));
                             }

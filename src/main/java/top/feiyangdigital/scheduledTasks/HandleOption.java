@@ -23,12 +23,13 @@ public class HandleOption {
     @Autowired
     private GroupInfoService groupInfoService;
 
-    public void ruleHandle(AbsSender sender, String groupId, String keyWords) {
+    public void ruleHandle(AbsSender sender, String groupId,String groupName, String keyWords) {
         schedulerService.clearAllJobs();
         GroupInfoWithBLOBs groupInfoWithBLOBs = groupInfoService.selAllByGroupId(groupId);
         Map<String, Object> map = new ConcurrentHashMap<>();
         map.put("sender", sender);
         map.put("groupId", groupId);
+        map.put("groupName", groupName);
         List<KeywordsFormat> keywordsFormatList = Arrays.stream(keyWords.split("\\n{2,}"))
                 .map(String::trim)
                 .map(KeywordsFormat::new)
@@ -47,6 +48,8 @@ public class HandleOption {
                         schedulerService.updateTrigger(keywordsFormatList.get(i).getReplyText(), ForBidMedia.class, content[0] + "job" + i, content[0] + "group" + i, map);
                     } else if ("OnlySendMessage".equalsIgnoreCase(content[0]) && "open".equals(groupInfoWithBLOBs.getCrontabflag())) {
                         schedulerService.updateTrigger(keywordsFormatList.get(i).getReplyText(), OnlySendMessage.class, content[0] + "job" + i, content[0] + "group" + i, map);
+                    } else if ("SendWordCloud".equalsIgnoreCase(content[0]) && "open".equals(groupInfoWithBLOBs.getCrontabflag())) {
+                        schedulerService.updateTrigger(keywordsFormatList.get(i).getReplyText(), SendWordCloud.class, content[0] + "job" + i, content[0] + "group" + i, map);
                     }
                 } else if (content.length == 4) {
                     if ("AllowMedia".equalsIgnoreCase(content[0]) && "open".equals(groupInfoWithBLOBs.getNightmodeflag())) {
@@ -55,6 +58,8 @@ public class HandleOption {
                         schedulerService.updateTrigger(keywordsFormatList.get(i).getReplyText(), ForBidMedia.class, content[0] + "job" + i, content[0] + "group" + i, map, content[3]);
                     } else if ("OnlySendMessage".equalsIgnoreCase(content[0]) && "open".equals(groupInfoWithBLOBs.getCrontabflag())) {
                         schedulerService.updateTrigger(keywordsFormatList.get(i).getReplyText(), OnlySendMessage.class, content[0] + "job" + i, content[0] + "group" + i, map, content[3]);
+                    } else if ("SendWordCloud".equalsIgnoreCase(content[0]) && "open".equals(groupInfoWithBLOBs.getCrontabflag())) {
+                        schedulerService.updateTrigger(keywordsFormatList.get(i).getReplyText(), SendWordCloud.class, content[0] + "job" + i, content[0] + "group" + i, map, content[3]);
                     }
                 }
             }

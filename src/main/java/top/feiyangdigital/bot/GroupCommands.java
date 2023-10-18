@@ -15,6 +15,7 @@ public class GroupCommands {
     public void setGroupCommands(AbsSender sender) throws TelegramApiException {
         List<BotCommand> commands = Arrays.asList(
                 new BotCommand("/setbot", "设置机器人，仅群主可用"),
+                new BotCommand("/rank", "生成词云排行榜"),
                 new BotCommand("/ban", "!或/ban user 时间(可选) 原因(可选)"),
                 new BotCommand("/dban","可Ban掉用户的同时，删除他的发言，格式参考Ban"),
                 new BotCommand("/unban", "解封用户，!或/unban user"),

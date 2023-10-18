@@ -39,6 +39,7 @@ public class CommonCallBack {
     public void cronOption(AbsSender sender, Update update) throws TelegramApiException {
         String userId = update.getCallbackQuery().getFrom().getId().toString();
         GroupInfoWithBLOBs groupInfoWithBLOBs = groupInfoService.selAllByGroupId(addRuleCacheMap.getGroupIdForUser(userId));
+        String groupName = groupInfoWithBLOBs.getGroupname();
         String keyWords = groupInfoWithBLOBs.getKeywords();
         String crontabFlag = "";
         String text = "";
@@ -49,7 +50,7 @@ public class CommonCallBack {
                 crontabFlag = "open";
                 text = "✅定时发送消息已打开";
                 if (StringUtils.hasText(keyWords)) {
-                    handleOption.ruleHandle(sender, addRuleCacheMap.getGroupIdForUser(userId), keyWords);
+                    handleOption.ruleHandle(sender, addRuleCacheMap.getGroupIdForUser(userId),groupName, keyWords);
                 }
             }
         } else {

@@ -84,7 +84,7 @@ public class AntiFloodService {
             try {
                 sender.execute(deleteMessage);
             } catch (TelegramApiException e) {
-                throw new RuntimeException(e);
+                //
             }
         });
     }
