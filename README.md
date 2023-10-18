@@ -87,3 +87,7 @@ docker-compose pull
 ```bash
 docker-compose up -d
 ```
+5.在宿主机的`/etc/sysctl.conf`文件中添加或修改以下行并重启：
+```bash
+vm.overcommit_memory = 1
+```
