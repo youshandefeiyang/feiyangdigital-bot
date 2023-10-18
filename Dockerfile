@@ -13,7 +13,7 @@ COPY src/ src/
 # 执行Maven构建
 RUN mvn clean package
 
-# 使用OpenJDK 17官方提供的基础镜像
+# 使用OpenJDK 17官方提供的buster镜像
 FROM openjdk:17-jdk-buster
 
 # 安装中文字体
