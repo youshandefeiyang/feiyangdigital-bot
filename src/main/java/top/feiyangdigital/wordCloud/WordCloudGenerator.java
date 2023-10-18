@@ -62,7 +62,6 @@ public class WordCloudGenerator {
         wordCloud.setKumoFont(new KumoFont(new Font("WenQuanYi Micro Hei", Font.PLAIN, 20))); 
         wordCloud.setFontScalar(new LinearFontScalar(20, 100));
         wordCloud.build(wordFrequencies);
-        wordCloud.setKumoFont(new KumoFont(new Font("WenQuanYi Micro Hei", Font.PLAIN, 20)));
         return wordCloud.getBufferedImage();
     }
 
@@ -70,8 +69,6 @@ public class WordCloudGenerator {
         Set<String> allMessages = messageService.getAllMessagesForDate(chatId, chatName, date);
 
         String combinedMessages = String.join("\n", allMessages);
-
-//        System.out.println(combinedMessages);
 
         List<String> words = ToAnalysis.parse(combinedMessages).getTerms().stream()
                 .map(term -> term.getName().trim())
