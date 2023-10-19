@@ -64,27 +64,35 @@ public class WordCloudGenerator {
     }
 
     public void generateAndSendWordCloud(AbsSender sender, String chatId, String chatName, String date) throws TelegramApiException, IOException {
-        Set<String> allMessages = (Set<String>) messageService.getAllMessagesInfoForDate(chatId, chatName, date).get("allMessages");
+        Path tempFile = null;
+        try {
+            Set<String> allMessages = (Set<String>) messageService.getAllMessagesInfoForDate(chatId, chatName, date).get("allMessages");
 
-        String combinedMessages = String.join("\n", allMessages);
+            String combinedMessages = String.join("\n", allMessages);
 
-        List<String> words = ToAnalysis.parse(combinedMessages).getTerms().stream()
-                .map(term -> term.getName().trim())
-                .filter(word -> !word.isEmpty())
-                .collect(Collectors.toList());
-        BufferedImage wordCloudImage = generateWordCloud(words);
-        Path tempFile = Files.createTempFile("wordcloud", ".png");
-        ImageIO.write(wordCloudImage, "PNG", tempFile.toFile());
+            List<String> words = ToAnalysis.parse(combinedMessages).getTerms().stream()
+                    .map(term -> term.getName().trim())
+                    .filter(word -> !word.isEmpty())
+                    .collect(Collectors.toList());
 
-        InputFile inputFile = new InputFile(tempFile.toFile());
-        SendPhoto sendPhoto = new SendPhoto();
-        sendPhoto.setChatId(chatId);
-        sendPhoto.setPhoto(inputFile);
-        sendPhoto.setCaption(buildStatisticsMessage(chatId, chatName, date));
-        sendPhoto.setParseMode(ParseMode.HTML);
-        sender.execute(sendPhoto);
-        Files.deleteIfExists(tempFile);
+            BufferedImage wordCloudImage = generateWordCloud(words);
+            tempFile = Files.createTempFile("wordcloud", ".png");
+            ImageIO.write(wordCloudImage, "PNG", tempFile.toFile());
+
+            InputFile inputFile = new InputFile(tempFile.toFile());
+            SendPhoto sendPhoto = new SendPhoto();
+            sendPhoto.setChatId(chatId);
+            sendPhoto.setPhoto(inputFile);
+            sendPhoto.setCaption(buildStatisticsMessage(chatId, chatName, date));
+            sendPhoto.setParseMode(ParseMode.HTML);
+            sender.execute(sendPhoto);
+        } finally {
+            if (tempFile != null) {
+                Files.deleteIfExists(tempFile);
+            }
+        }
     }
+
 
     public String buildStatisticsMessage(String chatId, String chatName, String date) {
         Map<String, Object> allMessagesInfoForDate = messageService.getAllMessagesInfoForDate(chatId, chatName, date);
