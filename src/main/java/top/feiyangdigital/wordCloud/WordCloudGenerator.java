@@ -87,9 +87,7 @@ public class WordCloudGenerator {
             sendPhoto.setParseMode(ParseMode.HTML);
             sender.execute(sendPhoto);
         } finally {
-            if (tempFile != null) {
-                Files.deleteIfExists(tempFile);
-            }
+            Files.deleteIfExists(tempFile);
         }
     }
 
