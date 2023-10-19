@@ -3,6 +3,7 @@ package top.feiyangdigital.wordCloud;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import java.util.*;
 import java.util.concurrent.TimeUnit;
@@ -16,13 +17,18 @@ public class MessageService {
 
     // 记录发言内容和次数
     public void recordMessage(Long chatId, String chatName, Long userId, String userName, String message, String date) {
-        String keySpeak = String.format("%s_%s_%s-%s_%s_发言数", chatId, chatName, userId, userName, date);
-        redisTemplate.opsForZSet().incrementScore(keySpeak, "score", 1);
-        redisTemplate.expire(keySpeak, 30, TimeUnit.DAYS);
+        if (StringUtils.hasText(message)) { // 仅在消息非空时添加
+            if (!StringUtils.hasText(userName)){
+                userName = String.valueOf(userId);
+            }
+            String keySpeak = String.format("%s_%s_%s-%s_%s_发言数", chatId, chatName, userId, userName, date);
+            redisTemplate.opsForZSet().incrementScore(keySpeak, "score", 1);
+            redisTemplate.expire(keySpeak, 30, TimeUnit.DAYS);
 
-        String keyContent = String.format("%s_%s_%s-%s_%s_发言内容", chatId, chatName, userId, userName, date);
-        redisTemplate.opsForZSet().add(keyContent, message, System.currentTimeMillis());
-        redisTemplate.expire(keyContent, 30, TimeUnit.DAYS);
+            String keyContent = String.format("%s_%s_%s-%s_%s_发言内容", chatId, chatName, userId, userName, date);
+            redisTemplate.opsForZSet().add(keyContent, message, System.currentTimeMillis());
+            redisTemplate.expire(keyContent, 30, TimeUnit.DAYS);
+        }
     }
 
     // 获取指定日期范围的所有消息
@@ -55,7 +61,11 @@ public class MessageService {
             for (String key : keys) {
                 Double score = redisTemplate.opsForZSet().score(key, "score");
                 if (score != null) {
-                    String userName = key.split("_")[2].split("-")[1];
+                    String[] userInfo = key.split("_")[2].split("-");
+                    String userName = userInfo[0];
+                    if (userInfo.length >= 2) {
+                        userName = userInfo[1];
+                    }
                     userSpeakCounts.put(userName, score.intValue());
                 }
             }
