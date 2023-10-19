@@ -32,23 +32,33 @@ public class MessageService {
     }
 
     // 获取指定日期范围的所有消息
-    public Set<String> getAllMessagesForDate(String chatId, String chatName, String date) {
+    public Map<String, Object> getAllMessagesInfoForDate(String chatId, String chatName, String date) {
+        Map<String, Object> result = new HashMap<>();
         Set<String> allMessages = new HashSet<>();
 
         // 使用日期直接构建键模式，这样可以避免不必要的键匹配
         String keyPattern = String.format("%s_%s_*_%s_发言内容", chatId, chatName, date);
         Set<String> keys = redisTemplate.keys(keyPattern);
-        if (keys != null && keys.isEmpty()) return allMessages;  // 返回空集合，如果没有匹配的键
+
+        int totalUsers = 0;
+        int totalMessages = 0;
+
         if (keys != null) {
+            totalUsers = keys.size(); // 统计发言的人数
             for (String key : keys) {
                 Set<String> messages = redisTemplate.opsForZSet().range(key, 0, -1);
                 if (messages != null) {
                     allMessages.addAll(messages);
                 }
+                totalMessages += redisTemplate.opsForZSet().zCard(key).intValue(); // 获取 ZSet 的大小，即用户的发言数
             }
         }
 
-        return allMessages;
+        result.put("allMessages", allMessages);
+        result.put("totalUsers", totalUsers);
+        result.put("totalMessages", totalMessages);
+
+        return result;
     }
 
     public Map<String, Integer> getTopSpeakersForDate(String chatId, String chatName, String date, int topN) {

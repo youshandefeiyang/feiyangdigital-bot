@@ -26,10 +26,8 @@ import java.nio.file.Path;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
+import java.util.*;
 import java.util.List;
-import java.util.Map;
-import java.util.Random;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -59,14 +57,14 @@ public class WordCloudGenerator {
         wordCloud.setPadding(5);
         wordCloud.setBackgroundColor(Color.WHITE);
         wordCloud.setColorPalette(generateRandomColorPalette(10));
-        wordCloud.setKumoFont(new KumoFont(new Font("WenQuanYi Micro Hei", Font.PLAIN, 20))); 
+        wordCloud.setKumoFont(new KumoFont(new Font("WenQuanYi Micro Hei", Font.PLAIN, 20)));
         wordCloud.setFontScalar(new LinearFontScalar(20, 100));
         wordCloud.build(wordFrequencies);
         return wordCloud.getBufferedImage();
     }
 
-    public void generateAndSendWordCloud(AbsSender sender,String chatId, String chatName, String date) throws TelegramApiException, IOException {
-        Set<String> allMessages = messageService.getAllMessagesForDate(chatId, chatName, date);
+    public void generateAndSendWordCloud(AbsSender sender, String chatId, String chatName, String date) throws TelegramApiException, IOException {
+        Set<String> allMessages = (Set<String>) messageService.getAllMessagesInfoForDate(chatId, chatName, date).get("allMessages");
 
         String combinedMessages = String.join("\n", allMessages);
 
@@ -82,21 +80,23 @@ public class WordCloudGenerator {
         SendPhoto sendPhoto = new SendPhoto();
         sendPhoto.setChatId(chatId);
         sendPhoto.setPhoto(inputFile);
-        sendPhoto.setCaption(buildStatisticsMessage(chatId,chatName,date));
+        sendPhoto.setCaption(buildStatisticsMessage(chatId, chatName, date));
         sendPhoto.setParseMode(ParseMode.HTML);
         sender.execute(sendPhoto);
         Files.deleteIfExists(tempFile);
     }
 
     public String buildStatisticsMessage(String chatId, String chatName, String date) {
-        int totalMessages = messageService.getAllMessagesForDate(chatId, chatName, date).size();
+        Map<String, Object> allMessagesInfoForDate = messageService.getAllMessagesInfoForDate(chatId, chatName, date);
+        int totalUsers = (int) allMessagesInfoForDate.get("totalUsers");
+        int totalMessages = (int) allMessagesInfoForDate.get("totalMessages");
         Map<String, Integer> topSpeakers = messageService.getTopSpeakersForDate(chatId, chatName, date, 10);
 
         StringBuilder message = new StringBuilder();
 
         message.append("🎤 今日话题词云 ").append("<b>").append(date).append("</b>").append(" 🎤\n");
         message.append("⏰ 截至今天 ").append("<b>").append(LocalDateTime.now(ZoneId.of("Asia/Shanghai")).format(DateTimeFormatter.ofPattern("HH:mm"))).append("</b>").append("\n");
-        message.append("🗣️ 本群 ").append("<b>").append(topSpeakers.size()).append("</b>").append(" 位朋友共产生 ").append("<b>").append(totalMessages).append("</b>").append(" 条无重复发言\n");
+        message.append("🗣️ 本群 ").append("<b>").append(totalUsers).append("</b>").append(" 位朋友共产生 ").append("<b>").append(totalMessages).append("</b>").append(" 条发言\n");
         message.append("🔍 看下有没有你感兴趣的关键词？\n\n");
         message.append("🏵 活跃用户排行榜 🏵\n\n");
 
