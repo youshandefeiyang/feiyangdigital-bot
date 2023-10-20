@@ -6,8 +6,8 @@
 
 1️⃣ 开始之前
 ----------------
-# 强烈推荐观看保姆级部署视频教程：https://www.youtube.com/watch?v=QgrPRgR5tek
-# 使用文档：https://pan.v1.mk/%E6%AF%8F%E6%9C%9F%E8%A7%86%E9%A2%91%E4%B8%AD%E7%94%A8%E5%88%B0%E7%9A%84%E6%96%87%E4%BB%B6%E5%88%86%E4%BA%AB/%E5%AF%86%E7%A0%81123-2023.09.25%E6%9C%9F.zip
+# 强烈推荐观看保姆级部署视频教程：[点击观看](https://www.youtube.com/watch?v=QgrPRgR5tek)
+# 使用文档：[点击下载](https://pan.v1.mk/%E6%AF%8F%E6%9C%9F%E8%A7%86%E9%A2%91%E4%B8%AD%E7%94%A8%E5%88%B0%E7%9A%84%E6%96%87%E4%BB%B6%E5%88%86%E4%BA%AB/%E5%AF%86%E7%A0%81123-2023.09.25%E6%9C%9F.zip)
 - **创建你的 Telegram 机器人:**
   1. 前往 [@BotFather](https://t.me/botfather) 以创建机器人。
   2. 记录下机器人的 `token` 和用户名。
