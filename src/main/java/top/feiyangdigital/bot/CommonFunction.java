@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
+import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.DeleteMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.bots.AbsSender;
@@ -215,7 +216,7 @@ public class CommonFunction {
                         keywordsButtons.add("❌关闭菜单##close");
                         keywordsFormat.setReplyText("<b>GitHub地址：</b><b><a href='https://github.com/youshandefeiyang/feiyangdigital-bot'>点击查看</a></b>\n<b>官方群组：</b><b><a href='https://t.me/feiyangdigital'>点击加入</a></b>\n");
                         keywordsFormat.setKeywordsButtons(keywordsButtons);
-                        sender.execute(sendContent.createResponseMessage(update, keywordsFormat, "html"));
+                        sender.execute((SendMessage) sendContent.createResponseMessage(update, keywordsFormat, "html"));
                     } else {
                         String userId = update.getMessage().getFrom().getId().toString();
                         if ("allow".equals(addRuleCacheMap.getKeywordsFlagForUser(userId))) {

@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.telegram.telegrambots.meta.api.methods.AnswerCallbackQuery;
+import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.chatmember.ChatMember;
@@ -106,7 +107,7 @@ public class BotHelper {
         KeywordsFormat keywordsFormat = new KeywordsFormat();
         keywordsFormat.setReplyText("点击跳转至群组设置：");
         keywordsFormat.setKeywordsButtons(keywordsButtons);
-        timerDelete.sendTimedMessage(sender, sendContent.createResponseMessage(update, keywordsFormat, "def"), 10);
+        timerDelete.sendTimedMessage(sender, (SendMessage) sendContent.createResponseMessage(update, keywordsFormat, "def"), 10);
     }
 
 
@@ -122,7 +123,7 @@ public class BotHelper {
         keywordsButtons.add("❌关闭菜单##closeMenu");
         keywordsFormat.setReplyText("当前群组：<b>" + addRuleCacheMap.getGroupNameForUser(userId) + "</b>\n当前群组ID：<b>" + addRuleCacheMap.getGroupIdForUser(userId) + "</b>\n当前可输入状态：<b>" + addRuleCacheMap.getKeywordsFlagForUser(userId) + "</b>\n当前定时发送消息状态：<b>" + addRuleCacheMap.getCrontabFlagForUser(userId) + "</b>\n当前AI状态：<b>" + addRuleCacheMap.getAiFlagForUser(userId) + "</b>\n⚡️请选择一个操作!⚡️");
         keywordsFormat.setKeywordsButtons(keywordsButtons);
-        sender.execute(sendContent.createResponseMessage(update, keywordsFormat, "html"));
+        sender.execute((SendMessage) sendContent.createResponseMessage(update, keywordsFormat, "html"));
     }
 
     public void handleCallbackQuery(AbsSender sender, Update update) throws TelegramApiException {
@@ -134,25 +135,25 @@ public class BotHelper {
         answer.setCallbackQueryId(callbackQuery.getId());
         switch (callbackData) {
             case "changeGroupCheckFlag":
-                setGroupSettingView.changeGroupCheckFlag(sender,update);
+                setGroupSettingView.changeGroupCheckFlag(sender, update);
                 return;
             case "changeToJoinChannel":
-                setGroupSettingView.changeToJoinChannel(sender,update);
+                setGroupSettingView.changeToJoinChannel(sender, update);
                 return;
             case "changeToCompute":
-                setGroupSettingView.changeToCompute(sender,update);
+                setGroupSettingView.changeToCompute(sender, update);
                 return;
             case "answerReplyhandle":
-                followChannelVerificationl.answerReplyhandle(sender,update);
+                followChannelVerificationl.answerReplyhandle(sender, update);
                 return;
             case "openCanSendMediaFlag":
-                nightSetting.openCanSendMediaFlag(sender,update);
+                nightSetting.openCanSendMediaFlag(sender, update);
                 return;
             case "closeCanSendMediaFlag":
-                nightSetting.closeCanSendMediaFlag(sender,update);
+                nightSetting.closeCanSendMediaFlag(sender, update);
                 return;
             case "nightSetting":
-                nightSetting.hadleCallBack(sender,update);
+                nightSetting.hadleCallBack(sender, update);
                 return;
             case "spamChannelBot":
                 nightModeAndReport.spamChannelBot(sender, update);
@@ -289,7 +290,7 @@ public class BotHelper {
                     String groupName = groupInfoWithBLOBs2.getGroupname();
                     String keyWords = groupInfoWithBLOBs2.getKeywords();
                     if (StringUtils.hasText(keyWords)) {
-                        handleOption.ruleHandle(sender, addRuleCacheMap.getGroupIdForUser(update.getCallbackQuery().getFrom().getId().toString()),groupName, keyWords);
+                        handleOption.ruleHandle(sender, addRuleCacheMap.getGroupIdForUser(update.getCallbackQuery().getFrom().getId().toString()), groupName, keyWords);
                     }
                     setDeleteView.deleteRuleSuccessCallBack(sender, update);
                 }

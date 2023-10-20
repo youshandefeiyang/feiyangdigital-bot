@@ -3,6 +3,9 @@ package top.feiyangdigital.handleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
+import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
+import org.telegram.telegrambots.meta.api.methods.send.SendPhoto;
+import org.telegram.telegrambots.meta.api.methods.send.SendVideo;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.bots.AbsSender;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
@@ -53,15 +56,15 @@ public class MessageHandle {
                     }
 
                     if (currentMap.containsKey("DeleteReplyAfterYSeconds")) {
-                        String text = String.format("<b>违规用户UserID为：<a href=\"tg://user?id=%d\">%s</a></b>",userId,userId);
-                        keywordFormat.setReplyText(keywordFormat.getReplyText()+"\n"+text);
+                        String text = String.format("<b>违规用户UserID为：<a href=\"tg://user?id=%d\">%s</a></b>", userId, userId);
+                        keywordFormat.setReplyText(keywordFormat.getReplyText() + "\n" + text);
                         int deleteReplyAfterYSeconds = Integer.parseInt(currentMap.get("DeleteReplyAfterYSeconds"));
                         if (deleteReplyAfterYSeconds == 0) {
                             // 立即删除reply
-                            timerDelete.sendAndDeleteMessageImmediately(sender, sendContent.createResponseMessage(update, keywordFormat, "html"));
+                            timerDelete.sendAndDeleteMessageImmediately(sender, (SendMessage) sendContent.createResponseMessage(update, keywordFormat, "html"));
                         } else {
                             // 使用timer删除reply
-                            timerDelete.sendTimedMessage(sender, sendContent.createResponseMessage(update, keywordFormat, "html"), deleteReplyAfterYSeconds);
+                            timerDelete.sendTimedMessage(sender, (SendMessage) sendContent.createResponseMessage(update, keywordFormat, "html"), deleteReplyAfterYSeconds);
                         }
                     }
                     return true;
@@ -69,7 +72,16 @@ public class MessageHandle {
             } // 可以判断后续逻辑，比如是否ban或者禁言
             else {
                 if (pattern.matcher(messageText).find()) {
-                    sender.execute(sendContent.replyToUser(update, keywordFormat, "html"));
+                    Object response = sendContent.replyToUser(update, keywordFormat, "html");
+                    if (response instanceof SendMessage) {
+                        sender.execute((SendMessage) response);
+                    } else if (response instanceof SendVideo) {
+                        sender.execute((SendVideo) response);
+                    } else if (response instanceof SendPhoto) {
+                        sender.execute((SendPhoto) response);
+                    }else {
+                        throw new RuntimeException("类型错误");
+                    }
                     return true;
                 }
             }

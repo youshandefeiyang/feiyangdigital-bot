@@ -9,9 +9,10 @@ public class KeywordsFormat {
     private String replyText;
 
     private List<String> keywordsButtons = new ArrayList<>();
+    private String photoUrl;
+    private String videoUrl;
 
     private Map<String, String> ruleMap = new ConcurrentHashMap<>();
-
 
     public KeywordsFormat(){
 
@@ -29,6 +30,10 @@ public class KeywordsFormat {
             if (action.startsWith("btns=")) {
                 String[] btnParts = action.substring(5).split("\\$\\$\\$");
                 keywordsButtons.addAll(Arrays.asList(btnParts));
+            } else if (action.startsWith("photo=")) {
+                this.photoUrl = action.substring(6);
+            } else if (action.startsWith("video=")) {
+                this.videoUrl = action.substring(6);
             } else if (action.startsWith("del=")) {
                 ruleMap.put("DeleteAfterXSeconds", action.substring(4).split("、")[0].split("=")[1]);
                 ruleMap.put("DeleteReplyAfterYSeconds", action.substring(4).split("、")[1].split("=")[1]);
@@ -36,13 +41,21 @@ public class KeywordsFormat {
                 ruleMap.put("DelWelcome",action.substring(8));
             } else if (action.startsWith("intoGroupBan=")) {
                 ruleMap.put("DelIntoGroupBan",action.substring(13));
-            }else if (action.startsWith("crontab=")) {
+            } else if (action.startsWith("crontab=")) {
                 ruleMap.put("crontabOption",action.substring(8));
             }
         }
     }
 
     // Getter methods...
+
+    public String getPhotoUrl() {
+        return photoUrl;
+    }
+
+    public String getVideoUrl() {
+        return videoUrl;
+    }
 
     public String getUuid() {
         return uuid;
@@ -84,6 +97,14 @@ public class KeywordsFormat {
         this.ruleMap = map;
     }
 
+    public void setPhotoUrl(String photoUrl) {
+        this.photoUrl = photoUrl;
+    }
+
+    public void setVideoUrl(String videoUrl) {
+        this.videoUrl = videoUrl;
+    }
+
     @Override
     public String toString() {
         return "KeywordsFormat{" +
@@ -91,6 +112,8 @@ public class KeywordsFormat {
                 ", regex='" + regex + '\'' +
                 ", replyText='" + replyText + '\'' +
                 ", keywordsButtons=" + keywordsButtons +
+                ", photoUrl='" + photoUrl + '\'' +
+                ", videoUrl='" + videoUrl + '\'' +
                 ", map=" + ruleMap +
                 '}';
     }

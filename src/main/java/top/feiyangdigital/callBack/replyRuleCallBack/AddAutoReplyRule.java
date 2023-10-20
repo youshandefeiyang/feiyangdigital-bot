@@ -3,6 +3,9 @@ package top.feiyangdigital.callBack.replyRuleCallBack;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
+import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
+import org.telegram.telegrambots.meta.api.methods.send.SendPhoto;
+import org.telegram.telegrambots.meta.api.methods.send.SendVideo;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.bots.AbsSender;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
@@ -67,9 +70,10 @@ public class AddAutoReplyRule {
                                 String groupName = groupInfoWithBLOBs2.getGroupname();
                                 String keyWords = groupInfoWithBLOBs2.getKeywords();
                                 if (StringUtils.hasText(keyWords)) {
-                                    handleOption.ruleHandle(sender, addRuleCacheMap.getGroupIdForUser(userId),groupName, keyWords);
+                                    handleOption.ruleHandle(sender, addRuleCacheMap.getGroupIdForUser(userId), groupName, keyWords);
                                 }
-                                sender.execute(sendContent.createResponseMessage(update, new KeywordsFormat(waitRule), "html"));
+                                Object response = sendContent.createResponseMessage(update, new KeywordsFormat(waitRule), "html");
+                                transferResponse(sender, response);
                             }
                         }
                     }
@@ -83,8 +87,21 @@ public class AddAutoReplyRule {
                 keywordsButtons.add("❌关闭菜单##closeMenu");
                 keywordsFormat.setReplyText("⚡️<b>规则不合法，请重新添加！</b>⚡️\n当前群组：<b>" + addRuleCacheMap.getGroupNameForUser(userId) + "</b>\n当前群组ID：<b>" + addRuleCacheMap.getGroupIdForUser(userId) + "</b>\n当前可输入状态：<b>" + addRuleCacheMap.getKeywordsFlagForUser(userId) + "</b>️");
                 keywordsFormat.setKeywordsButtons(keywordsButtons);
-                sender.execute(sendContent.createResponseMessage(update, keywordsFormat, "html"));
+                Object response = sendContent.createResponseMessage(update, keywordsFormat, "html");
+                transferResponse(sender, response);
             }
+        }
+    }
+
+    private void transferResponse(AbsSender sender, Object response) throws TelegramApiException {
+        if (response instanceof SendMessage) {
+            sender.execute((SendMessage) response);
+        } else if (response instanceof SendVideo) {
+            sender.execute((SendVideo) response);
+        } else if (response instanceof SendPhoto) {
+            sender.execute((SendPhoto) response);
+        }else {
+            throw new RuntimeException("类型错误");
         }
     }
 }

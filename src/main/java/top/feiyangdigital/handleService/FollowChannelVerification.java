@@ -6,6 +6,8 @@ import org.springframework.util.StringUtils;
 import org.telegram.telegrambots.meta.api.methods.ParseMode;
 import org.telegram.telegrambots.meta.api.methods.groupadministration.GetChatMember;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
+import org.telegram.telegrambots.meta.api.methods.send.SendPhoto;
+import org.telegram.telegrambots.meta.api.methods.send.SendVideo;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.chatmember.ChatMember;
 import org.telegram.telegrambots.meta.bots.AbsSender;
@@ -65,7 +67,7 @@ public class FollowChannelVerification implements CaptchaService {
         keywordsButtons.add("👉订阅频道$$" + checkUser.getLinkedChatInfo(sender, chatId).get("LinkedChatString") + "%%🔄完成验证##answerReplyhandle");
         keywordsFormat.setReplyText(text);
         keywordsFormat.setKeywordsButtons(keywordsButtons);
-        sender.execute(sendContent.createResponseMessage(update, keywordsFormat, "html"));
+        sender.execute((SendMessage) sendContent.createResponseMessage(update, keywordsFormat, "html"));
     }
 
     @Override
@@ -106,9 +108,21 @@ public class FollowChannelVerification implements CaptchaService {
                                         .replaceAll("@userId", String.format("<b><a href=\"tg://user?id=%d\">%s</a></b>", userId1, firstName))
                                         .replaceAll("@groupName", String.format("<b>%s</b>", groupInfoWithBLOBs.getGroupname()));
                                 newKeyFormat.setReplyText(text);
-                                SendMessage sendMessage = sendContent.createGroupMessage(groupId, newKeyFormat, "html");
-                                sendMessage.setDisableWebPagePreview(true);
-                                Integer msgId = timerDelete.deleteMessageImmediatelyAndNotifyAfterDelay(sender, sendMessage, groupId, messageId, userId1, Integer.parseInt(currentMap.get("DelWelcome")));
+                                newKeyFormat.setVideoUrl(keywordFormat.getVideoUrl());
+                                newKeyFormat.setPhotoUrl(keywordFormat.getPhotoUrl());
+                                Object response = sendContent.createGroupMessage(groupId, newKeyFormat, "html");
+                                Integer msgId;
+                                if (keywordFormat.getPhotoUrl() != null) {
+                                    SendPhoto sendPhoto = (SendPhoto) response;
+                                    msgId = timerDelete.deleteMessageImmediatelyAndNotifyAfterDelay(sender, sendPhoto, groupId, messageId, userId1, Integer.parseInt(currentMap.get("DelWelcome")));
+                                } else if (keywordFormat.getVideoUrl() != null) {
+                                    SendVideo sendVideo = (SendVideo) response;
+                                    msgId = timerDelete.deleteMessageImmediatelyAndNotifyAfterDelay(sender, sendVideo, groupId, messageId, userId1, Integer.parseInt(currentMap.get("DelWelcome")));
+                                } else {
+                                    SendMessage sendMessage = (SendMessage) response;
+                                    sendMessage.setDisableWebPagePreview(true);
+                                    msgId = timerDelete.deleteMessageImmediatelyAndNotifyAfterDelay(sender, sendMessage, groupId, messageId, userId1, Integer.parseInt(currentMap.get("DelWelcome")));
+                                }
                                 groupMessageIdCacheMap.setGroupMessageId(groupId, msgId);
                             }
                         }

@@ -5,6 +5,8 @@ import org.springframework.scheduling.TaskScheduler;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
+import org.telegram.telegrambots.meta.api.methods.send.SendPhoto;
+import org.telegram.telegrambots.meta.api.methods.send.SendVideo;
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.DeleteMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
@@ -87,19 +89,26 @@ public class TimerDelete {
         }
     }
 
-    public <T extends Serializable, Method extends BotApiMethod<T>> String sendTimedMessage(AbsSender sender, Method method, int delayInSeconds) {
-        Serializable response;
+    public <T extends Serializable, Method extends BotApiMethod<T>> String sendTimedMessage(AbsSender sender, Object sendRealType, int delayInSeconds) {
+        Message response;
         try {
-            response = sender.execute(method);
+            if (sendRealType instanceof SendMessage) {
+                response = sender.execute((SendMessage) sendRealType);
+            } else if (sendRealType instanceof SendVideo) {
+                response = sender.execute((SendVideo) sendRealType);
+            } else if (sendRealType instanceof SendPhoto) {
+                response = sender.execute((SendPhoto) sendRealType);
+            } else {
+                throw new RuntimeException("类型错误");
+            }
         } catch (TelegramApiException e) {
             throw new RuntimeException();
         }
-        if (response instanceof Message) {
-            Message sentMessage = (Message) response;
-            Integer messageId = sentMessage.getMessageId();
+        if (response != null) {
+            Integer messageId = response.getMessageId();
             Runnable task = () -> {
                 try {
-                    sender.execute(new DeleteMessage(sentMessage.getChatId().toString(), messageId));
+                    sender.execute(new DeleteMessage(response.getChatId().toString(), messageId));
                 } catch (TelegramApiException e) {
                     // 这里可以捕获异常，但是我们可以选择不执行任何操作，因为我们不关心消息是否确实已经被删除
                 }
@@ -136,14 +145,23 @@ public class TimerDelete {
         taskScheduler.schedule(task, Instant.now().plusSeconds(delayInSeconds));
     }
 
-    public Integer deleteMessageImmediatelyAndNotifyAfterDelay(AbsSender sender, SendMessage sendMessage, String chatId, Integer messageId, Long userId, int notifyDelay) {
+    public Integer deleteMessageImmediatelyAndNotifyAfterDelay(AbsSender sender, Object sendRealType, String chatId, Integer messageId, Long userId, int notifyDelay) {
         Integer msgId = 0;
         try {
             sender.execute(new DeleteMessage(chatId, messageId));
             captchaManager.clearMappingsForUser(userId.toString());
             captchaManagerCacheMap.clearMappingsForUser(userId.toString(), chatId);
             // 在此发送提示消息
-            Message message = sender.execute(sendMessage);
+            Message message;
+            if (sendRealType instanceof SendMessage) {
+                message = sender.execute((SendMessage) sendRealType);
+            } else if (sendRealType instanceof SendVideo) {
+                message = sender.execute((SendVideo) sendRealType);
+            } else if (sendRealType instanceof SendPhoto) {
+                message = sender.execute((SendPhoto) sendRealType);
+            } else {
+                throw new RuntimeException("类型错误");
+            }
             msgId = message.getMessageId();
             deleteMessageByMessageIdDelay(sender, chatId, msgId, notifyDelay);
         } catch (TelegramApiException e) {

@@ -1,9 +1,13 @@
 package top.feiyangdigital.utils;
 
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 import org.telegram.telegrambots.meta.api.methods.ParseMode;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
+import org.telegram.telegrambots.meta.api.methods.send.SendPhoto;
+import org.telegram.telegrambots.meta.api.methods.send.SendVideo;
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageText;
+import org.telegram.telegrambots.meta.api.objects.InputFile;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
@@ -45,7 +49,7 @@ public class SendContent {
         return message;
     }
 
-    public SendMessage createResponseMessage(Update update, KeywordsFormat keyword,String textFormat) {
+    public Object createResponseMessage(Update update, KeywordsFormat keyword,String textFormat) {
         String chatId;
         if (update.getMessage() == null) {
             if (update.getCallbackQuery() ==null){
@@ -87,32 +91,66 @@ public class SendContent {
             keyboard.add(row);
         }
 
+        // 设置文本格式
+        String formattedText = replyText;
+        String parseMode = null;
+        switch (textFormat) {
+            case "markdown":
+                parseMode = ParseMode.MARKDOWN;
+                break;
+            case "markdownV2":
+                formattedText = escapeMarkdownV2(replyText);
+                parseMode = ParseMode.MARKDOWNV2;
+                break;
+            case "html":
+                parseMode = ParseMode.HTML;
+                break;
+            default:
+                // 使用原始文本，不设置解析模式
+        }
+
         InlineKeyboardMarkup markup = new InlineKeyboardMarkup();
         markup.setKeyboard(keyboard);
 
-        SendMessage message = new SendMessage();
-        message.setChatId(chatId);
-
-        switch (textFormat) {
-            case "markdown":
-                message.setText(replyText);
-                message.setParseMode(ParseMode.MARKDOWN);
-                break;
-            case "markdownV2":
-                message.setText(escapeMarkdownV2(replyText));
-                message.setParseMode(ParseMode.MARKDOWNV2);
-                break;
-            case "html":
-                message.setText(replyText);
-                message.setParseMode(ParseMode.HTML);
-                break;
-            default:
-                message.setText(replyText);
+        // 检查图片URL
+        if (StringUtils.hasText(keyword.getPhotoUrl())) {
+            SendPhoto sendPhoto = new SendPhoto();
+            sendPhoto.setChatId(chatId);
+            InputFile inputFile = new InputFile();
+            inputFile.setMedia(keyword.getPhotoUrl());
+            sendPhoto.setPhoto(inputFile);
+            sendPhoto.setCaption(formattedText);
+            sendPhoto.setReplyMarkup(markup);
+            if (parseMode != null) {
+                sendPhoto.setParseMode(parseMode);
+            }
+            return sendPhoto;
         }
-
-        message.setReplyMarkup(markup);
-
-        return message;
+        // 检查视频URL
+        else if (StringUtils.hasText(keyword.getVideoUrl())) {
+            SendVideo sendVideo = new SendVideo();
+            sendVideo.setChatId(chatId);
+            InputFile inputFile = new InputFile();
+            inputFile.setMedia(keyword.getVideoUrl());
+            sendVideo.setVideo(inputFile);
+            sendVideo.setCaption(formattedText);
+            sendVideo.setReplyMarkup(markup);
+            if (parseMode != null) {
+                sendVideo.setParseMode(parseMode);
+            }
+            return sendVideo;
+        }
+        // 默认返回一个SendMessage对象
+        else {
+            SendMessage message = new SendMessage();
+            message.setChatId(chatId);
+            message.setText(formattedText);
+            message.setReplyMarkup(markup);
+            if (parseMode != null) {
+                message.setParseMode(parseMode);
+            }
+            return message;
+        }
     }
 
     public EditMessageText editResponseMessage(Update update, KeywordsFormat keyword, String textFormat) {
@@ -188,7 +226,7 @@ public class SendContent {
     }
 
 
-    public SendMessage replyToUser(Update update, KeywordsFormat keyword,String textFormat) {
+    public Object replyToUser(Update update, KeywordsFormat keyword,String textFormat) {
         String replyText = keyword.getReplyText();
         List<String> keywordsButtons = keyword.getKeywordsButtons();
         List<List<InlineKeyboardButton>> keyboard = new ArrayList<>();
@@ -220,36 +258,73 @@ public class SendContent {
             keyboard.add(row);
         }
 
+        String chatId = update.getMessage().getChatId().toString();
+        Integer messageId = update.getMessage().getMessageId();
+        String formattedText = replyText;
+        String parseMode = null;
+        switch (textFormat) {
+            case "markdown":
+                parseMode = ParseMode.MARKDOWN;
+                break;
+            case "markdownV2":
+                formattedText = escapeMarkdownV2(replyText);
+                parseMode = ParseMode.MARKDOWNV2;
+                break;
+            case "html":
+                parseMode = ParseMode.HTML;
+                break;
+            default:
+                // 使用原始文本，不设置解析模式
+        }
+
         InlineKeyboardMarkup markup = new InlineKeyboardMarkup();
         markup.setKeyboard(keyboard);
 
-        SendMessage message = new SendMessage();
-        message.setChatId(update.getMessage().getChatId().toString());
-        message.setReplyToMessageId(update.getMessage().getMessageId());
-
-        switch (textFormat) {
-            case "markdown":
-                message.setText(replyText);
-                message.setParseMode(ParseMode.MARKDOWN);
-                break;
-            case "markdownV2":
-                message.setText(escapeMarkdownV2(replyText));
-                message.setParseMode(ParseMode.MARKDOWNV2);
-                break;
-            case "html":
-                message.setText(replyText);
-                message.setParseMode(ParseMode.HTML);
-                break;
-            default:
-                message.setText(replyText);
+        // 检查图片URL
+        if (StringUtils.hasText(keyword.getPhotoUrl())) {
+            SendPhoto sendPhoto = new SendPhoto();
+            sendPhoto.setChatId(chatId);
+            sendPhoto.setReplyToMessageId(messageId);
+            InputFile inputFile = new InputFile();
+            inputFile.setMedia(keyword.getPhotoUrl());
+            sendPhoto.setPhoto(inputFile);
+            sendPhoto.setCaption(formattedText);
+            sendPhoto.setReplyMarkup(markup);
+            if (parseMode != null) {
+                sendPhoto.setParseMode(parseMode);
+            }
+            return sendPhoto;
         }
-
-        message.setReplyMarkup(markup);
-
-        return message;
+        // 检查视频URL
+        else if (StringUtils.hasText(keyword.getVideoUrl())) {
+            SendVideo sendVideo = new SendVideo();
+            sendVideo.setChatId(chatId);
+            sendVideo.setReplyToMessageId(messageId);
+            InputFile inputFile = new InputFile();
+            inputFile.setMedia(keyword.getVideoUrl());
+            sendVideo.setVideo(inputFile);
+            sendVideo.setCaption(formattedText);
+            sendVideo.setReplyMarkup(markup);
+            if (parseMode != null) {
+                sendVideo.setParseMode(parseMode);
+            }
+            return sendVideo;
+        }
+        // 默认返回一个SendMessage对象
+        else {
+            SendMessage message = new SendMessage();
+            message.setChatId(chatId);
+            message.setReplyToMessageId(messageId);
+            message.setText(formattedText);
+            message.setReplyMarkup(markup);
+            if (parseMode != null) {
+                message.setParseMode(parseMode);
+            }
+            return message;
+        }
     }
 
-    public SendMessage createGroupMessage(String chatId, KeywordsFormat keyword,String textFormat) {
+    public Object createGroupMessage(String chatId, KeywordsFormat keyword,String textFormat) {
         String replyText = keyword.getReplyText();
         List<String> keywordsButtons = keyword.getKeywordsButtons();
         List<List<InlineKeyboardButton>> keyboard = new ArrayList<>();
@@ -281,36 +356,67 @@ public class SendContent {
             keyboard.add(row);
         }
 
+        // 设置文本格式
+        String formattedText = replyText;
+        String parseMode = null;
+        switch (textFormat) {
+            case "markdown":
+                parseMode = ParseMode.MARKDOWN;
+                break;
+            case "markdownV2":
+                formattedText = escapeMarkdownV2(replyText);
+                parseMode = ParseMode.MARKDOWNV2;
+                break;
+            case "html":
+                parseMode = ParseMode.HTML;
+                break;
+            default:
+                // 使用原始文本，不设置解析模式
+        }
+
         InlineKeyboardMarkup markup = new InlineKeyboardMarkup();
         markup.setKeyboard(keyboard);
 
-        SendMessage message = new SendMessage();
-        message.setChatId(chatId);
-
-        switch (textFormat) {
-            case "markdown":
-                message.setText(replyText);
-                message.setParseMode(ParseMode.MARKDOWN);
-                break;
-            case "markdownV2":
-                message.setText(escapeMarkdownV2(replyText));
-                message.setParseMode(ParseMode.MARKDOWNV2);
-                break;
-            case "html":
-                message.setText(replyText);
-                message.setParseMode(ParseMode.HTML);
-                break;
-            default:
-                message.setText(replyText);
+        // 检查图片URL
+        if (StringUtils.hasText(keyword.getPhotoUrl())) {
+            SendPhoto sendPhoto = new SendPhoto();
+            sendPhoto.setChatId(chatId);
+            InputFile inputFile = new InputFile();
+            inputFile.setMedia(keyword.getPhotoUrl());
+            sendPhoto.setPhoto(inputFile);
+            sendPhoto.setCaption(formattedText);
+            sendPhoto.setReplyMarkup(markup);
+            if (parseMode != null) {
+                sendPhoto.setParseMode(parseMode);
+            }
+            return sendPhoto;
         }
-
-        message.setReplyMarkup(markup);
-
-        return message;
+        // 检查视频URL
+        else if (StringUtils.hasText(keyword.getVideoUrl())) {
+            SendVideo sendVideo = new SendVideo();
+            sendVideo.setChatId(chatId);
+            InputFile inputFile = new InputFile();
+            inputFile.setMedia(keyword.getVideoUrl());
+            sendVideo.setVideo(inputFile);
+            sendVideo.setCaption(formattedText);
+            sendVideo.setReplyMarkup(markup);
+            if (parseMode != null) {
+                sendVideo.setParseMode(parseMode);
+            }
+            return sendVideo;
+        }
+        // 默认返回一个SendMessage对象
+        else {
+            SendMessage message = new SendMessage();
+            message.setChatId(chatId);
+            message.setText(formattedText);
+            message.setReplyMarkup(markup);
+            if (parseMode != null) {
+                message.setParseMode(parseMode);
+            }
+            return message;
+        }
     }
-
-
-
 
     private String escapeMarkdownV2(String text) {
         String[] symbols = new String[]{"_", "*", "[", "]", "(", ")", "~", "`", ">", "#", "+", "-", "=", "|", "{", "}", ".", "!"};

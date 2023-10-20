@@ -2,6 +2,7 @@ package top.feiyangdigital.callBack.deleteRuleCallBack;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.bots.AbsSender;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
@@ -59,7 +60,7 @@ public class DeleteSingleRuleByKeyWord {
                             }
                             keywordsButtons.add("◀️返回上一级##deleteBackToAutoReply");
                             keywordsFormat.setKeywordsButtons(keywordsButtons);
-                            sender.execute(sendContent.createResponseMessage(update, keywordsFormat, "html"));
+                            sender.execute((SendMessage) sendContent.createResponseMessage(update, keywordsFormat, "html"));
                         }
 
 

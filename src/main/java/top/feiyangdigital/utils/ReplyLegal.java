@@ -22,29 +22,44 @@ public class ReplyLegal {
         }
 
         String[] conditions = mainParts[1].split("&&");
-        if (conditions.length < 1 || conditions.length > 3) return false;
+        if (conditions.length < 1 || conditions.length > 4) return false;
 
         // 验证消息部分
         if (conditions[0].isEmpty()) return false;
 
-        // 验证按钮部分（如果存在）
-        if (conditions.length > 1 && conditions[1].contains("btns=") && (conditions[1].contains("$$") || conditions[1].contains("##"))) {
-            String[] buttonsLines = conditions[1].split("\\$\\$\\$");
-            for (String buttonLine : buttonsLines) {
-                String[] buttons = buttonLine.split("%%");
-                for (String button : buttons) {
-                    String[] buttonParts = button.split("\\$\\$|##");
-                    if (buttonParts.length != 2) return false;
-                    if (buttonParts[0].trim().isEmpty() || buttonParts[1].trim().isEmpty()) return false;
+        boolean hasBtns = false, hasPhoto = false, hasVideo = false;
+
+        for (int i = 1; i < conditions.length; i++) {
+            if (conditions[i].startsWith("btns=") && (conditions[i].contains("$$") || conditions[i].contains("##"))) {
+                hasBtns = true;
+                String[] buttonsLines = conditions[i].split("\\$\\$\\$");
+                for (String buttonLine : buttonsLines) {
+                    String[] buttons = buttonLine.split("%%");
+                    for (String button : buttons) {
+                        String[] buttonParts = button.split("\\$\\$|##");
+                        if (buttonParts.length != 2) return false;
+                        if (buttonParts[0].trim().isEmpty() || buttonParts[1].trim().isEmpty()) return false;
+                    }
                 }
+            } else if (conditions[i].startsWith("photo=")) {
+                hasPhoto = true;
+                String photoLink = conditions[i].substring(6).trim();
+                if (!photoLink.startsWith("https://")) return false; // 检查链接有效性
+            } else if (conditions[i].startsWith("video=")) {
+                hasVideo = true;
+                String videoLink = conditions[i].substring(6).trim();
+                if (!videoLink.startsWith("https://")) return false; // 检查链接有效性
             }
         }
 
+        if (hasPhoto && hasVideo) return false;  // 如果同时存在photo和video，则返回false
+
         // 验证机器人操作部分
-        if ((conditions.length == 2 && !conditions[1].contains("btns=")) || conditions.length == 3) {
+        if ((conditions.length == 2 && !hasBtns && !hasPhoto && !hasVideo) || conditions.length == 3 || conditions.length == 4) {
             String botAction = conditions[conditions.length - 1];
             String[] botActionParts = botAction.split("=");
 
+            if (botActionParts.length == 1) return false;
             // 确保操作有效
             String operation = botActionParts[0];
             if (!Arrays.asList("del", "kick", "ban", "intoGroupBan", "crontab", "welcome").contains(operation))
@@ -59,9 +74,7 @@ public class ReplyLegal {
                         return false;
                     }
                     String[] timeLegal = botActionParts[1].split("、");
-                    if (timeLegal.length < 3 || timeLegal.length > 4) {
-                        return false;
-                    }
+                    return timeLegal.length >= 3 && timeLegal.length <= 4;
                 }
                 return true;
             } else if (botActionParts.length == 2) {

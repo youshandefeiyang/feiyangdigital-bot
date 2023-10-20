@@ -5,6 +5,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.telegram.telegrambots.meta.api.methods.ParseMode;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
+import org.telegram.telegrambots.meta.api.methods.send.SendPhoto;
+import org.telegram.telegrambots.meta.api.methods.send.SendVideo;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.User;
@@ -95,7 +97,7 @@ public class NewMemberIntoGroup {
                         String regex = keywordFormat.getRegex();
                         Pattern pattern = Pattern.compile(regex);
                         if (pattern.matcher(firstName).find() || pattern.matcher(lastName).find() || pattern.matcher(firstName + lastName).find()) {
-                            restrictOrUnrestrictUser.restrictUser(sender, userId, chatId.toString(),0L);
+                            restrictOrUnrestrictUser.restrictUser(sender, userId, chatId.toString(), 0L);
                             KeywordsFormat newKeyFormat = new KeywordsFormat();
                             newKeyFormat.setKeywordsButtons(keywordFormat.getKeywordsButtons());
                             String text = keywordFormat.getReplyText()
@@ -103,7 +105,7 @@ public class NewMemberIntoGroup {
                                     .replaceAll("@groupName", String.format("<b>%s</b>", groupInfoWithBLOBs.getGroupname()));
                             newKeyFormat.setReplyText(text);
                             newKeyFormat.setKeywordsButtons(Collections.singletonList(keywordFormat.getKeywordsButtons().get(0).replaceAll("@singleUserId", userId.toString())));
-                            SendMessage sendMessage = sendContent.createGroupMessage(chatId.toString(), newKeyFormat, "html");
+                            SendMessage sendMessage = (SendMessage) sendContent.createGroupMessage(chatId.toString(), newKeyFormat, "html");
                             sendMessage.setDisableWebPagePreview(true);
                             String msgId = timerDelete.sendTimedMessage(sender, sendMessage, Integer.parseInt(currentMap.get("DelIntoGroupBan")));
                             if (StringUtils.hasText(msgId)) {
@@ -135,9 +137,21 @@ public class NewMemberIntoGroup {
                                 .replaceAll("@userId", String.format("<b><a href=\"tg://user?id=%d\">%s</a></b>", userId, firstName))
                                 .replaceAll("@groupName", String.format("<b>%s</b>", groupInfoWithBLOBs.getGroupname()));
                         newKeyFormat.setReplyText(text);
-                        SendMessage sendMessage = sendContent.createGroupMessage(chatId.toString(), newKeyFormat, "html");
-                        sendMessage.setDisableWebPagePreview(true);
-                        String msgId = timerDelete.sendTimedMessage(sender, sendMessage, Integer.parseInt(currentMap.get("DelWelcome")));
+                        newKeyFormat.setPhotoUrl(keywordFormat.getPhotoUrl());
+                        newKeyFormat.setVideoUrl(keywordFormat.getVideoUrl());
+                        Object response = sendContent.createGroupMessage(chatId.toString(), newKeyFormat, "html");
+                        String msgId;
+                        if (keywordFormat.getPhotoUrl() != null) {
+                            SendPhoto sendPhoto = (SendPhoto) response;
+                            msgId = timerDelete.sendTimedMessage(sender, sendPhoto, Integer.parseInt(currentMap.get("DelWelcome")));
+                        } else if (keywordFormat.getVideoUrl() != null) {
+                            SendVideo sendVideo = (SendVideo) response;
+                            msgId = timerDelete.sendTimedMessage(sender, sendVideo, Integer.parseInt(currentMap.get("DelWelcome")));
+                        } else {
+                            SendMessage sendMessage = (SendMessage) response;
+                            sendMessage.setDisableWebPagePreview(true);
+                            msgId = timerDelete.sendTimedMessage(sender, sendMessage, Integer.parseInt(currentMap.get("DelWelcome")));
+                        }
                         if (groupMessageIdCacheMap.getMapSize() > 0) {
                             groupMessageIdCacheMap.deleteAllMessage(sender, chatId.toString());
                         }
@@ -150,7 +164,7 @@ public class NewMemberIntoGroup {
 
         if (groupInfoWithBLOBs != null && "open".equals(groupInfoWithBLOBs.getIntogroupcheckflag())) {
             String url = String.format("https://t.me/%s?start=_intoGroupInfo%sand%s", BaseInfo.getBotName(), chatId.toString(), userId.toString());
-            restrictOrUnrestrictUser.restrictUser(sender, userId, chatId.toString(),0L);
+            restrictOrUnrestrictUser.restrictUser(sender, userId, chatId.toString(), 0L);
             KeywordsFormat keywordsFormat = new KeywordsFormat();
             List<String> keywordsButtons = new ArrayList<>();
             keywordsButtons.add("👥管理员解禁##adminUnrestrict" + userId);
@@ -158,7 +172,7 @@ public class NewMemberIntoGroup {
             keywordsFormat.setKeywordsButtons(keywordsButtons);
             String text = String.format("欢迎 <b><a href=\"tg://user?id=%d\">%s</a></b> 加入<b> %s </b>, 现在你需要在<b>90秒内</b>点击下面的验证按钮完成验证，超时将永久限制发言！", userId, firstName, groupTitle);
             keywordsFormat.setReplyText(text);
-            Message message1 = sender.execute(sendContent.createResponseMessage(update, keywordsFormat, "html"));
+            Message message1 = sender.execute((SendMessage) sendContent.createResponseMessage(update, keywordsFormat, "html"));
             Integer messageId = message1.getMessageId();
             captchaManagerCacheMap.updateUserMapping(userId.toString(), chatId.toString(), 0, messageId);
             String text1 = String.format("用户 <b><a href=\"tg://user?id=%d\">%s</a></b> 在 <b>90秒内</b> 未进行验证，永久限制发言！", userId, firstName);
