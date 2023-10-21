@@ -108,8 +108,11 @@ public class FollowChannelVerification implements CaptchaService {
                                         .replaceAll("@userId", String.format("<b><a href=\"tg://user?id=%d\">%s</a></b>", userId1, firstName))
                                         .replaceAll("@groupName", String.format("<b>%s</b>", groupInfoWithBLOBs.getGroupname()));
                                 newKeyFormat.setReplyText(text);
-                                newKeyFormat.setVideoUrl(keywordFormat.getVideoUrl());
-                                newKeyFormat.setPhotoUrl(keywordFormat.getPhotoUrl());
+                                if (keywordFormat.getVideoUrl() != null) {
+                                    newKeyFormat.setVideoUrl(keywordFormat.getVideoUrl());
+                                } else if (keywordFormat.getPhotoUrl() != null) {
+                                    newKeyFormat.setPhotoUrl(keywordFormat.getPhotoUrl());
+                                }
                                 Object response = sendContent.createGroupMessage(groupId, newKeyFormat, "html");
                                 Integer msgId;
                                 if (keywordFormat.getPhotoUrl() != null) {

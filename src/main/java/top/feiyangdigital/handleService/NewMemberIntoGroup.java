@@ -137,8 +137,11 @@ public class NewMemberIntoGroup {
                                 .replaceAll("@userId", String.format("<b><a href=\"tg://user?id=%d\">%s</a></b>", userId, firstName))
                                 .replaceAll("@groupName", String.format("<b>%s</b>", groupInfoWithBLOBs.getGroupname()));
                         newKeyFormat.setReplyText(text);
-                        newKeyFormat.setPhotoUrl(keywordFormat.getPhotoUrl());
-                        newKeyFormat.setVideoUrl(keywordFormat.getVideoUrl());
+                        if (keywordFormat.getVideoUrl() != null) {
+                            newKeyFormat.setVideoUrl(keywordFormat.getVideoUrl());
+                        } else if (keywordFormat.getPhotoUrl() != null) {
+                            newKeyFormat.setPhotoUrl(keywordFormat.getPhotoUrl());
+                        }
                         Object response = sendContent.createGroupMessage(chatId.toString(), newKeyFormat, "html");
                         String msgId;
                         if (keywordFormat.getPhotoUrl() != null) {

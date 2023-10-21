@@ -23,7 +23,7 @@ public class HandleOption {
     @Autowired
     private GroupInfoService groupInfoService;
 
-    public void ruleHandle(AbsSender sender, String groupId,String groupName, String keyWords) {
+    public void ruleHandle(AbsSender sender, String groupId, String groupName, String keyWords) {
         schedulerService.clearAllJobs();
         GroupInfoWithBLOBs groupInfoWithBLOBs = groupInfoService.selAllByGroupId(groupId);
         Map<String, Object> map = new ConcurrentHashMap<>();
@@ -37,6 +37,11 @@ public class HandleOption {
         for (int i = 0; i < keywordsFormatList.size(); i++) {
             Map<String, String> currentMap = keywordsFormatList.get(i).getRuleMap();
             if (currentMap.containsKey("crontabOption")) {
+                if (keywordsFormatList.get(i).getVideoUrl() != null) {
+                    map.put("videoUrl", keywordsFormatList.get(i).getVideoUrl());
+                } else if (keywordsFormatList.get(i).getPhotoUrl() != null) {
+                    map.put("photoUrl", keywordsFormatList.get(i).getPhotoUrl());
+                }
                 map.put("keyButtons", keywordsFormatList.get(i).getKeywordsButtons());
                 String[] content = currentMap.get("crontabOption").split("、");
                 map.put("text", content[1]);

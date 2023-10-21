@@ -31,7 +31,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
-public class CaptchaGenerator implements CaptchaService{
+public class CaptchaGenerator implements CaptchaService {
 
     @Autowired
     private GroupInfoService groupInfoService;
@@ -59,7 +59,7 @@ public class CaptchaGenerator implements CaptchaService{
 
 
     @Override
-    public void sendCaptcha(AbsSender sender,Update update, String chatId) throws TelegramApiException {
+    public void sendCaptcha(AbsSender sender, Update update, String chatId) throws TelegramApiException {
 
         Long userId = update.getMessage().getFrom().getId();
         ArithmeticCaptcha captcha = new ArithmeticCaptcha(130, 48);
@@ -118,8 +118,11 @@ public class CaptchaGenerator implements CaptchaService{
                                         .replaceAll("@userId", String.format("<b><a href=\"tg://user?id=%d\">%s</a></b>", update.getMessage().getFrom().getId(), update.getMessage().getFrom().getFirstName()))
                                         .replaceAll("@groupName", String.format("<b>%s</b>", groupInfoWithBLOBs.getGroupname()));
                                 newKeyFormat.setReplyText(text);
-                                newKeyFormat.setVideoUrl(keywordFormat.getVideoUrl());
-                                newKeyFormat.setPhotoUrl(keywordFormat.getPhotoUrl());
+                                if (keywordFormat.getVideoUrl() != null) {
+                                    newKeyFormat.setVideoUrl(keywordFormat.getVideoUrl());
+                                } else if (keywordFormat.getPhotoUrl() != null) {
+                                    newKeyFormat.setPhotoUrl(keywordFormat.getPhotoUrl());
+                                }
                                 Object response = sendContent.createGroupMessage(groupId, newKeyFormat, "html");
                                 Integer msgId;
                                 if (keywordFormat.getPhotoUrl() != null) {
@@ -152,7 +155,7 @@ public class CaptchaGenerator implements CaptchaService{
                         sender.execute(sendContent.messageText(update, "未通过验证，你的机会已经用尽！"));
                         timerDelete.deleteByMessageIdImmediately(sender, groupId, messageId);
                         captchaManager.clearMappingsForUser(userId);
-                        captchaManagerCacheMap.clearMappingsForUser(userId,groupId);
+                        captchaManagerCacheMap.clearMappingsForUser(userId, groupId);
                         return;
                     }
                     SendMessage message = sendContent.messageText(update, "未通过验证，请再试一次，你只有两次机会，次数用尽/超时都将会永久禁言");

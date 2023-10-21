@@ -133,7 +133,7 @@ public class TimerDelete {
     public void deleteMessageAndNotifyAfterDelay(AbsSender sender, SendMessage sendMessage, String chatId, Integer messageId, int delayInSeconds, Long userId, int notifyDelay) {
         Runnable task = () -> {
             try {
-                if (messageId!=null){
+                if (messageId != null) {
                     sender.execute(new DeleteMessage(chatId, messageId));
                 }
                 captchaManager.clearMappingsForUser(userId.toString());
@@ -151,7 +151,7 @@ public class TimerDelete {
     public Integer deleteMessageImmediatelyAndNotifyAfterDelay(AbsSender sender, Object sendRealType, String chatId, Integer messageId, Long userId, int notifyDelay) {
         Integer msgId = 0;
         try {
-            if (messageId!=null){
+            if (messageId != null) {
                 sender.execute(new DeleteMessage(chatId, messageId));
             }
             captchaManager.clearMappingsForUser(userId.toString());
@@ -178,7 +178,7 @@ public class TimerDelete {
     public void deleteMessageByMessageIdDelay(AbsSender sender, String chatId, Integer messageId, int delayInSeconds) {
         Runnable task = () -> {
             try {
-                if (messageId!=null){
+                if (messageId != null) {
                     sender.execute(new DeleteMessage(chatId, messageId));
                 }
             } catch (TelegramApiException e) {
@@ -190,7 +190,7 @@ public class TimerDelete {
 
     public boolean deleteByMessageIdImmediately(AbsSender sender, String chatId, Integer messageId) {
         try {
-            if (messageId!=null){
+            if (messageId != null) {
                 sender.execute(new DeleteMessage(chatId, messageId));
             }
             return true;
