@@ -1,5 +1,6 @@
 package top.feiyangdigital.utils;
 
+import com.mchange.lang.IntegerUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.TaskScheduler;
 import org.springframework.stereotype.Component;
@@ -132,7 +133,9 @@ public class TimerDelete {
     public void deleteMessageAndNotifyAfterDelay(AbsSender sender, SendMessage sendMessage, String chatId, Integer messageId, int delayInSeconds, Long userId, int notifyDelay) {
         Runnable task = () -> {
             try {
-                sender.execute(new DeleteMessage(chatId, messageId));
+                if (messageId!=null){
+                    sender.execute(new DeleteMessage(chatId, messageId));
+                }
                 captchaManager.clearMappingsForUser(userId.toString());
                 captchaManagerCacheMap.clearMappingsForUser(userId.toString(), chatId);
                 // 在此发送提示消息
@@ -148,7 +151,9 @@ public class TimerDelete {
     public Integer deleteMessageImmediatelyAndNotifyAfterDelay(AbsSender sender, Object sendRealType, String chatId, Integer messageId, Long userId, int notifyDelay) {
         Integer msgId = 0;
         try {
-            sender.execute(new DeleteMessage(chatId, messageId));
+            if (messageId!=null){
+                sender.execute(new DeleteMessage(chatId, messageId));
+            }
             captchaManager.clearMappingsForUser(userId.toString());
             captchaManagerCacheMap.clearMappingsForUser(userId.toString(), chatId);
             // 在此发送提示消息
@@ -173,7 +178,9 @@ public class TimerDelete {
     public void deleteMessageByMessageIdDelay(AbsSender sender, String chatId, Integer messageId, int delayInSeconds) {
         Runnable task = () -> {
             try {
-                sender.execute(new DeleteMessage(chatId, messageId));
+                if (messageId!=null){
+                    sender.execute(new DeleteMessage(chatId, messageId));
+                }
             } catch (TelegramApiException e) {
                 // 这里可以捕获异常，但是我们可以选择不执行任何操作，因为我们不关心消息是否确实已经被删除
             }
@@ -183,8 +190,9 @@ public class TimerDelete {
 
     public boolean deleteByMessageIdImmediately(AbsSender sender, String chatId, Integer messageId) {
         try {
-            DeleteMessage deleteMessage = new DeleteMessage(chatId, messageId);
-            sender.execute(deleteMessage);
+            if (messageId!=null){
+                sender.execute(new DeleteMessage(chatId, messageId));
+            }
             return true;
         } catch (TelegramApiException e) {
             return false;
