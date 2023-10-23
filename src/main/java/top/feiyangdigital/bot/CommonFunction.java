@@ -35,7 +35,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ExecutorService;
 
 @Component
 public class CommonFunction {
@@ -171,6 +170,7 @@ public class CommonFunction {
                         }
                         return;
                     }
+                    antiFloodService.checkFlood(sender, update);
                     if (update.getMessage().hasText()) {
                         if (checkTextMessage(sender, update)) {
                             return;
@@ -184,7 +184,13 @@ public class CommonFunction {
                     aiCheckMedia.checkMedia(sender, update);
                     clearOtherInfo.clearAdviceInfo(sender, update);
                 }
+            } catch (TelegramApiException e) {
+                throw new RuntimeException(e);
+            }
+        });
 
+        threadPoolTaskExecutor.execute(() -> {
+            try {
                 if (update.hasMessage() && update.getMessage().getText() != null && update.getMessage().getChat().isUserChat()) {
 
                     if (update.getMessage().getText().contains("start _groupId")) {
@@ -230,7 +236,6 @@ public class CommonFunction {
 
                 }
 
-
                 //检测新入群用户且状态正常的用户
                 if (update.getChatMember() != null && "left".equals(update.getChatMember().getOldChatMember().getStatus()) && "member".equals(update.getChatMember().getNewChatMember().getStatus()) && (update.getChatMember().getChat().isGroupChat() || update.getChatMember().getChat().isSuperGroupChat())) {
                     newMemberIntoGroup.handleMessage(sender, update, null);
@@ -248,6 +253,7 @@ public class CommonFunction {
                 throw new RuntimeException(e);
             }
         });
+
 
         threadPoolTaskExecutor.execute(() -> {
             try {
@@ -275,21 +281,6 @@ public class CommonFunction {
                     }
                 }
             } catch (Exception e) {
-                throw new RuntimeException(e);
-            }
-        });
-
-        threadPoolTaskExecutor.execute(() -> {
-            try {
-                if ((update.hasMessage() && (update.getMessage().getChat().isGroupChat() || update.getMessage().getChat().isSuperGroupChat()))
-                        || (update.hasEditedMessage() && (update.getEditedMessage().getChat().isGroupChat() || update.getEditedMessage().getChat().isSuperGroupChat()))
-                ) {
-                    if (!update.hasMessage() && update.hasEditedMessage()) {
-                        update.setMessage(update.getEditedMessage());
-                    }
-                    antiFloodService.checkFlood(sender, update);
-                }
-            } catch (TelegramApiException e) {
                 throw new RuntimeException(e);
             }
         });
