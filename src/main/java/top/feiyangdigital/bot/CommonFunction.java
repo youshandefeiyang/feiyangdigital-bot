@@ -254,7 +254,6 @@ public class CommonFunction {
             }
         });
 
-
         threadPoolTaskExecutor.execute(() -> {
             try {
                 if ((update.hasMessage() && (update.getMessage().getChat().isGroupChat() || update.getMessage().getChat().isSuperGroupChat()))
