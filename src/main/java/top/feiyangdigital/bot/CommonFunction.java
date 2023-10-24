@@ -191,6 +191,16 @@ public class CommonFunction {
 
         threadPoolTaskExecutor.execute(() -> {
             try {
+                //检测新入群用户且状态正常的用户
+                if (update.getChatMember() != null && "left".equals(update.getChatMember().getOldChatMember().getStatus()) && "member".equals(update.getChatMember().getNewChatMember().getStatus()) && (update.getChatMember().getChat().isGroupChat() || update.getChatMember().getChat().isSuperGroupChat())) {
+                    newMemberIntoGroup.handleMessage(sender, update, null);
+                }
+
+                //检测新入群Bot
+                if (update.hasMessage() && (update.getMessage().getNewChatMembers() != null && !update.getMessage().getNewChatMembers().isEmpty()) && (update.getMessage().getChat().isGroupChat() || update.getMessage().getChat().isSuperGroupChat())) {
+                    botFirstIntoGroup.handleMessage(sender, update);
+                }
+
                 if (update.hasMessage() && update.getMessage().getText() != null && update.getMessage().getChat().isUserChat()) {
 
                     if (update.getMessage().getText().contains("start _groupId")) {
@@ -236,15 +246,6 @@ public class CommonFunction {
 
                 }
 
-                //检测新入群用户且状态正常的用户
-                if (update.getChatMember() != null && "left".equals(update.getChatMember().getOldChatMember().getStatus()) && "member".equals(update.getChatMember().getNewChatMember().getStatus()) && (update.getChatMember().getChat().isGroupChat() || update.getChatMember().getChat().isSuperGroupChat())) {
-                    newMemberIntoGroup.handleMessage(sender, update, null);
-                }
-
-                //检测新入群Bot
-                if (update.hasMessage() && (update.getMessage().getNewChatMembers() != null && !update.getMessage().getNewChatMembers().isEmpty()) && (update.getMessage().getChat().isGroupChat() || update.getMessage().getChat().isSuperGroupChat())) {
-                    botFirstIntoGroup.handleMessage(sender, update);
-                }
 
                 if (update.hasCallbackQuery()) {
                     botHelper.handleCallbackQuery(sender, update);
