@@ -43,7 +43,7 @@ public class OpenAiApiService {
     }
 
     public List<ChatChoice> getOpenAiAnalyzeResult(String text) {
-        final int MAX_RETRIES = 3;
+        final int MAX_RETRIES = 5;
         int attempt = 0;
 
         while (attempt < MAX_RETRIES) {
