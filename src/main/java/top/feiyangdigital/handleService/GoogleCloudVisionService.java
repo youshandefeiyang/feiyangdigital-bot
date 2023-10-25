@@ -24,35 +24,44 @@ import java.util.List;
 public class GoogleCloudVisionService {
 
     public File downloadFileWithOkHttp(String url) {
-        OkHttpClient client = new OkHttpClient();
+        final int MAX_RETRIES = 5;
+        int attempt = 0;
 
-        Request request = new Request.Builder()
-                .url(url)
-                .build();
+        while (attempt < MAX_RETRIES) {
+            OkHttpClient client = new OkHttpClient();
 
-        try (Response response = client.newCall(request).execute()) {
-            if (!response.isSuccessful()) {
-                throw new IOException("下载文件失败: " + response);
-            }
+            Request request = new Request.Builder()
+                    .url(url)
+                    .build();
 
-            File tempFile = Files.createTempFile("prefix-", ".suffix").toFile();
-            if (response.body() != null) {
-                try (FileOutputStream fos = new FileOutputStream(tempFile);
-                     InputStream is = response.body().byteStream()) {
+            try (Response response = client.newCall(request).execute()) {
+                if (!response.isSuccessful()) {
+                    throw new IOException("下载文件失败: " + response);
+                }
 
-                    byte[] buffer = new byte[4096];
-                    int bytesRead;
-                    while ((bytesRead = is.read(buffer)) != -1) {
-                        fos.write(buffer, 0, bytesRead);
+                File tempFile = Files.createTempFile("prefix-", ".suffix").toFile();
+                if (response.body() != null) {
+                    try (FileOutputStream fos = new FileOutputStream(tempFile);
+                         InputStream is = response.body().byteStream()) {
+
+                        byte[] buffer = new byte[4096];
+                        int bytesRead;
+                        while ((bytesRead = is.read(buffer)) != -1) {
+                            fos.write(buffer, 0, bytesRead);
+                        }
                     }
                 }
+                return tempFile;
+            } catch (Exception e) {
+                attempt++;
+                log.error("下载文件失败，尝试次数：{}，原因：{}", attempt, e.getMessage(), e);
+                if (attempt >= MAX_RETRIES) {
+                    log.error("达到最大尝试次数，停止重试。");
+                    return null;
+                }
             }
-
-            return tempFile;
-        } catch (Exception e) {
-            log.error("下载文件失败，{}",e.getMessage(),e);
-            return null;
         }
+        return null;  // 当达到最大尝试次数时返回null
     }
 
     private ImageAnnotatorClient createClient() {
@@ -124,64 +133,87 @@ public class GoogleCloudVisionService {
     }
 
     public List<EntityAnnotation> detectTextFromLocalImage(File tempFile) {
-        List<AnnotateImageRequest> requests = new ArrayList<>();
+        final int MAX_RETRIES = 5;
+        int attempt = 0;
 
-        try {
-            ByteString imgBytes = ByteString.readFrom(Files.newInputStream(tempFile.toPath()));
-            Image img = Image.newBuilder().setContent(imgBytes).build();
-            Feature feat = Feature.newBuilder().setType(Feature.Type.TEXT_DETECTION).build();
-            AnnotateImageRequest request = AnnotateImageRequest.newBuilder()
-                    .addFeatures(feat)
-                    .setImage(img)
-                    .build();
-            requests.add(request);
+        while (attempt < MAX_RETRIES) {
+            List<AnnotateImageRequest> requests = new ArrayList<>();
 
-            try (ImageAnnotatorClient client = createClient()) {
-                if (client == null) return new ArrayList<>();
+            try {
+                ByteString imgBytes = ByteString.readFrom(Files.newInputStream(tempFile.toPath()));
+                Image img = Image.newBuilder().setContent(imgBytes).build();
+                Feature feat = Feature.newBuilder().setType(Feature.Type.TEXT_DETECTION).build();
+                AnnotateImageRequest request = AnnotateImageRequest.newBuilder()
+                        .addFeatures(feat)
+                        .setImage(img)
+                        .build();
+                requests.add(request);
 
-                BatchAnnotateImagesResponse response = client.batchAnnotateImages(requests);
-                AnnotateImageResponse res = response.getResponses(0);
+                try (ImageAnnotatorClient client = createClient()) {
+                    if (client == null) return new ArrayList<>();
 
-                if (res.hasError()) {
+                    BatchAnnotateImagesResponse response = client.batchAnnotateImages(requests);
+                    AnnotateImageResponse res = response.getResponses(0);
+
+                    if (res.hasError()) {
+                        return new ArrayList<>();
+                    }
+
+                    return res.getTextAnnotationsList();
+                }
+            } catch (Exception e) {
+                attempt++;
+                log.error("解析图像文本失败，尝试次数：{}，原因：{}", attempt, e.getMessage(), e);
+                if (attempt >= MAX_RETRIES) {
+                    log.error("达到最大尝试次数，停止重试。");
                     return new ArrayList<>();
                 }
-
-                return res.getTextAnnotationsList();
             }
-        } catch (Exception e) {
-            log.error("解析图像文本失败，请将报错日志截图发送给开发者");
-            return new ArrayList<>();
         }
+
+        return new ArrayList<>();  // 当达到最大尝试次数时返回空列表
     }
 
     public SafeSearchAnnotation detectSafeSearchFromLocalImage(File tempFile) {
-        List<AnnotateImageRequest> requests = new ArrayList<>();
+        final int MAX_RETRIES = 3;
+        int attempt = 0;
 
-        try {
-            ByteString imgBytes = ByteString.readFrom(Files.newInputStream(tempFile.toPath()));
-            Image img = Image.newBuilder().setContent(imgBytes).build();
-            Feature feat = Feature.newBuilder().setType(Feature.Type.SAFE_SEARCH_DETECTION).build();
-            AnnotateImageRequest request = AnnotateImageRequest.newBuilder()
-                    .addFeatures(feat)
-                    .setImage(img)
-                    .build();
-            requests.add(request);
+        while (attempt < MAX_RETRIES) {
+            List<AnnotateImageRequest> requests = new ArrayList<>();
 
-            try (ImageAnnotatorClient client = createClient()) {
-                if (client == null) return null;
+            try {
+                ByteString imgBytes = ByteString.readFrom(Files.newInputStream(tempFile.toPath()));
+                Image img = Image.newBuilder().setContent(imgBytes).build();
+                Feature feat = Feature.newBuilder().setType(Feature.Type.SAFE_SEARCH_DETECTION).build();
+                AnnotateImageRequest request = AnnotateImageRequest.newBuilder()
+                        .addFeatures(feat)
+                        .setImage(img)
+                        .build();
+                requests.add(request);
 
-                BatchAnnotateImagesResponse response = client.batchAnnotateImages(requests);
-                AnnotateImageResponse res = response.getResponses(0);
+                try (ImageAnnotatorClient client = createClient()) {
+                    if (client == null) return null;
 
-                if (res.hasError()) {
+                    BatchAnnotateImagesResponse response = client.batchAnnotateImages(requests);
+                    AnnotateImageResponse res = response.getResponses(0);
+
+                    if (res.hasError()) {
+                        return null;
+                    }
+
+                    return res.getSafeSearchAnnotation();
+                }
+            } catch (Exception e) {
+                attempt++;
+                log.error("图片分级失败，尝试次数：{}，原因：{}", attempt, e.getMessage(), e);
+                if (attempt >= MAX_RETRIES) {
+                    log.error("达到最大尝试次数，停止重试。");
                     return null;
                 }
-
-                return res.getSafeSearchAnnotation();
             }
-        } catch (Exception e) {
-            log.error("图片分级失败，请将报错日志截图发送给开发者");
-            return null;
         }
+
+        return null;  // 当达到最大尝试次数时返回null
     }
+
 }
