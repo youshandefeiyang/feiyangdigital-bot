@@ -85,37 +85,8 @@ public class NewMemberIntoGroup {
 
         GroupInfoWithBLOBs groupInfoWithBLOBs = groupInfoService.selAllByGroupId(chatId.toString());
 
-        if (groupInfoWithBLOBs != null && "open".equals(groupInfoWithBLOBs.getIntogroupusernamecheckflag())) {
-            if (StringUtils.hasText(groupInfoWithBLOBs.getKeywords()) && groupInfoWithBLOBs.getKeywords().contains("&&intoGroupBan=")) {
-                List<KeywordsFormat> keywordsFormatList = Arrays.stream(groupInfoWithBLOBs.getKeywords().split("\\n{2,}"))
-                        .map(String::trim)
-                        .map(KeywordsFormat::new)
-                        .collect(Collectors.toList());
-                for (KeywordsFormat keywordFormat : keywordsFormatList) {
-                    Map<String, String> currentMap = keywordFormat.getRuleMap();
-                    if (currentMap.containsKey("DelIntoGroupBan")) {
-                        String regex = keywordFormat.getRegex();
-                        Pattern pattern = Pattern.compile(regex);
-                        if (pattern.matcher(firstName).find() || pattern.matcher(lastName).find() || pattern.matcher(firstName + lastName).find()) {
-                            restrictOrUnrestrictUser.restrictUser(sender, userId, chatId.toString(), 0L);
-                            KeywordsFormat newKeyFormat = new KeywordsFormat();
-                            newKeyFormat.setKeywordsButtons(keywordFormat.getKeywordsButtons());
-                            String text = keywordFormat.getReplyText()
-                                    .replaceAll("@userId", String.format("<b><a href=\"tg://user?id=%d\">%s</a></b>", userId, firstName))
-                                    .replaceAll("@groupName", String.format("<b>%s</b>", groupInfoWithBLOBs.getGroupname()));
-                            newKeyFormat.setReplyText(text);
-                            newKeyFormat.setKeywordsButtons(Collections.singletonList(keywordFormat.getKeywordsButtons().get(0).replaceAll("@singleUserId", userId.toString())));
-                            SendMessage sendMessage = (SendMessage) sendContent.createGroupMessage(chatId.toString(), newKeyFormat, "html");
-                            sendMessage.setDisableWebPagePreview(true);
-                            String msgId = timerDelete.sendTimedMessage(sender, sendMessage, Integer.parseInt(currentMap.get("DelIntoGroupBan")));
-                            if (StringUtils.hasText(msgId)) {
-                                captchaManagerCacheMap.updateUserMapping(userId.toString(), chatId.toString(), 0, Integer.valueOf(msgId));
-                            }
-                            return;
-                        }
-                    }
-                }
-            }
+        if (intoGroupNameCheck(sender, userId, chatId, groupInfoWithBLOBs, firstName, lastName)) {
+            return;
         }
 
         if (groupInfoWithBLOBs != null && "close".equals(groupInfoWithBLOBs.getIntogroupcheckflag()) && "close".equals(groupInfoWithBLOBs.getIntogroupwelcomeflag())) {
@@ -185,6 +156,42 @@ public class NewMemberIntoGroup {
             notification.setParseMode(ParseMode.HTML);
             timerDelete.deleteMessageAndNotifyAfterDelay(sender, notification, chatId.toString(), messageId, 90, userId, 20);
         }
+    }
+
+    public boolean intoGroupNameCheck(AbsSender sender, Long userId, Long chatId, GroupInfoWithBLOBs groupInfoWithBLOBs, String firstName, String lastName) {
+        if (groupInfoWithBLOBs != null && "open".equals(groupInfoWithBLOBs.getIntogroupusernamecheckflag())) {
+            if (StringUtils.hasText(groupInfoWithBLOBs.getKeywords()) && groupInfoWithBLOBs.getKeywords().contains("&&intoGroupBan=")) {
+                List<KeywordsFormat> keywordsFormatList = Arrays.stream(groupInfoWithBLOBs.getKeywords().split("\\n{2,}"))
+                        .map(String::trim)
+                        .map(KeywordsFormat::new)
+                        .collect(Collectors.toList());
+                for (KeywordsFormat keywordFormat : keywordsFormatList) {
+                    Map<String, String> currentMap = keywordFormat.getRuleMap();
+                    if (currentMap.containsKey("DelIntoGroupBan")) {
+                        String regex = keywordFormat.getRegex();
+                        Pattern pattern = Pattern.compile(regex);
+                        if (pattern.matcher(firstName).find() || pattern.matcher(lastName).find() || pattern.matcher(firstName + lastName).find()) {
+                            restrictOrUnrestrictUser.restrictUser(sender, userId, chatId.toString(), 0L);
+                            KeywordsFormat newKeyFormat = new KeywordsFormat();
+                            newKeyFormat.setKeywordsButtons(keywordFormat.getKeywordsButtons());
+                            String text = keywordFormat.getReplyText()
+                                    .replaceAll("@userId", String.format("<b><a href=\"tg://user?id=%d\">%s</a></b>", userId, firstName))
+                                    .replaceAll("@groupName", String.format("<b>%s</b>", groupInfoWithBLOBs.getGroupname()));
+                            newKeyFormat.setReplyText(text);
+                            newKeyFormat.setKeywordsButtons(Collections.singletonList(keywordFormat.getKeywordsButtons().get(0).replaceAll("@singleUserId", userId.toString())));
+                            SendMessage sendMessage = (SendMessage) sendContent.createGroupMessage(chatId.toString(), newKeyFormat, "html");
+                            sendMessage.setDisableWebPagePreview(true);
+                            String msgId = timerDelete.sendTimedMessage(sender, sendMessage, Integer.parseInt(currentMap.get("DelIntoGroupBan")));
+                            if (StringUtils.hasText(msgId)) {
+                                captchaManagerCacheMap.updateUserMapping(userId.toString(), chatId.toString(), 0, Integer.valueOf(msgId));
+                            }
+                            return true;
+                        }
+                    }
+                }
+            }
+        }
+        return false;
     }
 
 }

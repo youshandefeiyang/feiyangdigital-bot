@@ -172,6 +172,14 @@ public class CommonFunction {
                     }
                     antiFloodService.checkFlood(sender, update);
                     if (update.getMessage().hasText()) {
+                        String lastName = update.getMessage().getFrom().getLastName();
+                        if (lastName == null) {
+                            lastName = "";
+                        }
+                        if (newMemberIntoGroup.intoGroupNameCheck(sender, update.getMessage().getFrom().getId(), update.getMessage().getChatId(), groupInfoWithBLOBs, update.getMessage().getFrom().getFirstName(), lastName)) {
+                            sender.execute(new DeleteMessage(update.getMessage().getChatId().toString(), update.getMessage().getMessageId()));
+                            return;
+                        }
                         if (checkTextMessage(sender, update)) {
                             return;
                         } else if (reportToOwner.haddle(sender, update)) {
