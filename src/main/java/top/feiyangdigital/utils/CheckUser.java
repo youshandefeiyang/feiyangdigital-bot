@@ -1,5 +1,6 @@
 package top.feiyangdigital.utils;
 
+import cn.hutool.core.util.StrUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
@@ -84,7 +85,8 @@ public class CheckUser {
         for (ChatMember admin : adminList.getAdmins(sender, chatId)) {
             if (admin instanceof ChatMemberOwner) {
                 map.put("ownerId", admin.getUser().getId().toString());
-                map.put("ownerFirstName", admin.getUser().getFirstName());
+                String userName = StrUtil.concat(true, admin.getUser().getFirstName(), admin.getUser().getLastName());
+                map.put("ownerName", userName);
             }
         }
         return map;

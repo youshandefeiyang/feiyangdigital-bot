@@ -1,5 +1,6 @@
 package top.feiyangdigital.utils.groupCaptch;
 
+import cn.hutool.core.util.StrUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.ParseMode;
@@ -32,13 +33,13 @@ public class ReportToOwner {
         GroupInfoWithBLOBs groupInfoWithBLOBs = groupInfoService.selAllByGroupId(chatId);
         if ("@admin".equals(update.getMessage().getText()) && "open".equals(groupInfoWithBLOBs.getReportflag())) {
             Map<String, String> map = checkUser.getChatOwner(sender, update);
-            String text = String.format("用户 <b>%s</b> 在 <b>%s</b> 召唤群主 <b><a href=\"tg://user?id=%d\">%s</a></b> 请立即查看消息！", update.getMessage().getFrom().getFirstName(), update.getMessage().getChat().getTitle(), Long.valueOf(map.get("ownerId")), map.get("ownerFirstName"));
+            String text = String.format("用户 <b><a href=\"tg://user?id=%d\">%s</a></b> 在 <b>%s</b> 召唤群主 <b><a href=\"tg://user?id=%d\">%s</a></b> 请立即查看消息！", update.getMessage().getFrom().getId(), StrUtil.concat(true, update.getMessage().getFrom().getFirstName(), update.getMessage().getFrom().getLastName()), update.getMessage().getChat().getTitle(), Long.valueOf(map.get("ownerId")), map.get("ownerName"));
             SendMessage notification = new SendMessage();
             notification.setChatId(chatId);
             notification.setText(text);
             notification.setParseMode(ParseMode.HTML);
             sender.execute(notification);
-            timerDelete.deleteMessageByMessageIdDelay(sender,chatId,messageId,10);
+            timerDelete.deleteMessageByMessageIdDelay(sender, chatId, messageId, 10);
             return true;
         }
         return false;
