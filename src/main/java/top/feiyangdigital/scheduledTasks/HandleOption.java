@@ -48,23 +48,23 @@ public class HandleOption {
                 map.put("delMessageTime", content[2]);
                 if (content.length == 3) {
                     if ("AllowMedia".equalsIgnoreCase(content[0]) && "open".equals(groupInfoWithBLOBs.getNightmodeflag())) {
-                        schedulerService.updateTrigger(keywordsFormatList.get(i).getReplyText(), AllowMedia.class, content[0] + "job" + groupId + i, content[0] + "group" + groupId + i, map);
+                        schedulerService.updateTrigger(keywordsFormatList.get(i).getReplyText(), AllowMedia.class, content[0] + "job" + groupId + "_" + i, content[0] + "group" + groupId + "_" + i, map);
                     } else if ("ForBidMedia".equalsIgnoreCase(content[0]) && "open".equals(groupInfoWithBLOBs.getNightmodeflag())) {
-                        schedulerService.updateTrigger(keywordsFormatList.get(i).getReplyText(), ForBidMedia.class, content[0] + "job" + groupId + i, content[0] + "group" + groupId + i, map);
+                        schedulerService.updateTrigger(keywordsFormatList.get(i).getReplyText(), ForBidMedia.class, content[0] + "job" + groupId + "_" + i, content[0] + "group" + groupId + "_" + i, map);
                     } else if ("OnlySendMessage".equalsIgnoreCase(content[0]) && "open".equals(groupInfoWithBLOBs.getCrontabflag())) {
-                        schedulerService.updateTrigger(keywordsFormatList.get(i).getReplyText(), OnlySendMessage.class, content[0] + "job" + groupId + i, content[0] + "group" + groupId + i, map);
+                        schedulerService.updateTrigger(keywordsFormatList.get(i).getReplyText(), OnlySendMessage.class, content[0] + "job" + groupId + "_" + i, content[0] + "group" + groupId + "_" + i, map);
                     } else if ("SendWordCloud".equalsIgnoreCase(content[0]) && "open".equals(groupInfoWithBLOBs.getCrontabflag())) {
-                        schedulerService.updateTrigger(keywordsFormatList.get(i).getReplyText(), SendWordCloud.class, content[0] + "job" + groupId + i, content[0] + "group" + groupId + i, map);
+                        schedulerService.updateTrigger(keywordsFormatList.get(i).getReplyText(), SendWordCloud.class, content[0] + "job" + groupId + "_" + i, content[0] + "group" + groupId + "_" + i, map);
                     }
                 } else if (content.length == 4) {
                     if ("AllowMedia".equalsIgnoreCase(content[0]) && "open".equals(groupInfoWithBLOBs.getNightmodeflag())) {
-                        schedulerService.updateTrigger(keywordsFormatList.get(i).getReplyText(), AllowMedia.class, content[0] + "job" + groupId + i, content[0] + "group" + groupId + i, map, content[3]);
+                        schedulerService.updateTrigger(keywordsFormatList.get(i).getReplyText(), AllowMedia.class, content[0] + "job" + groupId + "_" + i, content[0] + "group" + groupId + "_" + i, map, content[3]);
                     } else if ("ForBidMedia".equalsIgnoreCase(content[0]) && "open".equals(groupInfoWithBLOBs.getNightmodeflag())) {
-                        schedulerService.updateTrigger(keywordsFormatList.get(i).getReplyText(), ForBidMedia.class, content[0] + "job" + groupId + i, content[0] + "group" + groupId + i, map, content[3]);
+                        schedulerService.updateTrigger(keywordsFormatList.get(i).getReplyText(), ForBidMedia.class, content[0] + "job" + groupId + "_" + i, content[0] + "group" + groupId + "_" + i, map, content[3]);
                     } else if ("OnlySendMessage".equalsIgnoreCase(content[0]) && "open".equals(groupInfoWithBLOBs.getCrontabflag())) {
-                        schedulerService.updateTrigger(keywordsFormatList.get(i).getReplyText(), OnlySendMessage.class, content[0] + "job" + groupId + i, content[0] + "group" + groupId + i, map, content[3]);
+                        schedulerService.updateTrigger(keywordsFormatList.get(i).getReplyText(), OnlySendMessage.class, content[0] + "job" + groupId + "_" + i, content[0] + "group" + groupId + "_" + i, map, content[3]);
                     } else if ("SendWordCloud".equalsIgnoreCase(content[0]) && "open".equals(groupInfoWithBLOBs.getCrontabflag())) {
-                        schedulerService.updateTrigger(keywordsFormatList.get(i).getReplyText(), SendWordCloud.class, content[0] + "job" + groupId + i, content[0] + "group" + groupId + i, map, content[3]);
+                        schedulerService.updateTrigger(keywordsFormatList.get(i).getReplyText(), SendWordCloud.class, content[0] + "job" + groupId + "_" + i, content[0] + "group" + groupId + "_" + i, map, content[3]);
                     }
                 }
             }
