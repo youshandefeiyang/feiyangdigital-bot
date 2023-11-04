@@ -29,7 +29,7 @@ public class ForBidMedia implements Job {
     private GroupInfoService groupInfoService;
 
     @Override
-    public void execute(JobExecutionContext jobExecutionContext) {
+    public void execute(JobExecutionContext jobExecutionContext) throws RuntimeException {
         log.warn("执行开启夜间模式");
         JobDataMap dataMap = jobExecutionContext.getMergedJobDataMap();
         AbsSender sender = (AbsSender) dataMap.get("sender");
@@ -38,10 +38,10 @@ public class ForBidMedia implements Job {
         KeywordsFormat keywordsFormat = new KeywordsFormat();
         keywordsFormat.setKeywordsButtons((List<String>) dataMap.get("keyButtons"));
         keywordsFormat.setReplyText(dataMap.getString("text"));
-        timerDelete.sendTimedMessage(sender,sendContent.createGroupMessage(groupId,keywordsFormat,"html"),delMessageTime);
+        timerDelete.sendTimedMessage(sender, sendContent.createGroupMessage(groupId, keywordsFormat, "html"), delMessageTime);
         GroupInfoWithBLOBs groupInfoWithBLOBs = new GroupInfoWithBLOBs();
         groupInfoWithBLOBs.setCansendmediaflag("open");
-        if (groupInfoService.updateSelectiveByChatId(groupInfoWithBLOBs,groupId)){
+        if (groupInfoService.updateSelectiveByChatId(groupInfoWithBLOBs, groupId)) {
             log.warn("夜间模式开启成功");
         }
     }

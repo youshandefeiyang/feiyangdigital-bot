@@ -25,7 +25,7 @@ public class OnlySendMessage implements Job {
     private TimerDelete timerDelete;
 
     @Override
-    public void execute(JobExecutionContext jobExecutionContext) {
+    public void execute(JobExecutionContext jobExecutionContext) throws RuntimeException {
         log.warn("仅仅只发送消息，不执行操作");
         JobDataMap dataMap = jobExecutionContext.getMergedJobDataMap();
         AbsSender sender = (AbsSender) dataMap.get("sender");

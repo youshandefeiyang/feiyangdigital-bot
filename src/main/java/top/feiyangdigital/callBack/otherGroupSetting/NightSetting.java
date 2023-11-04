@@ -116,7 +116,7 @@ public class NightSetting {
                 nightFlag = "open";
                 text = "✅夜间值守模式已打开";
                 if (StringUtils.hasText(keyWords)) {
-                    handleOption.ruleHandle(sender, addRuleCacheMap.getGroupIdForUser(userId),groupName, keyWords);
+                    handleOption.ruleHandle(sender, addRuleCacheMap.getGroupIdForUser(userId), groupName, keyWords);
                 }
             }
         } else {
@@ -124,7 +124,8 @@ public class NightSetting {
             if (groupInfoService.updateSelectiveByChatId(groupInfoWithBLOBs1, addRuleCacheMap.getGroupIdForUser(userId))) {
                 nightFlag = "close";
                 text = "❗夜间值守模式已关闭";
-                schedulerService.clearJobsExcludingGroupPrefix("OnlySendMessage");
+                schedulerService.clearJobsWithGroupPrefix("AllowMediajob_" + groupInfoWithBLOBs.getGroupid());
+                schedulerService.clearJobsWithGroupPrefix("ForBidMediajob_" + groupInfoWithBLOBs.getGroupid());
             }
         }
         List<String> keywordsButtons = new ArrayList<>();

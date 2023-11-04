@@ -29,7 +29,7 @@ public class AllowMedia implements Job {
     private GroupInfoService groupInfoService;
 
     @Override
-    public void execute(JobExecutionContext jobExecutionContext) {
+    public void execute(JobExecutionContext jobExecutionContext) throws RuntimeException {
         log.warn("执行关闭夜间模式");
         JobDataMap dataMap = jobExecutionContext.getMergedJobDataMap();
         AbsSender sender = (AbsSender) dataMap.get("sender");

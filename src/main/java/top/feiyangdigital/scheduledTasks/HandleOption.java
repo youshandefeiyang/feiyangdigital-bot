@@ -24,7 +24,7 @@ public class HandleOption {
     private GroupInfoService groupInfoService;
 
     public void ruleHandle(AbsSender sender, String groupId, String groupName, String keyWords) {
-        schedulerService.clearAllJobs();
+        schedulerService.clearAllJobs(groupId, groupName);
         GroupInfoWithBLOBs groupInfoWithBLOBs = groupInfoService.selAllByGroupId(groupId);
         Map<String, Object> map = new ConcurrentHashMap<>();
         map.put("sender", sender);

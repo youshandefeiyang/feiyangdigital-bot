@@ -50,7 +50,7 @@ public class CommonCallBack {
                 crontabFlag = "open";
                 text = "✅定时发送消息已打开";
                 if (StringUtils.hasText(keyWords)) {
-                    handleOption.ruleHandle(sender, addRuleCacheMap.getGroupIdForUser(userId),groupName, keyWords);
+                    handleOption.ruleHandle(sender, addRuleCacheMap.getGroupIdForUser(userId), groupName, keyWords);
                 }
             }
         } else {
@@ -58,7 +58,7 @@ public class CommonCallBack {
             if (groupInfoService.updateSelectiveByChatId(groupInfoWithBLOBs1, addRuleCacheMap.getGroupIdForUser(userId))) {
                 crontabFlag = "close";
                 text = "❗定时发送消息已关闭";
-                schedulerService.clearJobsWithGroupPrefix("OnlySendMessage");
+                schedulerService.clearJobsWithGroupPrefix("OnlySendMessagejob_" + groupInfoWithBLOBs.getGroupid());
             }
         }
         List<String> keywordsButtons = new ArrayList<>();

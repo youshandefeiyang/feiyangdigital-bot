@@ -67,47 +67,36 @@ public class SchedulerService {
 
     public void clearJobsWithGroupPrefix(String groupPrefix) {
         try {
-            GroupMatcher<JobKey> matcher = GroupMatcher.jobGroupStartsWith(groupPrefix);  // 创建组匹配器
+            // 获取所有的 job group
             for (String groupName : scheduler.getJobGroupNames()) {
-                if (groupName.startsWith(groupPrefix)) {  // 检查组名是否以指定的前缀开头
-                    for (JobKey jobKey : scheduler.getJobKeys(matcher)) {  // 遍历指定组内所有的任务
-                        scheduler.deleteJob(jobKey);  // 删除任务
+                // 遍历 group 内所有的 job
+                for (JobKey jobKey : scheduler.getJobKeys(GroupMatcher.jobGroupEquals(groupName))) {
+                    if (jobKey.getName().startsWith(groupPrefix)) {
+                        // 删除 job
+                        scheduler.deleteJob(jobKey);
                     }
                 }
             }
-            log.info("所有以{}开头的组的Job，都被成功清除", groupPrefix);
+            log.warn("所有以{}开头的组的Job，都被成功清除", groupPrefix);
         } catch (SchedulerException e) {
             log.error("清除所有以{}开头的组的Job，发生异常", groupPrefix, e);
         }
     }
 
-    public void clearJobsExcludingGroupPrefix(String groupPrefix) {
-        try {
-            for (String groupName : scheduler.getJobGroupNames()) {
-                if (!groupName.startsWith(groupPrefix)) {  // 检查组名是否不是以指定的前缀开头
-                    for (JobKey jobKey : scheduler.getJobKeys(GroupMatcher.jobGroupEquals(groupName))) {  // 遍历该组内所有的任务
-                        scheduler.deleteJob(jobKey);  // 删除任务
-                    }
-                }
-            }
-            log.info("所有不是以{}开头的组的Job，都被成功清除", groupPrefix);
-        } catch (SchedulerException e) {
-            log.error("清除所有不是以{}开头的组的Job，发生异常", groupPrefix, e);
-        }
-    }
-
-    public void clearAllJobs() {
+    public void clearAllJobs(String chatId, String chatName) {
         try {
             // 获取所有的 job group
             for (String groupName : scheduler.getJobGroupNames()) {
                 // 遍历 group 内所有的 job
                 for (JobKey jobKey : scheduler.getJobKeys(GroupMatcher.jobGroupEquals(groupName))) {
-                    // 删除 job
-                    scheduler.deleteJob(jobKey);
+                    if (jobKey.getName().contains(chatId)) {
+                        // 删除 job
+                        scheduler.deleteJob(jobKey);
+                    }
                 }
             }
         } catch (SchedulerException e) {
-            log.error("删除所有job失败", e);
+            log.error("清除除群组{}所有job失败", chatName, e);
         }
     }
 
