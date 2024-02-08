@@ -8,6 +8,7 @@ import org.telegram.telegrambots.meta.api.methods.send.SendPhoto;
 import org.telegram.telegrambots.meta.api.methods.send.SendVideo;
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageText;
 import org.telegram.telegrambots.meta.api.objects.InputFile;
+import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
@@ -37,7 +38,7 @@ public class SendContent {
 
         if (update.getCallbackQuery() != null) {
             chatId = update.getCallbackQuery().getMessage().getChatId().toString();
-            messageId = update.getCallbackQuery().getMessage().getMessageId();
+            messageId = ((Message)update.getCallbackQuery().getMessage()).getMessageId();
         } else if (update.getMessage() != null) {
             chatId = update.getMessage().getChatId().toString();
             messageId = update.getMessage().getMessageId();
@@ -159,7 +160,7 @@ public class SendContent {
 
         if (update.getCallbackQuery() != null) {
             chatId = update.getCallbackQuery().getMessage().getChatId().toString();
-            messageId = update.getCallbackQuery().getMessage().getMessageId();
+            messageId = ((Message)update.getCallbackQuery().getMessage()).getMessageId();
         } else if (update.getMessage() != null) {
             chatId = update.getMessage().getChatId().toString();
             messageId = update.getMessage().getMessageId();

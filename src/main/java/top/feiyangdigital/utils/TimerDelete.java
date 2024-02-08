@@ -51,7 +51,7 @@ public class TimerDelete {
         addRuleCacheMap.updateUserMapping(userId, addRuleCacheMap.getGroupIdForUser(userId), addRuleCacheMap.getGroupNameForUser(userId), "notallow", addRuleCacheMap.getAiFlagForUser(userId), addRuleCacheMap.getCrontabFlagForUser(userId));
         deleteRuleCacheMap.updateUserMapping(userId, deleteRuleCacheMap.getGroupIdForUser(userId), deleteRuleCacheMap.getGroupNameForUser(userId), "notdelete");
         try {
-            sender.execute(new DeleteMessage(update.getCallbackQuery().getMessage().getChatId().toString(), update.getCallbackQuery().getMessage().getMessageId()));
+            sender.execute(new DeleteMessage(update.getCallbackQuery().getMessage().getChatId().toString(), ((Message)update.getCallbackQuery().getMessage()).getMessageId()));
             sender.execute(sendContent.messageText(update, "当前群组ID：" + addRuleCacheMap.getGroupIdForUser(userId) + " \n当前可输入状态：" + addRuleCacheMap.getKeywordsFlagForUser(userId) + "\n你已退出 " + addRuleCacheMap.getGroupNameForUser(userId) + " 的设置"));
         } catch (TelegramApiException e) {
             // 这里可以捕获异常，但是我们可以选择不执行任何操作，因为我们不关心消息是否确实已经被删除
@@ -60,7 +60,7 @@ public class TimerDelete {
 
     public void deletePrivateUsualMessageImmediately(AbsSender sender, Update update) {
         try {
-            sender.execute(new DeleteMessage(update.getCallbackQuery().getMessage().getChatId().toString(), update.getCallbackQuery().getMessage().getMessageId()));
+            sender.execute(new DeleteMessage(update.getCallbackQuery().getMessage().getChatId().toString(), ((Message)update.getCallbackQuery().getMessage()).getMessageId()));
             sender.execute(sendContent.messageText(update, "你已退出设置"));
         } catch (TelegramApiException e) {
             // 这里可以捕获异常，但是我们可以选择不执行任何操作，因为我们不关心消息是否确实已经被删除
