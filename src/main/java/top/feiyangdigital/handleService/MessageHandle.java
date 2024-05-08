@@ -28,10 +28,14 @@ public class MessageHandle {
 
     public boolean processUserMessage(AbsSender sender, Update update, List<KeywordsFormat> keywordsList) throws TelegramApiException {
         String messageText = update.getMessage().getText();
+        String buttonText = "";
+        if (update.getMessage().getReplyMarkup() != null) {
+            buttonText = update.getMessage().getReplyMarkup().getKeyboard().get(0).get(0).getText();
+        }
         Long userId = update.getMessage().getFrom().getId();
 
         // 如果消息文本为null，直接返回，不做处理
-        if (!StringUtils.hasText(messageText)) {
+        if (!StringUtils.hasText(messageText) && !StringUtils.hasText(buttonText)) {
             return true;
         }
 
@@ -43,7 +47,7 @@ public class MessageHandle {
             if (currentMap.containsKey("DelWelcome") || currentMap.containsKey("DelIntoGroupBan") || currentMap.containsKey("crontabOption")) {
                 //不执行任何操作
             } else if (currentMap.containsKey("DeleteAfterXSeconds")) {
-                if (pattern.matcher(messageText).find()) {
+                if (pattern.matcher(messageText).find() || (StringUtils.hasText(buttonText) && pattern.matcher(buttonText).find())) {
                     // 用户违规了
                     int deleteAfterXSeconds = Integer.parseInt(currentMap.get("DeleteAfterXSeconds"));
 
@@ -71,7 +75,7 @@ public class MessageHandle {
                 }
             } // 可以判断后续逻辑，比如是否ban或者禁言
             else {
-                if (pattern.matcher(messageText).find()) {
+                if (pattern.matcher(messageText).find() || (StringUtils.hasText(buttonText) && pattern.matcher(buttonText).find())) {
                     Object response = sendContent.replyToUser(update, keywordFormat, "html");
                     if (response instanceof SendMessage) {
                         sender.execute((SendMessage) response);
@@ -79,7 +83,7 @@ public class MessageHandle {
                         sender.execute((SendVideo) response);
                     } else if (response instanceof SendPhoto) {
                         sender.execute((SendPhoto) response);
-                    }else {
+                    } else {
                         throw new RuntimeException("类型错误");
                     }
                     return true;
