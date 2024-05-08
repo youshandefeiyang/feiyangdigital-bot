@@ -28,10 +28,11 @@ public class MessageHandle {
 
     public boolean processUserMessage(AbsSender sender, Update update, List<KeywordsFormat> keywordsList) throws TelegramApiException {
         String messageText = update.getMessage().getText();
-        String buttonText = "";
+        StringBuilder buttonBuilder = new StringBuilder();
         if (update.getMessage().getReplyMarkup() != null) {
-            buttonText = update.getMessage().getReplyMarkup().getKeyboard().get(0).get(0).getText();
+            update.getMessage().getReplyMarkup().getKeyboard().forEach(i-> buttonBuilder.append(i.get(0).getText()).append("\n"));
         }
+        String buttonText = "" + buttonBuilder;
         Long userId = update.getMessage().getFrom().getId();
 
         // 如果消息文本为null，直接返回，不做处理
