@@ -2,6 +2,7 @@ package top.feiyangdigital.handleService;
 
 import com.alibaba.fastjson2.JSONReader;
 import com.unfbx.chatgpt.OpenAiClient;
+import com.unfbx.chatgpt.entity.chat.BaseChatCompletion;
 import com.unfbx.chatgpt.entity.chat.ChatChoice;
 import com.unfbx.chatgpt.entity.chat.ChatCompletion;
 import com.unfbx.chatgpt.entity.chat.Message;
@@ -52,7 +53,7 @@ public class OpenAiApiService {
                 Message message = Message.builder().role(Message.Role.SYSTEM).content(content).build();
                 ChatCompletion chatCompletion = ChatCompletion.builder()
                         .maxTokens(2000)
-                        .model(ChatCompletion.Model.GPT_3_5_TURBO.getName())
+                        .model(ChatCompletion.Model.GPT_4O_MINI.getName())
                         .temperature(0.4)
                         .topP(1.0)
                         .presencePenalty(1)

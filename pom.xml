@@ -21,7 +21,7 @@
             <id>jitpack.io</id>
             <url>https://jitpack.io</url>
         </repository>
-    </repositories>     
+    </repositories>
 
     <dependencies>
         <dependency>
@@ -57,10 +57,10 @@
             <version>2.0.39</version>
         </dependency>
         <dependency>
-	   <groupId>com.github.youshandefeiyang</groupId>
-	   <artifactId>chatgpt-java</artifactId>
-	   <version>1.1.7</version>
-	</dependency>
+            <groupId>com.github.youshandefeiyang</groupId>
+            <artifactId>chatgpt-java</artifactId>
+            <version>1.1.7</version>
+        </dependency>
         <dependency>
             <groupId>com.google.cloud</groupId>
             <artifactId>google-cloud-vision</artifactId>
