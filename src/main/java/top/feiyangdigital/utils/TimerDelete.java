@@ -91,7 +91,7 @@ public class TimerDelete {
     }
 
     public <T extends Serializable, Method extends BotApiMethod<T>> String sendTimedMessage(AbsSender sender, Object sendRealType, int delayInSeconds) {
-        Message response;
+        Message response = null;
         try {
             if (sendRealType instanceof SendMessage) {
                 response = sender.execute((SendMessage) sendRealType);
@@ -100,25 +100,38 @@ public class TimerDelete {
             } else if (sendRealType instanceof SendPhoto) {
                 response = sender.execute((SendPhoto) sendRealType);
             } else {
-                throw new RuntimeException("类型错误");
+                // 记录错误但不抛出异常
+                System.err.println("类型错误: " + sendRealType.getClass().getName());
+                return null;
             }
         } catch (TelegramApiException e) {
-            throw new RuntimeException();
+            // 捕获异常并打印日志，不抛出异常，保证程序继续执行
+            System.err.println("Telegram API 执行失败: " + e.getMessage());
+            e.printStackTrace();
+            // 返回 null 表示操作失败，但不阻塞后续逻辑
+            return null;
         }
+
         if (response != null) {
             Integer messageId = response.getMessageId();
             Runnable task = () -> {
                 try {
                     sender.execute(new DeleteMessage(response.getChatId().toString(), messageId));
                 } catch (TelegramApiException e) {
-                    // 这里可以捕获异常，但是我们可以选择不执行任何操作，因为我们不关心消息是否确实已经被删除
+                    // 捕获异常但不做任何操作
+                    System.err.println("删除消息失败: " + e.getMessage());
                 }
             };
+            // 调度删除消息的任务
             taskScheduler.schedule(task, Instant.now().plusSeconds(delayInSeconds));
             return messageId.toString();
+        } else {
+            // 如果response为空，输出日志，但程序继续运行
+            System.err.println("Response 为 null, 无法获取消息ID");
+            return null;
         }
-        return null;
     }
+
 
     public <T extends Serializable, Method extends BotApiMethod<T>> String sendAndDeleteMessageImmediately(AbsSender sender, Method method) throws TelegramApiException {
         Serializable response = sender.execute(method);
