@@ -51,7 +51,7 @@ public class TimerDelete {
         addRuleCacheMap.updateUserMapping(userId, addRuleCacheMap.getGroupIdForUser(userId), addRuleCacheMap.getGroupNameForUser(userId), "notallow", addRuleCacheMap.getAiFlagForUser(userId), addRuleCacheMap.getCrontabFlagForUser(userId));
         deleteRuleCacheMap.updateUserMapping(userId, deleteRuleCacheMap.getGroupIdForUser(userId), deleteRuleCacheMap.getGroupNameForUser(userId), "notdelete");
         try {
-            sender.execute(new DeleteMessage(update.getCallbackQuery().getMessage().getChatId().toString(), ((Message)update.getCallbackQuery().getMessage()).getMessageId()));
+            sender.execute(new DeleteMessage(update.getCallbackQuery().getMessage().getChatId().toString(), ((Message) update.getCallbackQuery().getMessage()).getMessageId()));
             sender.execute(sendContent.messageText(update, "当前群组ID：" + addRuleCacheMap.getGroupIdForUser(userId) + " \n当前可输入状态：" + addRuleCacheMap.getKeywordsFlagForUser(userId) + "\n你已退出 " + addRuleCacheMap.getGroupNameForUser(userId) + " 的设置"));
         } catch (TelegramApiException e) {
             // 这里可以捕获异常，但是我们可以选择不执行任何操作，因为我们不关心消息是否确实已经被删除
@@ -60,7 +60,7 @@ public class TimerDelete {
 
     public void deletePrivateUsualMessageImmediately(AbsSender sender, Update update) {
         try {
-            sender.execute(new DeleteMessage(update.getCallbackQuery().getMessage().getChatId().toString(), ((Message)update.getCallbackQuery().getMessage()).getMessageId()));
+            sender.execute(new DeleteMessage(update.getCallbackQuery().getMessage().getChatId().toString(), ((Message) update.getCallbackQuery().getMessage()).getMessageId()));
             sender.execute(sendContent.messageText(update, "你已退出设置"));
         } catch (TelegramApiException e) {
             // 这里可以捕获异常，但是我们可以选择不执行任何操作，因为我们不关心消息是否确实已经被删除
@@ -91,7 +91,7 @@ public class TimerDelete {
     }
 
     public <T extends Serializable, Method extends BotApiMethod<T>> String sendTimedMessage(AbsSender sender, Object sendRealType, int delayInSeconds) {
-        Message response = new Message();
+        Message response = null;
         try {
             if (sendRealType instanceof SendMessage) {
                 response = sender.execute((SendMessage) sendRealType);
@@ -100,10 +100,10 @@ public class TimerDelete {
             } else if (sendRealType instanceof SendPhoto) {
                 response = sender.execute((SendPhoto) sendRealType);
             } else {
-                System.err.println("类型错误: " + sendRealType.getClass().getName());
+                throw new RuntimeException("类型错误:" + sendRealType.getClass().getName());
             }
         } catch (TelegramApiException e) {
-            System.err.println("Telegram API 执行失败: " + e.getMessage());
+            // 这里可以捕获异常，但是我们可以选择不执行任何操作
         }
         if (response != null) {
             Integer messageId = response.getMessageId();
@@ -166,7 +166,7 @@ public class TimerDelete {
             } else if (sendRealType instanceof SendPhoto) {
                 message = sender.execute((SendPhoto) sendRealType);
             } else {
-                throw new RuntimeException("类型错误");
+                throw new RuntimeException("类型错误:" + sendRealType.getClass().getName());
             }
             msgId = message.getMessageId();
             deleteMessageByMessageIdDelay(sender, chatId, msgId, notifyDelay);
