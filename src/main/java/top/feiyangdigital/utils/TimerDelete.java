@@ -91,23 +91,26 @@ public class TimerDelete {
     }
 
     public <T extends Serializable, Method extends BotApiMethod<T>> String sendTimedMessage(AbsSender sender, Object sendRealType, int delayInSeconds) throws TelegramApiException {
-        Message response;
-
-        if (sendRealType instanceof SendMessage) {
-            response = sender.execute((SendMessage) sendRealType);
-        } else if (sendRealType instanceof SendVideo) {
-            response = sender.execute((SendVideo) sendRealType);
-        } else if (sendRealType instanceof SendPhoto) {
-            response = sender.execute((SendPhoto) sendRealType);
-        } else {
-            throw new RuntimeException("类型错误:" + sendRealType.getClass().getName());
+        Message response = null;
+        try {
+            if (sendRealType instanceof SendMessage) {
+                response = sender.execute((SendMessage) sendRealType);
+            } else if (sendRealType instanceof SendVideo) {
+                response = sender.execute((SendVideo) sendRealType);
+            } else if (sendRealType instanceof SendPhoto) {
+                response = sender.execute((SendPhoto) sendRealType);
+            } else {
+                throw new RuntimeException("类型错误:" + sendRealType.getClass().getName());
+            }
+        }catch (TelegramApiException e){
+            // 这里可以捕获异常，但是我们可以选择不执行任何操作
         }
-
         if (response != null) {
             Integer messageId = response.getMessageId();
+            Message finalResponse = response;
             Runnable task = () -> {
                 try {
-                    sender.execute(new DeleteMessage(response.getChatId().toString(), messageId));
+                    sender.execute(new DeleteMessage(finalResponse.getChatId().toString(), messageId));
                 } catch (TelegramApiException e) {
                     // 这里可以捕获异常，但是我们可以选择不执行任何操作，因为我们不关心消息是否确实已经被删除
                 }
