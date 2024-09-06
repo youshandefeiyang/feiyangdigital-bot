@@ -102,7 +102,7 @@ public class TimerDelete {
             } else {
                 throw new RuntimeException("类型错误:" + sendRealType.getClass().getName());
             }
-        }catch (TelegramApiException e){
+        } catch (TelegramApiException e) {
             // 这里可以捕获异常，但是我们可以选择不执行任何操作
         }
         if (response != null) {
