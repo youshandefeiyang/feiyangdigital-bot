@@ -90,7 +90,7 @@ public class TimerDelete {
         }
     }
 
-    public <T extends Serializable, Method extends BotApiMethod<T>> String sendTimedMessage(AbsSender sender, Object sendRealType, int delayInSeconds) throws TelegramApiException {
+    public <T extends Serializable, Method extends BotApiMethod<T>> String sendTimedMessage(AbsSender sender, Object sendRealType, int delayInSeconds) {
         Message response = null;
         try {
             if (sendRealType instanceof SendMessage) {
