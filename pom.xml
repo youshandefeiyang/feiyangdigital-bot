@@ -16,6 +16,13 @@
         <relativePath/>
     </parent>
 
+    <repositories>
+        <repository>
+            <id>jitpack.io</id>
+            <url>https://jitpack.io</url>
+        </repository>
+    </repositories>
+
     <dependencies>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -53,12 +60,6 @@
             <groupId>com.github.youshandefeiyang</groupId>
             <artifactId>chatgpt-java</artifactId>
             <version>1.1.7.1</version>
-            <repositories>
-                <repository>
-                    <id>jitpack.io</id>
-                    <url>https://jitpack.io</url>
-                </repository>
-            </repositories>
         </dependency>
         <dependency>
             <groupId>com.google.cloud</groupId>
@@ -108,4 +109,6 @@
             </plugin>
         </plugins>
     </build>
+
+
 </project>
