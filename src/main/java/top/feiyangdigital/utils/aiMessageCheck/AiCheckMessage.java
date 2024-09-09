@@ -3,7 +3,6 @@ package top.feiyangdigital.utils.aiMessageCheck;
 import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson2.JSONObject;
 import com.unfbx.chatgpt.entity.chat.ChatChoice;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
@@ -26,7 +25,6 @@ import top.feiyangdigital.utils.groupCaptch.RestrictOrUnrestrictUser;
 import java.util.List;
 
 @Component
-@Slf4j
 public class AiCheckMessage {
 
     @Autowired
@@ -87,7 +85,6 @@ public class AiCheckMessage {
             } else if (normalCount >= 5) {
                 return;
             }
-            log.info("内容是：" + content);
             List<ChatChoice> list = openAiApiService.getOpenAiAnalyzeResult(content);
             if (!list.isEmpty()) {
                 JSONObject jsonObject = JSONObject.parseObject(list.get(0).getMessage().getContent());
