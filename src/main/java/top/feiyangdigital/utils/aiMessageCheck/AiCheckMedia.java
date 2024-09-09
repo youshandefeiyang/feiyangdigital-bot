@@ -1,5 +1,6 @@
 package top.feiyangdigital.utils.aiMessageCheck;
 
+import cn.hutool.core.util.StrUtil;
 import com.google.cloud.vision.v1.EntityAnnotation;
 import com.google.cloud.vision.v1.SafeSearchAnnotation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,6 +50,7 @@ public class AiCheckMedia {
         String userId = update.getMessage().getFrom().getId().toString();
         Integer messageId = update.getMessage().getMessageId();
         String firstName = update.getMessage().getFrom().getFirstName();
+        String userName = StrUtil.concat(true, firstName, update.getMessage().getFrom().getLastName());
         GroupInfoWithBLOBs groupInfoWithBLOBs = groupInfoService.selAllByGroupId(groupId);
         if (groupInfoWithBLOBs != null && "open".equals(groupInfoWithBLOBs.getAiflag())) {
             BotRecord botRecord = botRecordService.selBotRecordByGidAndUid(groupId, userId);
@@ -96,7 +98,7 @@ public class AiCheckMedia {
                         }
                         SafeSearchAnnotation safeSearchAnnotation = googleCloudVisionService.detectSafeSearchFromLocalImage(file);
                         BotRecord botRecord1 = new BotRecord();
-                        String realUpdateText = miaoshu;
+                        String realUpdateText = userName + "," + miaoshu;
                         if (StringUtils.hasText(update.getMessage().getCaption())) {
                             realUpdateText += "\n" + update.getMessage().getCaption();
                         }

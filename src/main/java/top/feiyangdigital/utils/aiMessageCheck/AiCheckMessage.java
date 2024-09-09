@@ -1,7 +1,9 @@
 package top.feiyangdigital.utils.aiMessageCheck;
 
+import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson2.JSONObject;
 import com.unfbx.chatgpt.entity.chat.ChatChoice;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
@@ -24,6 +26,7 @@ import top.feiyangdigital.utils.groupCaptch.RestrictOrUnrestrictUser;
 import java.util.List;
 
 @Component
+@Slf4j
 public class AiCheckMessage {
 
     @Autowired
@@ -52,7 +55,8 @@ public class AiCheckMessage {
         String userId = update.getMessage().getFrom().getId().toString();
         Integer messageId = update.getMessage().getMessageId();
         String firstName = update.getMessage().getFrom().getFirstName();
-        String content = update.getMessage().getText();
+        String userName = StrUtil.concat(true, firstName, update.getMessage().getFrom().getLastName());
+        String content = userName + "," + update.getMessage().getText();
         List<KeywordsFormat> keywordsFormatList = matchList.createBanKeyDeleteOptionList(update);
         if (keywordsFormatList != null) {
             if (messageHandle.processUserMessage(sender, update, keywordsFormatList)) {
@@ -75,14 +79,15 @@ public class AiCheckMessage {
                 String otherText = String.format("<b>违规用户UserID为：<a href=\"tg://user?id=%d\">%s</a></b>", Long.valueOf(userId), userId);
                 SendMessage notification = new SendMessage();
                 notification.setChatId(groupId);
-                notification.setText(text+"\n"+otherText);
+                notification.setText(text + "\n" + otherText);
                 notification.setParseMode(ParseMode.HTML);
                 timerDelete.deleteMessageImmediatelyAndNotifyAfterDelay(sender, notification, groupId, messageId, Long.valueOf(userId), 90);
-                restrictOrUnrestrictUser.restrictUser(sender, Long.valueOf(userId), groupId,0L);
+                restrictOrUnrestrictUser.restrictUser(sender, Long.valueOf(userId), groupId, 0L);
                 return;
             } else if (normalCount >= 5) {
                 return;
             }
+            log.info("内容是：" + content);
             List<ChatChoice> list = openAiApiService.getOpenAiAnalyzeResult(content);
             if (!list.isEmpty()) {
                 JSONObject jsonObject = JSONObject.parseObject(list.get(0).getMessage().getContent());
@@ -94,7 +99,7 @@ public class AiCheckMessage {
                     String otherText = String.format("<b>违规用户UserID为：<a href=\"tg://user?id=%d\">%s</a></b>", Long.valueOf(userId), userId);
                     SendMessage notification = new SendMessage();
                     notification.setChatId(groupId);
-                    notification.setText(text+"\n"+otherText);
+                    notification.setText(text + "\n" + otherText);
                     notification.setParseMode(ParseMode.HTML);
                     timerDelete.deleteMessageImmediatelyAndNotifyAfterDelay(sender, notification, groupId, messageId, Long.valueOf(userId), 90);
                     botRecord1.setViolationcount(violationCount + 1);
