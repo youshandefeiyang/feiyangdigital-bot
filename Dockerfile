@@ -1,33 +1,27 @@
-# 使用Maven 3.8.5基础镜像进行构建
-FROM maven:3.8.5-openjdk-17 as build
+# 构建阶段（修正 as/AS 大小写）
+FROM maven:3.9.9-eclipse-temurin-17 AS build
 
-# 设置工作目录
 WORKDIR /app
-
-# 复制pom.xml
 COPY pom.xml .
-
-# 复制源代码
+# 利用缓存将依赖先拉下（可选，需 BuildKit）
+RUN --mount=type=cache,target=/root/.m2 mvn -B -q -DskipTests dependency:go-offline
 COPY src/ src/
+RUN --mount=type=cache,target=/root/.m2 mvn -B -q -DskipTests clean package
 
-# 执行Maven构建
-RUN mvn clean package
+# 运行阶段：使用受支持的 Debian 12（bookworm）slim
+FROM openjdk:17-jre-slim-bookworm
 
-# 使用OpenJDK 17官方提供的buster镜像
-FROM openjdk:17-jdk-buster
+# 安装中文字体（WenQuanYi 与 Noto 二选一或都装）
+RUN apt-get update \
+ && apt-get install -y --no-install-recommends fonts-wqy-microhei fonts-wqy-zenhei fonts-noto-cjk \
+ && rm -rf /var/lib/apt/lists/*
 
-# 安装中文字体
-RUN apt-get update && apt-get install -y fonts-wqy-microhei
-
-# 设置应用的目录结构
 WORKDIR /app
-
-# 从构建阶段复制构建的jar文件和src目录
-COPY --from=build /app/target/*.jar app.jar
-COPY --from=build /app/src/ /app/src/
+# 只拷贝 jar，去掉 src/（减小镜像）
+COPY --from=build /app/target/*.jar /app/app.jar
 
 # 设置Java的Headless模式
-ENV JAVA_TOOL_OPTIONS -Djava.awt.headless=true
+ENV JAVA_TOOL_OPTIONS -Djava.awt.headless=true -Dfile.encoding=UTF-8
 
 # 设置启动命令
 ENTRYPOINT ["java", "-jar", "app.jar"]
