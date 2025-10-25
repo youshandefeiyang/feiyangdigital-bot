@@ -2,7 +2,7 @@
 🤖 Feiyang Digital Telegram 群管机器人
 ===========================================
 
-基于 **SpringBoot** 和 **Telegrambot-Api** 打造的多功能 Telegram 群管理机器人，有效查杀18+违规视频、贴图、图片，AI识别各种博彩，违规图片、文字，可设置正则自定义关键字回复、违规词汇删除等功能，支持每日词云统计，进群欢迎等多种实用群管功能，**Powered By OpenAI And Google Cloud Vision**。
+基于 **SpringBoot** 和 **Telegrambot-Api** 打造的多功能 Telegram 群管理机器人，有效查杀18+违规视频、贴图、图片，AI识别各种博彩，违规图片、文字，可设置正则自定义关键字回复、违规词汇删除等功能，支持每日词云统计，进群欢迎等多种实用群管功能，**Powered By DeepSeek And Google Cloud Vision**。
 
 1️⃣ 开始之前
 ----------------
