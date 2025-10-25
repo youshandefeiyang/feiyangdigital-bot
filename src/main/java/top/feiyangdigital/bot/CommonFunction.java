@@ -7,7 +7,12 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.DeleteMessage;
+import org.telegram.telegrambots.meta.api.objects.ExternalReplyInfo;
+import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
+import org.telegram.telegrambots.meta.api.objects.messageorigin.MessageOrigin;
+import org.telegram.telegrambots.meta.api.objects.messageorigin.MessageOriginChannel;
+import org.telegram.telegrambots.meta.api.objects.messageorigin.MessageOriginChat;
 import org.telegram.telegrambots.meta.bots.AbsSender;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import top.feiyangdigital.callBack.deleteRuleCallBack.DeleteSingleRuleByKeyWord;
@@ -135,6 +140,53 @@ public class CommonFunction {
         } else return restrictOrUnrestrictUser.unMuteOption(sender, update);
     }
 
+    /**
+     * 私有拦截函数：若消息引用了“外部群/频道”的内容，且其 chatId ≠ 当前群的 chatId，则静默删除并返回 true。
+     * 兼容：
+     * 1) ExternalReplyInfo.getChat() 直接给出被引消息所在 chat；
+     * 2) ExternalReplyInfo.getOrigin() 为 MessageOriginChannel/MessageOriginChat 时的兜底提取。
+     */
+    private boolean deleteIfExternalQuote(AbsSender sender, Update update) throws TelegramApiException {
+        if (update == null) return false;
+        Message msg = update.getMessage();
+        if (msg == null) return false;
+
+        ExternalReplyInfo ext = msg.getExternalReplyInfo();
+        if (ext == null) return false;
+
+        Long currentChatId = msg.getChatId();
+        Long externalChatId = null;
+
+        // 1) 首选：ExternalReplyInfo.chat
+        if (ext.getChat() != null) {
+            externalChatId = ext.getChat().getId();
+        }
+
+        // 2) 兜底：从 origin 中提取
+        if (externalChatId == null && ext.getOrigin() != null) {
+            MessageOrigin origin = ext.getOrigin();
+            if (origin instanceof MessageOriginChannel) {
+                // Channel 场景使用 getChat()
+                if (((MessageOriginChannel) origin).getChat() != null) {
+                    externalChatId = ((MessageOriginChannel) origin).getChat().getId();
+                }
+            } else if (origin instanceof MessageOriginChat) {
+                // Chat 场景使用 getSenderChat()（没有 getChat()）
+                if (((MessageOriginChat) origin).getSenderChat() != null) {
+                    externalChatId = ((MessageOriginChat) origin).getSenderChat().getId();
+                }
+            }
+            // 其他类型（User/HiddenUser/Bot）通常无法拿到 chatId，忽略
+        }
+
+        if (externalChatId != null && !externalChatId.equals(currentChatId)) {
+            // 静默删除，不进行任何提示
+            sender.execute(new DeleteMessage(currentChatId.toString(), msg.getMessageId()));
+            return true;
+        }
+        return false;
+    }
+
     public void mainFunc(AbsSender sender, Update update) {
 
         threadPoolTaskExecutor.execute(() -> {
@@ -145,6 +197,12 @@ public class CommonFunction {
                     if (!update.hasMessage() && update.hasEditedMessage()) {
                         update.setMessage(update.getEditedMessage());
                     }
+
+                    // ★ 先行拦截：检测跨群/频道引用，发现则直接删除并返回
+                    if (deleteIfExternalQuote(sender, update)) {
+                        return;
+                    }
+
                     GroupInfoWithBLOBs groupInfoWithBLOBs = groupInfoService.selAllByGroupId(update.getMessage().getChatId().toString());
                     if (groupInfoWithBLOBs != null) {
                         Long chatId = update.getMessage().getChatId();
@@ -254,7 +312,6 @@ public class CommonFunction {
 
                 }
 
-
                 if (update.hasCallbackQuery()) {
                     botHelper.handleCallbackQuery(sender, update);
                 }
@@ -270,6 +327,11 @@ public class CommonFunction {
                 ) {
                     if (!update.hasMessage() && update.hasEditedMessage()) {
                         update.setMessage(update.getEditedMessage());
+                    }
+
+                    // ★ 同样先行拦截，避免被删消息进入词云/统计
+                    if (deleteIfExternalQuote(sender, update)) {
+                        return;
                     }
 
                     Long userId = update.getMessage().getFrom().getId();
