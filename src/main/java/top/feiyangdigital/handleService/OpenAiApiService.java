@@ -6,6 +6,7 @@ import com.unfbx.chatgpt.entity.chat.BaseChatCompletion;
 import com.unfbx.chatgpt.entity.chat.ChatChoice;
 import com.unfbx.chatgpt.entity.chat.ChatCompletion;
 import com.unfbx.chatgpt.entity.chat.Message;
+import com.unfbx.chatgpt.entity.chat.ResponseFormat;
 import com.unfbx.chatgpt.interceptor.DynamicKeyOpenAiAuthInterceptor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -60,7 +61,8 @@ public class OpenAiApiService {
             "{\n" +
             "\"spamChance\": <垃圾广告的可能性，范围为\"0\"-\"10\">,\n" +
             "\"spamReason\": \"<你判断该发言是否为垃圾广告或违法内容的原因>\"\n" +
-            "}";
+            "}\n" +
+            "只输出合法 json，不要任何多余文本。";
 
 
     private OpenAiClient createOpenAiClient() {
@@ -87,6 +89,11 @@ public class OpenAiApiService {
                         .temperature(0.4)
                         .topP(1.0)
                         .presencePenalty(1)
+                        .responseFormat(
+                                ResponseFormat.builder()
+                                        .type(ResponseFormat.Type.JSON_OBJECT.getName())
+                                        .build()
+                        )
                         .messages(Collections.singletonList(message))
                         .build();
                 return createOpenAiClient().chatCompletion(chatCompletion).getChoices();
