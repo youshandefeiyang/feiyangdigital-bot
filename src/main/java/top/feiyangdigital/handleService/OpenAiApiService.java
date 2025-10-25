@@ -69,6 +69,7 @@ public class OpenAiApiService {
         return OpenAiClient.builder()
                 .apiKey(list)
                 .authInterceptor(new DynamicKeyOpenAiAuthInterceptor())
+                .apiHost("https://api.deepseek.com/")
                 .build();
     }
 
@@ -82,7 +83,7 @@ public class OpenAiApiService {
                 Message message = Message.builder().role(Message.Role.SYSTEM).content(content).build();
                 ChatCompletion chatCompletion = ChatCompletion.builder()
                         .maxTokens(2000)
-                        .model(ChatCompletion.Model.GPT_4O_MINI.getName())
+                        .model("deepseek-chat")
                         .temperature(0.4)
                         .topP(1.0)
                         .presencePenalty(1)
