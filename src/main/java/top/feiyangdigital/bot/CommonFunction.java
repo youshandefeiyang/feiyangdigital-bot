@@ -329,11 +329,6 @@ public class CommonFunction {
                         update.setMessage(update.getEditedMessage());
                     }
 
-                    // ★ 同样先行拦截，避免被删消息进入词云/统计
-                    if (deleteIfExternalQuote(sender, update)) {
-                        return;
-                    }
-
                     Long userId = update.getMessage().getFrom().getId();
                     String userName = StrUtil.concat(true, update.getMessage().getFrom().getFirstName(), update.getMessage().getFrom().getLastName());
                     String text = update.getMessage().getText();
