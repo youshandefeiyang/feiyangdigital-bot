@@ -6,9 +6,7 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
-import org.telegram.telegrambots.meta.api.methods.groupadministration.GetChatMember;
 import org.telegram.telegrambots.meta.api.objects.User;
-import org.telegram.telegrambots.meta.api.objects.chatmember.ChatMember;
 import org.telegram.telegrambots.meta.api.objects.messageorigin.MessageOriginUser;
 import lombok.extern.slf4j.Slf4j;
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.DeleteMessage;
@@ -20,7 +18,6 @@ import org.telegram.telegrambots.meta.api.objects.messageorigin.MessageOriginCha
 import org.telegram.telegrambots.meta.api.objects.messageorigin.MessageOriginChat;
 import org.telegram.telegrambots.meta.bots.AbsSender;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
-import org.telegram.telegrambots.meta.exceptions.TelegramApiRequestException;
 import top.feiyangdigital.callBack.deleteRuleCallBack.DeleteSingleRuleByKeyWord;
 import top.feiyangdigital.callBack.replyRuleCallBack.AddAutoReplyRule;
 import top.feiyangdigital.entity.BaseInfo;
@@ -194,7 +191,8 @@ public class CommonFunction {
         return false;
     }
 
-    private boolean moderateBotText(AbsSender sender, Message message) {
+    private boolean moderateBotText(AbsSender sender, Update update) {
+        Message message = update.getMessage();
         if (!message.hasText()) {
             return false;
         }
@@ -212,20 +210,12 @@ public class CommonFunction {
             return true;
         }
         try {
-            if (message.getSenderChat() == null && author != null && author.getId() != null) {
-                ChatMember member = sender.execute(GetChatMember.builder().chatId(chatId).userId(author.getId()).build());
-                if (member != null && ("administrator".equals(member.getStatus()) || "creator".equals(member.getStatus()))) {
-                    return true;
-                }
-            }
-        } catch (TelegramApiException e) {
-            // 访客 Bot 不一定在群里。明确不在群时仍删除；其他查询故障不误删管理员消息。
-            if (!(e instanceof TelegramApiRequestException)
-                    || !String.valueOf(((TelegramApiRequestException) e).getApiResponse())
-                            .contains("USER_NOT_PARTICIPANT")) {
-                log.warn("Bot文本管理员身份查询失败：chatId={} messageId={}", chatId, message.getMessageId(), e);
+            if (message.getSenderChat() == null && author != null && checkUser.isGroupAdmin(sender, update)) {
                 return true;
             }
+        } catch (TelegramApiException e) {
+            log.warn("Bot文本管理员身份查询失败：chatId={} messageId={}", chatId, message.getMessageId(), e);
+            return true;
         }
         try {
             if (!Boolean.TRUE.equals(sender.execute(new DeleteMessage(chatId, message.getMessageId())))) {
@@ -252,7 +242,7 @@ public class CommonFunction {
                         update.setMessage(update.getEditedMessage());
                     }
 
-                    if (moderateBotText(sender, update.getMessage())) {
+                    if (moderateBotText(sender, update)) {
                         return;
                     }
 
