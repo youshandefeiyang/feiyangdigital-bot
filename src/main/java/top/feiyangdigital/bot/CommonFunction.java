@@ -191,11 +191,9 @@ public class CommonFunction {
         return false;
     }
 
-    private boolean moderateBotText(AbsSender sender, Update update) {
+    private boolean moderateBotMessage(AbsSender sender, Update update) {
         Message message = update.getMessage();
-        if (!message.hasText()) {
-            return false;
-        }
+        // Bot 来源与正文、图片、按钮等内容类型无关。
         User author = message.getFrom();
         boolean directBot = message.getSenderChat() == null && isBot(author);
         boolean forwardedBot = isBot(message.getForwardFrom())
@@ -214,15 +212,15 @@ public class CommonFunction {
                 return true;
             }
         } catch (TelegramApiException e) {
-            log.warn("Bot文本管理员身份查询失败：chatId={} messageId={}", chatId, message.getMessageId(), e);
+            log.warn("Bot消息管理员身份查询失败：chatId={} messageId={}", chatId, message.getMessageId(), e);
             return true;
         }
         try {
             if (!Boolean.TRUE.equals(sender.execute(new DeleteMessage(chatId, message.getMessageId())))) {
-                log.warn("Bot文本删除未确认：chatId={} messageId={}", chatId, message.getMessageId());
+                log.warn("Bot消息删除未确认：chatId={} messageId={}", chatId, message.getMessageId());
             }
         } catch (TelegramApiException e) {
-            log.warn("Bot文本删除失败：chatId={} messageId={}", chatId, message.getMessageId(), e);
+            log.warn("Bot消息删除失败：chatId={} messageId={}", chatId, message.getMessageId(), e);
         }
         return true;
     }
@@ -242,7 +240,7 @@ public class CommonFunction {
                         update.setMessage(update.getEditedMessage());
                     }
 
-                    if (moderateBotText(sender, update)) {
+                    if (moderateBotMessage(sender, update)) {
                         return;
                     }
 
