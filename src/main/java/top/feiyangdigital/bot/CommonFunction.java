@@ -191,6 +191,37 @@ public class CommonFunction {
         return false;
     }
 
+    // 临时诊断：只跟踪出现漏删的群，避免其他群刷屏。
+    private static final long MODERATION_TRACE_CHAT_ID = -1001630231030L;
+
+    private boolean tracesModeration(Message message) {
+        return message != null && message.getChatId() != null
+                && message.getChatId() == MODERATION_TRACE_CHAT_ID;
+    }
+
+    private void traceModerationResult(Update update, String result) {
+        Message message = update.getMessage();
+        if (tracesModeration(message)) {
+            log.warn("bot_moderation_trace stage=result updateId={} chatId={} messageId={} result={}",
+                    update.getUpdateId(), message.getChatId(), message.getMessageId(), result);
+        }
+    }
+
+    private void traceModerationIngress(Update update) {
+        Message message = update.hasMessage() ? update.getMessage() : update.getEditedMessage();
+        if (!tracesModeration(message)) {
+            return;
+        }
+        User author = message.getFrom();
+        log.warn("bot_moderation_trace stage=received updateId={} chatId={} messageId={} edited={} fromId={} fromBot={} senderChatId={} viaBotId={} forwardOriginType={} legacyForwardBot={} hasText={} hasPhoto={} hasButtons={}",
+                update.getUpdateId(), message.getChatId(), message.getMessageId(), !update.hasMessage(),
+                author == null ? null : author.getId(), author == null ? null : author.getIsBot(),
+                message.getSenderChat() == null ? null : message.getSenderChat().getId(),
+                message.getViaBot() == null ? null : message.getViaBot().getId(),
+                message.getForwardOrigin() == null ? null : message.getForwardOrigin().getClass().getSimpleName(),
+                isBot(message.getForwardFrom()), message.hasText(), message.hasPhoto(), message.getReplyMarkup() != null);
+    }
+
     private boolean moderateBotMessage(AbsSender sender, Update update) {
         Message message = update.getMessage();
         // Bot 来源与正文、图片、按钮等内容类型无关。
@@ -200,26 +231,34 @@ public class CommonFunction {
                 || (message.getForwardOrigin() instanceof MessageOriginUser
                     && isBot(((MessageOriginUser) message.getForwardOrigin()).getSenderUser()));
         if (!directBot && !forwardedBot && !isBot(message.getViaBot())) {
+            traceModerationResult(update, "source_not_bot");
             return false;
         }
         String chatId = message.getChatId().toString();
         // 本群匿名管理员以本群身份发言；频道马甲不享受此豁免。
         if (message.getSenderChat() != null && message.getChatId().equals(message.getSenderChat().getId())) {
+            traceModerationResult(update, "anonymous_admin");
             return true;
         }
         try {
             if (message.getSenderChat() == null && author != null && checkUser.isGroupAdmin(sender, update)) {
+                traceModerationResult(update, "admin");
                 return true;
             }
         } catch (TelegramApiException e) {
+            traceModerationResult(update, "admin_check_failed");
             log.warn("Bot消息管理员身份查询失败：chatId={} messageId={}", chatId, message.getMessageId(), e);
             return true;
         }
         try {
             if (!Boolean.TRUE.equals(sender.execute(new DeleteMessage(chatId, message.getMessageId())))) {
+                traceModerationResult(update, "delete_unconfirmed");
                 log.warn("Bot消息删除未确认：chatId={} messageId={}", chatId, message.getMessageId());
+            } else {
+                traceModerationResult(update, "deleted");
             }
         } catch (TelegramApiException e) {
+            traceModerationResult(update, "delete_failed");
             log.warn("Bot消息删除失败：chatId={} messageId={}", chatId, message.getMessageId(), e);
         }
         return true;
@@ -230,6 +269,7 @@ public class CommonFunction {
     }
 
     public void mainFunc(AbsSender sender, Update update) {
+        traceModerationIngress(update);
 
         threadPoolTaskExecutor.execute(() -> {
             try {
